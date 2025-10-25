@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE project>
-<project name="L2AFTER_PROJECT_aCis_409" default="dist-local" basedir=".">
+<project name="PROJECT_TARGON_409" default="dist-local" basedir=".">
 	<scriptdef name="substring" language="javascript">
 		<attribute name="text" />
 		<attribute name="start" />
