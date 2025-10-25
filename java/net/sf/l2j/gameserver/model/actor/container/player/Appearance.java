@@ -4,13 +4,24 @@ import net.sf.l2j.gameserver.enums.actors.Sex;
 
 public final class Appearance
 {
+	// Campos existentes
 	private byte _face;
 	private byte _hairColor;
 	private byte _hairStyle;
 	private Sex _sex;
 	private boolean _isVisible = true;
-	private int _nameColor = 0xFFFFFF;
+	private int _nameColor = 0xF1FFFF;
 	private int _titleColor = 0xFFFF77;
+	
+	// Novos campos para os itens visuais, todos como 'int'
+	private int _under; // Corrigido de byte para int
+	private int _helmet;
+	private int _chest;
+	private int _legs;
+	private int _gloves;
+	private int _feet;
+	private int _rhand;
+	private int _lhand;
 	
 	public Appearance(byte face, byte hColor, byte hStyle, Sex sex)
 	{
@@ -20,6 +31,7 @@ public final class Appearance
 		_sex = sex;
 	}
 	
+	// --- Getters e Setters existentes (Face, Hair, Sex, Colors, etc.) ---
 	public byte getFace()
 	{
 		return _face;
@@ -80,11 +92,6 @@ public final class Appearance
 		_nameColor = nameColor;
 	}
 	
-	public void setNameColor(int red, int green, int blue)
-	{
-		_nameColor = (red & 0xFF) + ((green & 0xFF) << 8) + ((blue & 0xFF) << 16);
-	}
-	
 	public int getTitleColor()
 	{
 		return _titleColor;
@@ -95,8 +102,99 @@ public final class Appearance
 		_titleColor = titleColor;
 	}
 	
+	// ... (outros métodos existentes como setTitleColor(r,g,b) podem permanecer aqui) ...
+	public void setNameColor(int red, int green, int blue)
+	{
+		_nameColor = (red & 0xFF) + ((green & 0xFF) << 8) + ((blue & 0xFF) << 16);
+	}
+	
 	public void setTitleColor(int red, int green, int blue)
 	{
 		_titleColor = (red & 0xFF) + ((green & 0xFF) << 8) + ((blue & 0xFF) << 16);
 	}
+	
+	// --- INICIO GETTERS E SETTERS PARA EQUIPAMENTOS ---
+	
+	// Getters (METODOS NOVOS E NECESSARIOS)
+	public int getUnder()
+	{
+		return _under;
+	}
+	
+	public int getHelmet()
+	{
+		return _helmet;
+	}
+	
+	public int getChest()
+	{
+		return _chest;
+	}
+	
+	public int getLegs()
+	{
+		return _legs;
+	}
+	
+	public int getGloves()
+	{
+		return _gloves;
+	}
+	
+	public int getFeet()
+	{
+		return _feet;
+	}
+	
+	public int getWeapon()
+	{
+		return _rhand;
+	}
+	
+	public int getShield()
+	{
+		return _lhand;
+	}
+	
+	public void setUnder(int id)
+	{
+		this._under = id;
+	} // Corrigido, sem cast para byte
+	
+	public void setHelmet(int id)
+	{
+		this._helmet = id;
+	}
+	
+	public void setChest(int id)
+	{
+		this._chest = id;
+	}
+	
+	public void setLegs(int id)
+	{
+		this._legs = id;
+	}
+	
+	public void setGloves(int id)
+	{
+		this._gloves = id;
+	}
+	
+	public void setFeet(int id)
+	{
+		this._feet = id;
+	}
+	
+	public void setWeapon(int id)
+	{
+		this._rhand = id;
+	}
+	
+	public void setShield(int id)
+	{
+		this._lhand = id;
+	}
+	
+	// --- FIM DA SEÇÃO DE GETTERS E SETTERS PARA EQUIPAMENTOS ---
 }

@@ -215,7 +215,7 @@ abstract class AbstractAI<T extends Creature>
 		thinkMoveRoute();
 	}
 	
-	protected synchronized void doMoveToIntention(Location loc, Boat boat)
+	public synchronized void doMoveToIntention(Location loc, Boat boat)
 	{
 		prepareIntention();
 		

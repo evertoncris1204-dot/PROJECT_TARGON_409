@@ -11,6 +11,7 @@ import net.sf.l2j.gameserver.enums.items.EtcItemType;
 import net.sf.l2j.gameserver.enums.items.WeaponType;
 import net.sf.l2j.gameserver.enums.skills.SkillTargetType;
 import net.sf.l2j.gameserver.enums.skills.SkillType;
+import net.sf.l2j.gameserver.geoengine.GeoEngine;
 import net.sf.l2j.gameserver.handler.IItemHandler;
 import net.sf.l2j.gameserver.handler.ItemHandler;
 import net.sf.l2j.gameserver.model.World;
@@ -23,6 +24,7 @@ import net.sf.l2j.gameserver.model.actor.Summon;
 import net.sf.l2j.gameserver.model.actor.container.player.BoatInfo;
 import net.sf.l2j.gameserver.model.actor.instance.StaticObject;
 import net.sf.l2j.gameserver.model.item.instance.ItemInstance;
+import net.sf.l2j.gameserver.model.location.Location;
 import net.sf.l2j.gameserver.network.SystemMessageId;
 import net.sf.l2j.gameserver.network.serverpackets.ActionFailed;
 import net.sf.l2j.gameserver.network.serverpackets.AutoAttackStart;
@@ -33,6 +35,8 @@ import net.sf.l2j.gameserver.network.serverpackets.SystemMessage;
 import net.sf.l2j.gameserver.skills.L2Skill;
 import net.sf.l2j.gameserver.taskmanager.AttackStanceTaskManager;
 import net.sf.l2j.gameserver.taskmanager.ItemsOnGroundTaskManager;
+import net.sf.l2j.gameserver.util.sellBuffEngine.BuffShopManager;
+import net.sf.l2j.gameserver.util.sellBuffEngine.BuffShopUIManager;
 
 public class PlayerAI extends PlayableAI<Player>
 {
@@ -238,7 +242,37 @@ public class PlayerAI extends PlayableAI<Player>
 			doIdleIntention();
 			return;
 		}
-		
+		// Verifique se a inten��o � interagir com a loja de buffs
+		if (target instanceof Player && BuffShopManager.getInstance().getSellers().containsKey(target.getObjectId()))
+		{
+			Player sellerNpc = (Player) target;
+			Integer ownerId = BuffShopManager.getInstance().getSellers().get(sellerNpc.getObjectId());
+			if (ownerId != null && ownerId.equals(_actor.getObjectId()))
+			{
+				_actor.sendMessage("Voc� n�o pode comprar buffs da sua pr�pria loja.");
+				// Enviar ActionFailed ou limpar a inten��o da AI
+				_actor.sendPacket(ActionFailed.STATIC_PACKET);
+				doIdleIntention(); // Parar a intera��o
+				return;
+			}
+			if (_actor.distance3D(target) > 150)
+			{
+				// Calcule um novo local pr�ximo � loja
+				final Location destination = GeoEngine.getInstance().getValidLocation(_actor, target.getX(), target.getY(), target.getZ());
+				
+				// Defina a inten��o do jogador para se mover para o novo local
+				_actor.getAI().doMoveToIntention(destination, null);
+				BuffShopUIManager.getInstance().showPublicShopWindow(_actor, (Player) target, BuffShopManager.getInstance().getProfile((Player) target), 1, 1);
+				return; // Interrompa o m�todo para que o jogador possa se mover
+			}
+			
+			// BuffShopManager.getInstance().showShop((Player) target, _actor, 1);
+			BuffShopUIManager.getInstance().showPublicShopWindow(_actor, (Player) target, BuffShopManager.getInstance().getProfile((Player) target), 1, 1);
+			_actor.sendPacket(ActionFailed.STATIC_PACKET); // Importante para o cliente n�o ficar "preso"
+			doIdleIntention(); // Parar a intera��o
+			return; // Interrompe o processamento da a��o padr�o de clique em Player
+			
+		}
 		if (!_actor.getCast().canAttemptCast(target, skill))
 			return;
 		

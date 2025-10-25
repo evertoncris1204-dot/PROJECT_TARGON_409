@@ -56,6 +56,7 @@ import net.sf.l2j.gameserver.enums.GaugeColor;
 import net.sf.l2j.gameserver.enums.LootRule;
 import net.sf.l2j.gameserver.enums.MessageType;
 import net.sf.l2j.gameserver.enums.Paperdoll;
+import net.sf.l2j.gameserver.enums.PrivateStoreType;
 import net.sf.l2j.gameserver.enums.PrivilegeType;
 import net.sf.l2j.gameserver.enums.PunishmentType;
 import net.sf.l2j.gameserver.enums.RestartType;
@@ -491,6 +492,75 @@ public final class Player extends Playable
 	private final Set<Integer> _selectedFriendList = ConcurrentHashMap.newKeySet();
 	
 	/**
+		 * Returns true if this player is a dummy, false otherwise.
+		 * A dummy player is a player that is not connected to the game server, but still exists in the world.
+		 * This is used for testing purposes or for players that are not logged in but still have an active character.
+		 */	
+		private boolean _isDummy;
+		
+		public boolean isDummy()
+		{
+			return _isDummy;
+		}
+		
+		public void setDummy(final boolean isDummy)
+		{
+			_isDummy = isDummy;
+		}
+	
+		private PrivateStoreType _privateStoreType = PrivateStoreType.NONE;
+	
+	    public void setPrivateStoreType(PrivateStoreType type)
+	    {
+	        if (_privateStoreType == type)
+	            return;
+	
+	        _privateStoreType = type;
+	
+	        // Atualiza o cliente com o novo status de loja
+	        sendPacket(new UserInfo(this));
+	
+	        // Opcional: pode adicionar l�gica extra, como fechar loja antiga, limpar listas, etc.
+	        switch (type) {
+	        case NONE:
+	            setOperateType(OperateType.NONE); // Usa o setter padr�o se houver, ou this._operateType = ...
+	            break;
+	        case SELL:
+	            setOperateType(OperateType.SELL);
+	            break;
+	        case PACKAGE_SELL:
+	            setOperateType(OperateType.PACKAGE_SELL);
+	            break;
+	        case BUY:
+	            setOperateType(OperateType.BUY);
+	            break;
+	        case MANUFACTURE: // Usado BuffShop
+	            setOperateType(OperateType.MANUFACTURE);
+	            break;
+	        default:
+	            setOperateType(OperateType.NONE);
+	            break;
+	    }
+		broadcastUserInfo();
+	    }
+	
+		// Temporary variable to store BuffShop price
+		private String tempBuffShopPrice;
+	
+		public void setVarTempBuffShopPrice(String price) {
+			this.tempBuffShopPrice = price;
+		}
+	
+		public String getVarTempBuffShopPrice() {
+			return this.tempBuffShopPrice;
+		}
+	
+	    public PrivateStoreType getPrivateStoreType()
+	    {
+	        return _privateStoreType;
+	    }
+		
+		/**
 	 * Constructor of Player (use Creature constructor).
 	 * <ul>
 	 * <li>Call the Creature constructor to create an empty _skills slot and copy basic Calculator set to this Player</li>
@@ -502,7 +572,7 @@ public final class Player extends Playable
 	 * @param accountName The name of the account including this Player
 	 * @param app The PcAppearance of the Player
 	 */
-	private Player(int objectId, PlayerTemplate template, String accountName, Appearance app)
+	    public Player(int objectId, PlayerTemplate template, String accountName, Appearance app)
 	{
 		super(objectId, template);
 		
@@ -3911,6 +3981,12 @@ public final class Player extends Playable
 	@Override
 	public boolean isGM()
 	{
+			AccessLevel al = getAccessLevel(); 
+		    if (al == null) {
+		        // LOGGER.warn("Player " + getName() + " (" + getObjectId() + ") possui AccessLevel nulo ao checar isGM().", new Throwable());
+		        return false; // Se AccessLevel for null, assume que NAO E GM.
+		    }
+				
 		return getAccessLevel().isGm();
 	}
 	

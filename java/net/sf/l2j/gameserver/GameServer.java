@@ -131,6 +131,8 @@ public class GameServer
 			LogManager.getLogManager().readConfiguration(is);
 		}
 		
+		
+		
 		StringUtil.printSection("Config");
 		Config.loadGameServer();
 		
