@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <list>
 	<!-- server list from c3 (only english names) -->
-	<server id="1" name="L2AFTER_PROJECT" />
+	<server id="1" name="L2TARGON_PROJECT" />
 	<server id="2" name="Sieghardt" />
 	<server id="3" name="Kain" />
 	<server id="4" name="Lionna" />
