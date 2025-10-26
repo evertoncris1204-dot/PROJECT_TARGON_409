@@ -77,7 +77,7 @@ public final class BuffShopUIManager
 	 */
 	public void showIndexWindow(Player player, String message)
 	{
-		String html = HtmCache.getInstance().getHtm("data/html/BuffShop/index.htm");
+		String html = HtmCache.getInstance().getHtm("./data/html/BuffShop/index.htm");
 		html = html.replace("%message%", (message != null) ? message : "");
 		sendHtml(player, html);
 	}
@@ -108,7 +108,7 @@ public final class BuffShopUIManager
 		final String[] navigation = buildManagementPageNavigation("list", currentPage, totalPages);
 		
 		// 6. Monta e envia o HTML final.
-		String html = HtmCache.getInstance().getHtm("data/html/BuffShop/shopBuffList.htm");
+		String html = HtmCache.getInstance().getHtm("./data/html/BuffShop/shopBuffList.htm");
 		
 		html = html.replace("%shop_title%", shopConfig.getTitle());
 		html = html.replace("%shop_buff_count%", String.valueOf(shopConfig.getBuffList().size()));
@@ -206,7 +206,7 @@ public final class BuffShopUIManager
 			return;
 		}
 		
-		String template = HtmCache.getInstance().getHtm("data/html/mods/BuffManager.htm");
+		String template = HtmCache.getInstance().getHtm("./data/html/mods/BuffManager.htm");
 		if (template == null)
 			return;
 		

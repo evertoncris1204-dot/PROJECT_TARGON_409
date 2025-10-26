@@ -34,7 +34,7 @@ public class VoicedCommandHandler
 	public void registerHandler(IVoicedCommandHandler handler)
 	{
 		for (String id : handler.getVoicedCommandList())
-			_datatable.put(id.toLowerCase(), handler); // usa a string em lowercase como chave
+			_datatable.put(id.toLowerCase(), handler);
 	}
 	
 	public IVoicedCommandHandler getHandler(String voicedCommand)

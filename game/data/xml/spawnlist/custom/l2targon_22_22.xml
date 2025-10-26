@@ -10,4 +10,13 @@
 		<npc id="90000" pos="82261;148605;-3464;64056" total="1" respawn="60sec" /> <!-- L2TARGON -->
 	</npcmaker>
 
+	<territory name="l2targon_1761448090176" minZ="-3464" maxZ="-3448">
+		<node x="82955" y="148185" />
+		<node x="82855" y="148185" />
+		<node x="82855" y="148085" />
+		<node x="82955" y="148085" />
+	</territory>
+	<npcmaker name="l2targon_546240076712599" territory="l2targon_1761448090176" maximumNpcs="1">
+		<npc id="50017" pos="82905;148135;-3464;60483" total="1" respawn="60sec" /> <!-- L2TARGON -->
+	</npcmaker>
 </list>

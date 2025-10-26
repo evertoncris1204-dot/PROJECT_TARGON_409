@@ -11,7 +11,6 @@ public class VoicedMenu implements IVoicedCommandHandler
 	private static final String[] VOICED_COMMANDS =
 	{
 		"menu",
-		"rembuff"
 	
 	};
 	
@@ -23,11 +22,7 @@ public class VoicedMenu implements IVoicedCommandHandler
 			player.sendMessage("comando indisponivel menu");
 			player.sendMessage("dfss");
 		}
-		if (command.startsWith("rembuff"))
-		{
-			player.sendMessage("comando indisponivel rembuff");
-			player.sendMessage("fffddd");
-		}
+		
 		return true;
 	}
 	
