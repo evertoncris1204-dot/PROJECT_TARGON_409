@@ -12,6 +12,7 @@ import net.sf.l2j.gameserver.enums.actors.ClassId;
 import net.sf.l2j.gameserver.handler.AdminCommandHandler;
 import net.sf.l2j.gameserver.handler.IAdminCommandHandler;
 import net.sf.l2j.gameserver.handler.itemhandlers.ActiveItemSpecial;
+import net.sf.l2j.gameserver.model.L2AutoFarmTask;
 import net.sf.l2j.gameserver.model.World;
 import net.sf.l2j.gameserver.model.WorldObject;
 import net.sf.l2j.gameserver.model.actor.Npc;
@@ -46,12 +47,11 @@ public final class RequestBypassToServer extends L2GameClientPacket
 		int spaceIdx = fullCommand.indexOf(" ");
 		if (spaceIdx != -1)
 		{
-			commandPart = fullCommand.substring(0, spaceIdx); // Pega a primeira palavra
+			commandPart = fullCommand.substring(0, spaceIdx);
 		}
 		
 		switch (commandPart)
 		{
-			// Aqui TODOS os comandos Bufshop handleBypass espera da parte html de npc
 			case "index":
 			case "setprice":
 			case "settitle":
@@ -97,8 +97,6 @@ public final class RequestBypassToServer extends L2GameClientPacket
 				handleAdminCommand(player);
 			else if (_command.startsWith("player_help "))
 				handlePlayerHelp(player);
-			else if (_command.startsWith("npc_"))
-				handleNpcBypass(player);
 			else if (_command.startsWith("manor_menu_select?"))
 				handleManor(player);
 			else if (_command.startsWith("bbs_") || _command.startsWith("_bbs") || _command.startsWith("_friend") || _command.startsWith("_mail") || _command.startsWith("_block"))
@@ -116,6 +114,45 @@ public final class RequestBypassToServer extends L2GameClientPacket
 			}
 			else if (_command.startsWith("class_index_select"))
 				handleClassChange(player);
+			// === NOVO: AutoFarm ===
+			else if (_command.startsWith("farm"))
+			{
+				L2AutoFarmTask bot = player.getFarm();
+				final StringTokenizer tokenizer = new StringTokenizer(_command);
+				tokenizer.nextToken(); // pula o "farm"
+				if (!tokenizer.hasMoreTokens())
+				{
+					player.sendMessage("Use farm on/off.");
+					return;
+				}
+				final String param = tokenizer.nextToken();
+				
+				switch (param.toLowerCase())
+				{
+					case "on":
+						if (!bot.running())
+						{
+							bot.start();
+							player.sendMessage("AutoFarm ativado.");
+						}
+						break;
+
+					case "off":
+						if (bot.running())
+						{
+							bot.stop();
+							player.sendMessage("AutoFarm desativado.");
+						}
+						break;
+
+					default:
+						player.sendMessage("Use farm on/off.");
+						break;
+				}
+			}
+			// === FIM AutoFarm ===
+			else if (_command.startsWith("npc_"))
+				handleNpcBypass(player);
 		}
 		catch (Exception e)
 		{

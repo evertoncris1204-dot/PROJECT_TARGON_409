@@ -90,6 +90,7 @@ import net.sf.l2j.gameserver.handler.IItemHandler;
 import net.sf.l2j.gameserver.handler.ItemHandler;
 import net.sf.l2j.gameserver.handler.skillhandlers.SummonFriend;
 import net.sf.l2j.gameserver.model.AccessLevel;
+import net.sf.l2j.gameserver.model.L2AutoFarmTask;
 import net.sf.l2j.gameserver.model.World;
 import net.sf.l2j.gameserver.model.WorldObject;
 import net.sf.l2j.gameserver.model.actor.ai.type.PlayerAI;
@@ -112,6 +113,7 @@ import net.sf.l2j.gameserver.model.actor.container.player.SubClass;
 import net.sf.l2j.gameserver.model.actor.instance.Door;
 import net.sf.l2j.gameserver.model.actor.instance.FestivalMonster;
 import net.sf.l2j.gameserver.model.actor.instance.Folk;
+import net.sf.l2j.gameserver.model.actor.instance.Monster;
 import net.sf.l2j.gameserver.model.actor.instance.Pet;
 import net.sf.l2j.gameserver.model.actor.instance.Servitor;
 import net.sf.l2j.gameserver.model.actor.instance.StaticObject;
@@ -2709,6 +2711,8 @@ public final class Player extends Playable
 		{
 			if (isFakeDeath())
 				stopFakeDeath(true);
+			if (getFarm().running())
+				getFarm().stop();
 		}
 		
 		if (killer != null)
@@ -7257,4 +7261,28 @@ public final class Player extends Playable
 		setTarget(null);
 		sendPacket(ActionFailed.STATIC_PACKET);
 	}
+	private final L2AutoFarmTask _farm = new L2AutoFarmTask(this);
+		
+		public L2AutoFarmTask getFarm()
+		{
+			return _farm;
+	}
+
+		/**
+		 * @return
+		 */
+		public boolean isAttackingNow()
+		{
+			// TODO Auto-generated method stub
+			return false;
+		}
+
+		/**
+		 * @param monster
+		 */
+		public void doAutoAttack(Monster monster)
+		{
+			// TODO Auto-generated method stub
+			
+		}
 }
