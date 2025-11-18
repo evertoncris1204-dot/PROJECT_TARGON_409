@@ -1,0 +1,43 @@
+<html>
+<body>
+<center>
+<table width=300>
+<tr><td width=200><center><font color="LEVEL">Farm Dungeon Instance</font></center></td></tr>
+</table>
+<br>
+<table width=300 bgcolor=5A5A5A>
+<tr><td width=150>Active Instance:</td><td width=150><center>%hasInstance%</center></td></tr>
+<tr><td width=150>Remaining Time:</td><td width=150><center>%remainingTime%</center></td></tr>
+</table>
+<br>
+<font color="LEVEL">Rent a private dungeon instance for farming!</font><br>
+You will have your own private dungeon where you can farm without interference.<br>
+<br>
+<table width=300 bgcolor=5A5A5A>
+<tr><td width=100>Duration</td><td width=100>Cost</td><td width=100>Action</td></tr>
+<tr><td>30 minutes</td><td>%cost30min%</td><td><center><button value="Buy" action="bypass -h npc_%npcId%_farmdungeon_buy 30" width=65 height=19 back="L2UI_CT1.Button_DF_Down" fore="L2UI_CT1.Button_DF"></center></td></tr>
+<tr><td>60 minutes</td><td>%cost60min%</td><td><center><button value="Buy" action="bypass -h npc_%npcId%_farmdungeon_buy 60" width=65 height=19 back="L2UI_CT1.Button_DF_Down" fore="L2UI_CT1.Button_DF"></center></td></tr>
+<tr><td>120 minutes</td><td>%cost120min%</td><td><center><button value="Buy" action="bypass -h npc_%npcId%_farmdungeon_buy 120" width=65 height=19 back="L2UI_CT1.Button_DF_Down" fore="L2UI_CT1.Button_DF"></center></td></tr>
+</table>
+<br>
+<center>
+%leaveButton%
+</center>
+<br>
+<table width=300 bgcolor=5A5A5A>
+<tr><td width=150>Preserved Time:</td><td width=150><center>%preservedTime%</center></td></tr>
+</table>
+<br>
+<center>
+%preservedButton%
+</center>
+<br>
+<font color="LEVEL">Rules:</font><br>
+- Minimum duration: %minDuration% minutes<br>
+- Maximum duration: %maxDuration% minutes<br>
+- Cost per hour: %costPerHour%<br>
+- You will be teleported back when time expires<br>
+- Only you can enter your instance<br>
+</body>
+</html>
+

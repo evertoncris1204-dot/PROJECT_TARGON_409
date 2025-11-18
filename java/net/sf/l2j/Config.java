@@ -18,8 +18,11 @@ import net.sf.l2j.commons.logging.CLogger;
 
 import net.sf.l2j.config.HwidProtectionConfig;
 import net.sf.l2j.gameserver.enums.GeoType;
+import net.sf.l2j.gameserver.model.entity.Tournament.enums.TournamentFightType;
 import net.sf.l2j.gameserver.model.holder.BuffSkillHolder;
 import net.sf.l2j.gameserver.model.holder.IntIntHolder;
+import net.sf.l2j.gameserver.model.location.Location;
+import net.sf.l2j.util.RewardHolder;
 
 /**
  * This class contains global server configuration.<br>
@@ -43,6 +46,12 @@ public final class Config
 	private static final String PLAYERS_FILE = "./config/players.properties";
 	private static final String SERVER_FILE = "./config/server.properties";
 	private static final String SIEGE_FILE = "./config/siege.properties";
+	private static final String BOSS_EVENT_FILE = "./config/Events/BossEvent.properties";
+	private static final String TVT_EVENT_FILE = "./config/Events/TvTEvent.properties";
+	private static final String ANNUNCE_FILE = "./config/Custom/Annunces.properties";
+	private static final String JMODS_CUSTOM_FILE = "./config/Custom/jModsCustom.properties";
+	private static final String FARM_DUNGEON_FILE = "./config/Custom/jModsCustom.properties";
+	public static final String TOURNAMENT = "./config/Mods/Tournament.ini";
 
 	
 	// --------------------------------------------------
@@ -140,6 +149,42 @@ public final class Config
 	public static int FISH_CHAMPIONSHIP_REWARD_3;
 	public static int FISH_CHAMPIONSHIP_REWARD_4;
 	public static int FISH_CHAMPIONSHIP_REWARD_5;
+	
+	/** Boss Event */
+	public static boolean BOSS_EVENT_TIME_ON_SCREEN;
+	public static int BOSS_EVENT_TIME_TO_DESPAWN_BOSS;
+	public static int BOSS_EVENT_REGISTRATION_NPC_ID;
+	public static Map<Integer, Integer> BOSS_EVENT_GENERAL_REWARDS = new HashMap<>();
+	public static Map<Integer, Integer> BOSS_EVENT_LAST_ATTACKER_REWARDS = new HashMap<>();
+	public static Map<Integer, Integer> BOSS_EVENT_MAIN_DAMAGE_DEALER_REWARDS = new HashMap<>();
+	public static boolean BOSS_EVENT_REWARD_MAIN_DAMAGE_DEALER;
+	public static boolean BOSS_EVENT_REWARD_LAST_ATTACKER;
+	public static List<Location> BOSS_EVENT_LOCATION = new ArrayList<>();
+	public static int BOSS_EVENT_REWARD_ID;
+	public static int BOSS_EVENT_REWARD_COUNT;
+	public static int BOSS_EVENT_MIN_DAMAGE_TO_OBTAIN_REWARD;
+	public static List<Integer> BOSS_EVENT_ID = new ArrayList<>();
+	public static Location BOSS_EVENT_NPC_REGISTER_LOC;
+	public static int BOSS_EVENT_TIME_TO_WAIT;
+	public static int BOSS_EVENT_TIME_TO_TELEPORT_PLAYERS;
+	public static int BOSS_EVENT_MIN_PLAYERS;
+	public static int BOSS_EVENT_REGISTRATION_TIME;
+	public static String[] BOSS_EVENT_BY_TIME_OF_DAY;
+	
+	/** TvT Event */
+	public static int TVT_EVENT_REGISTRATION_NPC_ID;
+	public static Location TVT_EVENT_NPC_REGISTER_LOC;
+	public static List<Location> TVT_EVENT_BLUE_LOCATION = new ArrayList<>();
+	public static List<Location> TVT_EVENT_RED_LOCATION = new ArrayList<>();
+	public static Location TVT_EVENT_RETURN_LOCATION;
+	public static int TVT_EVENT_MIN_PLAYERS;
+	public static int TVT_EVENT_REGISTRATION_TIME;
+	public static int TVT_EVENT_TIME_TO_WAIT;
+	public static int TVT_EVENT_TIME_TO_TELEPORT_PLAYERS;
+	public static int TVT_EVENT_MATCH_TIME;
+	public static int TVT_EVENT_RESURRECT_TIME;
+	public static String TVT_EVENT_WINNER_REWARDS;
+	public static String TVT_EVENT_LOSER_REWARDS;
 	
 	// --------------------------------------------------
 	// GeoEngine
@@ -328,6 +373,43 @@ public final class Config
 	public static int PVP_NORMAL_TIME;
 	public static int PVP_PVP_TIME;
 	
+	// --------------------------------------------------
+	// Announcements System
+	// --------------------------------------------------
+	
+	/** Premium/Hero Login Announcements */
+	public static boolean ANNOUNCE_PREMIUM_ENTER;
+	public static String ANNOUNCE_PREMIUM_ENTER_BY_CLAN_MEMBER_MSG;
+	public static String ANNOUNCE_PREMIUM_ENTER_BY_PLAYER_MSG;
+	
+	public static boolean ANNOUNCE_HERO_ONLY_BASECLASS;
+	public static String ANNOUNCE_HERO_ENTER_BY_CLAN_MEMBER_MSG;
+	public static String ANNOUNCE_HERO_ENTER_BY_PLAYER_MSG;
+	
+	/** PvP/PK Kill Announcements */
+	public static boolean ANNOUNCE_KILL;
+	public static String ANNOUNCE_PVP_MSG;
+	public static String ANNOUNCE_PK_MSG;
+	
+	/** Raid/Grand Boss Announcements */
+	public static boolean ANNOUNCE_RAID_BOSS_ALIVE;
+	public static String RAID_ID_ANNOUNCE;
+	public static List<Integer> LIST_RAID_ANNOUNCE = new ArrayList<>();
+	
+	public static boolean ANNOUNCE_EPIC_BOSS_ALIVE;
+	
+	public static boolean ENABLE_BOSS_DEFEATED_MSG;
+	public static String RAID_BOSS_DEFEATED_BY_CLAN_MEMBER_MSG;
+	public static String RAID_BOSS_DEFEATED_BY_PLAYER_MSG;
+	public static String GRAND_BOSS_DEFEATED_BY_CLAN_MEMBER_MSG;
+	public static String GRAND_BOSS_DEFEATED_BY_PLAYER_MSG;
+	
+	/** FlagZone Messages */
+	public static String ENTER_FLAGZONE_MESSEGE;
+	public static int TIME_MESSEGE_FLAGZONE_ENTER;
+	public static String EXIT_FLAGZONE_MESSEGE;
+	public static int TIME_MESSEGE_FLAGZONE_EXIT;
+	
 	/** Party */
 	public static String PARTY_XP_CUTOFF_METHOD;
 	public static int PARTY_XP_CUTOFF_LEVEL;
@@ -366,6 +448,12 @@ public final class Config
 	/** Buffs */
 	public static boolean STORE_SKILL_COOLTIME;
 	public static int MAX_BUFFS_AMOUNT;
+	public static boolean NORESTART_ZONE;
+	public static boolean NOSTORE_ZONE;
+	public static boolean NOLOGOUT_ZONE;
+	public static boolean GIVE_NOBLESSE;
+	public static boolean REVIVE_NOBLESSE;
+	public static boolean REVIVE_HEAL;
 	
 	// --------------------------------------------------
 	// Sieges
@@ -531,6 +619,48 @@ public final class Config
 	public static int PCB_CHANCE_DUAL_POINT;
 	public static int PCB_INTERVAL;
 
+	// CTF Event
+	public static boolean CTF_EVENT_ENABLED;
+	public static String[] CTF_EVENT_INTERVAL;
+	public static int CTF_EVENT_PARTICIPATION_TIME;
+	public static int CTF_EVENT_RUNNING_TIME;
+	public static String CTF_NPC_LOC_NAME;
+	public static int CTF_EVENT_PARTICIPATION_NPC_ID;
+	public static int CTF_EVENT_TEAM_1_HEADQUARTERS_ID;
+	public static int CTF_EVENT_TEAM_2_HEADQUARTERS_ID;
+	public static int CTF_EVENT_TEAM_1_FLAG;
+	public static int CTF_EVENT_TEAM_2_FLAG;
+	public static int CTF_EVENT_CAPTURE_SKILL;
+	public static int[] CTF_EVENT_PARTICIPATION_NPC_COORDINATES = new int[4];
+	public static int[] CTF_EVENT_PARTICIPATION_FEE = new int[2];
+	public static int CTF_EVENT_MIN_PLAYERS_IN_TEAMS;
+	public static int CTF_EVENT_MAX_PLAYERS_IN_TEAMS;
+	public static int CTF_EVENT_MIN_PLAYER_LEVEL;
+	public static int CTF_EVENT_MAX_PLAYER_LEVEL;
+	public static int CTF_EVENT_RESPAWN_TELEPORT_DELAY;
+	public static int CTF_EVENT_START_LEAVE_TELEPORT_DELAY;
+	public static String CTF_EVENT_TEAM_1_NAME;
+	public static int[] CTF_EVENT_TEAM_1_COORDINATES = new int[3];
+	public static int[] CTF_EVENT_TEAM_1_FLAG_COORDINATES = new int[3];
+	public static String CTF_EVENT_TEAM_2_NAME;
+	public static int[] CTF_EVENT_TEAM_2_COORDINATES = new int[3];
+	public static int[] CTF_EVENT_TEAM_2_FLAG_COORDINATES = new int[3];
+	public static List<int[]> CTF_EVENT_REWARDS;
+	public static boolean CTF_EVENT_TARGET_TEAM_MEMBERS_ALLOWED;
+	public static boolean CTF_EVENT_SCROLL_ALLOWED;
+	public static boolean CTF_EVENT_POTIONS_ALLOWED;
+	public static boolean CTF_EVENT_SUMMON_BY_ITEM_ALLOWED;
+	public static List<Integer> CTF_DOORS_IDS_TO_OPEN;
+	public static List<Integer> CTF_DOORS_IDS_TO_CLOSE;
+	public static boolean CTF_REWARD_TEAM_TIE;
+	public static int CTF_EVENT_EFFECTS_REMOVAL;
+
+	// Other Events (for CheckNextEvent)
+	public static String[] TVT_EVENT_INTERVAL;
+	public static String[] DM_EVENT_INTERVAL;
+	public static String[] LM_EVENT_INTERVAL;
+	public static String[] EVENT_PARTY_FARM_INTERVAL_BY_TIME_OF_DAY;
+
 	// HWID / Multibox Protection
 	public static final int HWID_MULTIBOX_PROTECTION_CLIENTS_PER_PC =
 	        HwidProtectionConfig.getIntProperty("hwid.multibox.max_clients_per_hwid", 2);
@@ -687,6 +817,120 @@ public final class Config
 		FISH_CHAMPIONSHIP_REWARD_3 = events.getProperty("FishChampionshipReward3", 300000);
 		FISH_CHAMPIONSHIP_REWARD_4 = events.getProperty("FishChampionshipReward4", 200000);
 		FISH_CHAMPIONSHIP_REWARD_5 = events.getProperty("FishChampionshipReward5", 100000);
+		
+		// Load Boss Event configuration
+		loadBossEvent();
+		
+		// Load TvT Event configuration
+		loadTvTEvent();
+	}
+	
+	/**
+	 * Loads Boss Event settings.
+	 */
+	private static final void loadBossEvent()
+	{
+		final ExProperties bossEvent = initProperties(BOSS_EVENT_FILE);
+		BOSS_EVENT_BY_TIME_OF_DAY = bossEvent.getProperty("EventTime", "20:00").split(",");
+		for (String bossList : bossEvent.getProperty("BossList", "29046;29029").split(";"))
+		{
+			BOSS_EVENT_ID.add(Integer.parseInt(bossList.trim()));
+		}
+		for (String locationsList : bossEvent.getProperty("LocationsList", "10468,-24569,-3645;174229,-88032,-5116").split(";"))
+		{
+			String[] coords = locationsList.split(",");
+			int x = Integer.parseInt(coords[0].trim());
+			int y = Integer.parseInt(coords[1].trim());
+			int z = Integer.parseInt(coords[2].trim());
+			BOSS_EVENT_LOCATION.add(new Location(x, y, z));
+		}
+
+		BOSS_EVENT_MIN_PLAYERS = bossEvent.getProperty("MinPlayers", 1);
+		BOSS_EVENT_MIN_DAMAGE_TO_OBTAIN_REWARD = bossEvent.getProperty("MinDamage", 2000);
+		BOSS_EVENT_REGISTRATION_TIME = bossEvent.getProperty("RegistrationTime", 120);
+		BOSS_EVENT_REWARD_ID = bossEvent.getProperty("RewardId", 3470);
+		BOSS_EVENT_REWARD_COUNT = bossEvent.getProperty("RewardCount", 10);
+		BOSS_EVENT_TIME_TO_WAIT = bossEvent.getProperty("WaitTime", 30);
+		BOSS_EVENT_TIME_TO_TELEPORT_PLAYERS = bossEvent.getProperty("TeleportTime", 15);
+		BOSS_EVENT_REWARD_LAST_ATTACKER = bossEvent.getProperty("RewardLastAttacker", true);
+		BOSS_EVENT_REWARD_MAIN_DAMAGE_DEALER = bossEvent.getProperty("RewardMainDamageDealer", true);
+		for (String rewards : bossEvent.getProperty("GeneralRewards", "57,100000;3470,10").split(";"))
+		{
+			String[] reward = rewards.split(",");
+			BOSS_EVENT_GENERAL_REWARDS.put(Integer.parseInt(reward[0].trim()), Integer.parseInt(reward[1].trim()));
+		}
+		for (String rewards : bossEvent.getProperty("MainDamageDealerRewards", "57,100000;3470,10").split(";"))
+		{
+			String[] reward = rewards.split(",");
+			BOSS_EVENT_MAIN_DAMAGE_DEALER_REWARDS.put(Integer.parseInt(reward[0].trim()), Integer.parseInt(reward[1].trim()));
+		}
+		for (String rewards : bossEvent.getProperty("LastAttackerRewards", "57,100000;3470,10").split(";"))
+		{
+			String[] reward = rewards.split(",");
+			BOSS_EVENT_LAST_ATTACKER_REWARDS.put(Integer.parseInt(reward[0].trim()), Integer.parseInt(reward[1].trim()));
+		}
+		BOSS_EVENT_REGISTRATION_NPC_ID = bossEvent.getProperty("RegisterNpcID", 35070);
+		BOSS_EVENT_TIME_TO_DESPAWN_BOSS = bossEvent.getProperty("TimeToDespawnBoss", 300);
+		String[] regLoc = bossEvent.getProperty("RegisterNpcLocation", "82727,148605,-3471").split(",");
+		BOSS_EVENT_NPC_REGISTER_LOC = new Location(Integer.parseInt(regLoc[0].trim()), Integer.parseInt(regLoc[1].trim()), Integer.parseInt(regLoc[2].trim()));
+		BOSS_EVENT_TIME_ON_SCREEN = bossEvent.getProperty("EventTimeOnScreen", true);
+	}
+	
+	/**
+	 * Loads TvT Event settings.
+	 */
+	private static final void loadTvTEvent()
+	{
+		final ExProperties tvtEvent = initProperties(TVT_EVENT_FILE);
+		
+		TVT_EVENT_REGISTRATION_NPC_ID = tvtEvent.getProperty("RegisterNpcID", 35071);
+		String[] regLoc = tvtEvent.getProperty("RegisterNpcLocation", "82727,148605,-3471").split(",");
+		TVT_EVENT_NPC_REGISTER_LOC = new Location(Integer.parseInt(regLoc[0].trim()), Integer.parseInt(regLoc[1].trim()), Integer.parseInt(regLoc[2].trim()));
+		
+		// Blue team locations
+		for (String locationsList : tvtEvent.getProperty("BlueLocations", "106679,116319,-1587").split(";"))
+		{
+			String[] coords = locationsList.split(",");
+			int x = Integer.parseInt(coords[0].trim());
+			int y = Integer.parseInt(coords[1].trim());
+			int z = Integer.parseInt(coords[2].trim());
+			TVT_EVENT_BLUE_LOCATION.add(new Location(x, y, z));
+		}
+		
+		// Red team locations
+		for (String locationsList : tvtEvent.getProperty("RedLocations", "105914,113368,-1587").split(";"))
+		{
+			String[] coords = locationsList.split(",");
+			int x = Integer.parseInt(coords[0].trim());
+			int y = Integer.parseInt(coords[1].trim());
+			int z = Integer.parseInt(coords[2].trim());
+			TVT_EVENT_RED_LOCATION.add(new Location(x, y, z));
+		}
+		
+		// Return location
+		String[] returnLoc = tvtEvent.getProperty("ReturnLocation", "83374,148081,-3407").split(",");
+		TVT_EVENT_RETURN_LOCATION = new Location(Integer.parseInt(returnLoc[0].trim()), Integer.parseInt(returnLoc[1].trim()), Integer.parseInt(returnLoc[2].trim()));
+		
+		TVT_EVENT_MIN_PLAYERS = tvtEvent.getProperty("MinPlayers", 4);
+		TVT_EVENT_REGISTRATION_TIME = tvtEvent.getProperty("RegistrationTime", 300);
+		TVT_EVENT_TIME_TO_WAIT = tvtEvent.getProperty("WaitTime", 20);
+		TVT_EVENT_TIME_TO_TELEPORT_PLAYERS = tvtEvent.getProperty("TeleportTime", 10);
+		TVT_EVENT_MATCH_TIME = tvtEvent.getProperty("MatchTime", 300);
+		TVT_EVENT_RESURRECT_TIME = tvtEvent.getProperty("ResurrectTime", 5);
+		TVT_EVENT_WINNER_REWARDS = tvtEvent.getProperty("WinnerRewards", "57,100000;3470,10");
+		TVT_EVENT_LOSER_REWARDS = tvtEvent.getProperty("LoserRewards", "57,50000;3470,5");
+		
+		// Load event intervals from main config
+		String intervals = tvtEvent.getProperty("EventIntervals", "");
+		if (intervals != null && !intervals.isEmpty())
+		{
+			TVT_EVENT_INTERVAL = intervals.split(",");
+		}
+		else
+		{
+			// Fallback to default intervals if not configured
+			TVT_EVENT_INTERVAL = new String[]{"20:00"};
+		}
 	}
 	
 	/**
@@ -973,6 +1217,14 @@ public final class Config
 		
 		MAX_BUFFS_AMOUNT = players.getProperty("MaxBuffsAmount", 20);
 		STORE_SKILL_COOLTIME = players.getProperty("StoreSkillCooltime", true);
+		
+		// L2ChaoticZone settings
+		NORESTART_ZONE = players.getProperty("NoRestartZone", true);
+		NOSTORE_ZONE = players.getProperty("NoStoreZone", true);
+		NOLOGOUT_ZONE = players.getProperty("NoLogoutZone", true);
+		GIVE_NOBLESSE = players.getProperty("GiveNoblesse", true);
+		REVIVE_NOBLESSE = players.getProperty("ReviveNoblesse", true);
+		REVIVE_HEAL = players.getProperty("ReviveHeal", true);
 	}
 	
 	/**
@@ -1182,14 +1434,164 @@ public final class Config
 		// server settings
 		loadServer();
 		
+		// announcements settings
+		loadAnnunce();
+		
+		// DressMe settings
+		loadDressMe();
 		
 		loadModsConfig();
+		
+		// Tournament settings
+		loadTournament();
+	}
+	
+	private static final void loadAnnunce()
+	{
+		final ExProperties Annunce = initProperties(Config.ANNUNCE_FILE);
+		
+		ANNOUNCE_PREMIUM_ENTER = Annunce.getProperty("AnnouncePremiumLogin", false);
+		ANNOUNCE_PREMIUM_ENTER_BY_CLAN_MEMBER_MSG = Annunce.getProperty("AnnouncePremiumLoginByClanMemberMsg", "The Premium %player% of the clan %clan% is now online.");
+		ANNOUNCE_PREMIUM_ENTER_BY_PLAYER_MSG = Annunce.getProperty("AnnouncePremiumLoginByPlayerMsg", "The Premium %player% is now online.");
+		
+		ANNOUNCE_HERO_ONLY_BASECLASS = Annunce.getProperty("AnnounceHero", false);
+		ANNOUNCE_HERO_ENTER_BY_CLAN_MEMBER_MSG = Annunce.getProperty("AnnounceHeroLoginByClanMemberMsg", "The Hero %player% from %classe% and of the clan %clan% is now online.");
+		ANNOUNCE_HERO_ENTER_BY_PLAYER_MSG = Annunce.getProperty("AnnounceHeroLoginByPlayerMsg", "The Hero %player% from %classe% is now online.");
+		
+		ENTER_FLAGZONE_MESSEGE = Annunce.getProperty("FlagZoneMessageTextEnter", "You entered the Chaotic Zone!");
+		TIME_MESSEGE_FLAGZONE_ENTER = Integer.parseInt(Annunce.getProperty("FlagZoneMessegeTimeEnter", "6")) * 1000;
+		EXIT_FLAGZONE_MESSEGE = Annunce.getProperty("FlagZoneMessageTextExit", "You left the Chaotic Zone!");
+		TIME_MESSEGE_FLAGZONE_EXIT = Integer.parseInt(Annunce.getProperty("FlagZoneMessegeTimeExit", "6")) * 1000;
+		
+		ANNOUNCE_KILL = Annunce.getProperty("AnnounceKill", false);
+		ANNOUNCE_PVP_MSG = Annunce.getProperty("AnnouncePvpMsg", "$killer has defeated $target");
+		ANNOUNCE_PK_MSG = Annunce.getProperty("AnnouncePkMsg", "$killer has slaughtered $target");
+		
+		ANNOUNCE_EPIC_BOSS_ALIVE = Annunce.getProperty("AnnounceSpawnGranBoss", false);
+		
+		ANNOUNCE_RAID_BOSS_ALIVE = Annunce.getProperty("AnnounceSpawnRaidBoss", false);
+		RAID_ID_ANNOUNCE = Annunce.getProperty("AnnounceRaidBossId", "");
+		LIST_RAID_ANNOUNCE = new ArrayList<>();
+		if (!RAID_ID_ANNOUNCE.isEmpty())
+		{
+			for (String id : RAID_ID_ANNOUNCE.split(","))
+			{
+				if (!id.trim().isEmpty())
+					LIST_RAID_ANNOUNCE.add(Integer.parseInt(id.trim()));
+			}
 		}
 		
-		    // =========================================================
-			// Pc Bang Config
-			// =========================================================
-			public static void loadModsConfig()
+		ENABLE_BOSS_DEFEATED_MSG = Annunce.getProperty("EnableBossDefeatedMsg", false);
+		RAID_BOSS_DEFEATED_BY_CLAN_MEMBER_MSG = Annunce.getProperty("RaidBossDefeatedByClanMemberMsg", "Raid Boss %raidboss% has been defeated by %player% of clan %clan%.");
+		RAID_BOSS_DEFEATED_BY_PLAYER_MSG = Annunce.getProperty("RaidBossDefeatedByPlayerMsg", "Raid Boss %raidboss% has been defeated by %player%.");
+		GRAND_BOSS_DEFEATED_BY_CLAN_MEMBER_MSG = Annunce.getProperty("GrandBossDefeatedByClanMemberMsg", "Grand Boss %grandboss% has been defeated by %player% of clan %clan%.");
+		GRAND_BOSS_DEFEATED_BY_PLAYER_MSG = Annunce.getProperty("GrandBossDefeatedByPlayerMsg", "Grand Boss %grandboss% has been defeated by %player%.");
+	}
+	
+	// --------------------------------------------------
+	// DressMe System
+	// --------------------------------------------------
+	
+	public static boolean ALLOW_DRESS_ME_SYSTEM;
+	public static String DRESS_ME_COMMAND;
+	public static boolean ALLOW_DRESS_ME_FOR_PREMIUM;
+	public static boolean ALLOW_DRESS_ME_IN_OLY;
+	
+	// --------------------------------------------------
+	// Farm Dungeon Instance System
+	// --------------------------------------------------
+	
+	public static boolean ALLOW_FARM_DUNGEON_INSTANCE;
+	public static int FARM_DUNGEON_NPC_ID;
+	public static Location FARM_DUNGEON_NPC_LOCATION;
+	public static Location FARM_DUNGEON_LOCATION;
+	public static long FARM_DUNGEON_COST_PER_HOUR;
+	public static int FARM_DUNGEON_MIN_DURATION;
+	public static int FARM_DUNGEON_MAX_DURATION;
+	
+	// Farm Dungeon Item Payment
+	public static int FARM_DUNGEON_PAYMENT_ITEM_ID;
+	public static int FARM_DUNGEON_PAYMENT_ITEM_COUNT_PER_HOUR;
+	
+	// Farm Dungeon Monster Spawn
+	public static String FARM_DUNGEON_MONSTER_SPAWNS; // Format: npcId1,x1,y1,z1;npcId2,x2,y2,z2;...
+	public static int FARM_DUNGEON_MONSTER_RESPAWN_DELAY; // in seconds
+	
+	// Farm Dungeon Exit NPC
+	public static int FARM_DUNGEON_EXIT_NPC_ID;
+	
+	// --------------------------------------------------
+	// Tournament System
+	// --------------------------------------------------
+	
+	public static int TOURNAMENT_EVENT_DURATION;
+	public static String[] TOURNAMENT_EVENT_INTERVAL_BY_TIME_OF_DAY;
+	public static int TOURNAMENT_NPC_ID;
+	public static Location TOURNAMENT_NPC_LOCATION;
+	public static Location TOURNAMENT_ZONE_LOCATION;
+	public static List<Integer> TOURNAMENT_RESTRICTED_SKILL_LIST = new ArrayList<>();
+	public static List<Integer> TOURNAMENT_RESTRICTED_ITEM_LIST = new ArrayList<>();
+	public static int TOURNAMENT_TIME_SEARCH_FIGHTS;
+	public static List<RewardHolder> TOURNAMENT_FIGHT_REWARD_WINNER = new ArrayList<>();
+	public static List<RewardHolder> TOURNAMENT_FIGHT_REWARD_LOOSER = new ArrayList<>();
+	public static Map<TournamentFightType, Integer> TOURNAMENT_FIGHT_START_TIME = new HashMap<>();
+	public static Map<TournamentFightType, Integer> TOURNAMENT_FIGHT_DURATION = new HashMap<>();
+	public static int TOURNAMENT_TIME_TO_TELEPORT;
+	public static boolean TOURNAMENT_DEBUG;
+	
+	public static Map<TournamentFightType, Integer> TOURNAMENT_DUELIST_ALLOWED = new HashMap<>();
+	public static Map<TournamentFightType, Integer> TOURNAMENT_DREADNOUGHT_ALLOWED = new HashMap<>();
+	public static Map<TournamentFightType, Integer> TOURNAMENT_TANKER_ALLOWED = new HashMap<>();
+	public static Map<TournamentFightType, Integer> TOURNAMENT_DAGGER_ALLOWED = new HashMap<>();
+	public static Map<TournamentFightType, Integer> TOURNAMENT_ARCHER_ALLOWED = new HashMap<>();
+	public static Map<TournamentFightType, Integer> TOURNAMENT_HEALER_ALLOWED = new HashMap<>();
+	public static Map<TournamentFightType, Integer> TOURNAMENT_ARCHMAGE_ALLOWED = new HashMap<>();
+	public static Map<TournamentFightType, Integer> TOURNAMENT_SOULTAKER_ALLOWED = new HashMap<>();
+	public static Map<TournamentFightType, Integer> TOURNAMENT_MYSTICMUSE_ALLOWED = new HashMap<>();
+	public static Map<TournamentFightType, Integer> TOURNAMENT_STORMSCREAMER_ALLOWED = new HashMap<>();
+	public static Map<TournamentFightType, Integer> TOURNAMENT_TITAN_ALLOWED = new HashMap<>();
+	public static Map<TournamentFightType, Integer> TOURNAMENT_DOMINATOR_ALLOWED = new HashMap<>();
+	public static Map<TournamentFightType, Integer> TOURNAMENT_DOOMCRYER_ALLOWED = new HashMap<>();
+	
+	private static final void loadDressMe()
+	{
+		final ExProperties Custom = initProperties(Config.JMODS_CUSTOM_FILE);
+		
+		ALLOW_DRESS_ME_SYSTEM = Custom.getProperty("AllowDressMeSystem", false);
+		DRESS_ME_COMMAND = Custom.getProperty("DressMeCommand", "dressme");
+		ALLOW_DRESS_ME_FOR_PREMIUM = Custom.getProperty("AllowDressMeForPremiumOnly", false);
+		ALLOW_DRESS_ME_IN_OLY = Custom.getProperty("AllowDressMeInOly", false);
+		
+		// Load Farm Dungeon Instance settings
+		ALLOW_FARM_DUNGEON_INSTANCE = Custom.getProperty("AllowFarmDungeonInstance", false);
+		FARM_DUNGEON_NPC_ID = Custom.getProperty("FarmDungeonNpcId", 35072);
+		
+		String[] npcLoc = Custom.getProperty("FarmDungeonNpcLocation", "82727,148605,-3471").split(",");
+		FARM_DUNGEON_NPC_LOCATION = new Location(Integer.parseInt(npcLoc[0].trim()), Integer.parseInt(npcLoc[1].trim()), Integer.parseInt(npcLoc[2].trim()));
+		
+		String[] dungeonLoc = Custom.getProperty("FarmDungeonLocation", "105941,114730,-1560").split(",");
+		FARM_DUNGEON_LOCATION = new Location(Integer.parseInt(dungeonLoc[0].trim()), Integer.parseInt(dungeonLoc[1].trim()), Integer.parseInt(dungeonLoc[2].trim()));
+		
+		FARM_DUNGEON_COST_PER_HOUR = Custom.getProperty("FarmDungeonCostPerHour", 100000L);
+		FARM_DUNGEON_MIN_DURATION = Custom.getProperty("FarmDungeonMinDuration", 30);
+		FARM_DUNGEON_MAX_DURATION = Custom.getProperty("FarmDungeonMaxDuration", 120);
+		
+		// Farm Dungeon Item Payment
+		FARM_DUNGEON_PAYMENT_ITEM_ID = Custom.getProperty("FarmDungeonPaymentItemId", 57); // Default: Adena
+		FARM_DUNGEON_PAYMENT_ITEM_COUNT_PER_HOUR = Custom.getProperty("FarmDungeonPaymentItemCountPerHour", 100000);
+		
+		// Farm Dungeon Monster Spawn
+		FARM_DUNGEON_MONSTER_SPAWNS = Custom.getProperty("FarmDungeonMonsterSpawns", ""); // Format: npcId1,x1,y1,z1;npcId2,x2,y2,z2;...
+		FARM_DUNGEON_MONSTER_RESPAWN_DELAY = Custom.getProperty("FarmDungeonMonsterRespawnDelay", 60); // in seconds
+		
+		// Farm Dungeon Exit NPC
+		FARM_DUNGEON_EXIT_NPC_ID = Custom.getProperty("FarmDungeonExitNpcId", 35074);
+	}
+	
+	// =========================================================
+	// Pc Bang Config
+	// =========================================================
+	public static void loadModsConfig()
 			{
 				final String FILENAME = "./config/CustomMods/PcBang.properties";
 		
@@ -1210,6 +1612,299 @@ public final class Config
 					e.printStackTrace();
 			throw new Error("Failed to Load " + FILENAME + " File.");
 			}
+	}
+	
+	private static final void loadTournament()
+	{
+		final ExProperties tournament = initProperties(TOURNAMENT);
+		
+		String[] npcLoc = tournament.getProperty("TournamentNpcLocation", "150086,46733,-3412").split(",");
+		TOURNAMENT_NPC_ID = tournament.getProperty("TournamentNpcId", 50009);
+		TOURNAMENT_NPC_LOCATION = new Location(Integer.parseInt(npcLoc[0]), Integer.parseInt(npcLoc[1]), Integer.parseInt(npcLoc[2]));
+		
+		String[] zoneLoc = tournament.getProperty("TournamentZoneLocation", "150086,46733,-3412").split(",");
+		TOURNAMENT_ZONE_LOCATION = new Location(Integer.parseInt(zoneLoc[0]), Integer.parseInt(zoneLoc[1]), Integer.parseInt(zoneLoc[2]));
+		
+		TOURNAMENT_EVENT_INTERVAL_BY_TIME_OF_DAY = tournament.getProperty("TournamentStartTime", "20:00").split(",");
+		TOURNAMENT_EVENT_DURATION = tournament.getProperty("TournamentDuration", 5);
+		for (String item : tournament.getProperty("ItemRestrictedList", "").split(","))
+		{
+			if (!item.trim().isEmpty())
+				TOURNAMENT_RESTRICTED_ITEM_LIST.add(Integer.parseInt(item.trim()));
+		}
+		for (String skill : tournament.getProperty("SkillRestrictedList", "").split(","))
+		{
+			if (!skill.trim().isEmpty())
+				TOURNAMENT_RESTRICTED_SKILL_LIST.add(Integer.parseInt(skill.trim()));
+		}
+		TOURNAMENT_TIME_SEARCH_FIGHTS = tournament.getProperty("TimeBetweenSearchFights", 5);
+		TOURNAMENT_DEBUG = tournament.getProperty("Debug", true);
+		TOURNAMENT_TIME_TO_TELEPORT = tournament.getProperty("TeleportFightTime", 10);
+		TOURNAMENT_FIGHT_REWARD_WINNER.clear();
+		for (String s : tournament.getProperty("WinnerRewards", "57,1000;3470,10").split(";"))
+		{
+			if (!s.trim().isEmpty())
+			{
+				String[] reward = s.split(",");
+				if (reward.length == 2)
+				{
+					RewardHolder simpleReward = new RewardHolder(Integer.parseInt(reward[0].trim()), Integer.parseInt(reward[1].trim()));
+					TOURNAMENT_FIGHT_REWARD_WINNER.add(simpleReward);
+				}
+			}
+		}
+		TOURNAMENT_FIGHT_REWARD_LOOSER.clear();
+		for (String s : tournament.getProperty("LooserRewards", "57,500;3470,5").split(";"))
+		{
+			if (!s.trim().isEmpty())
+			{
+				String[] reward = s.split(",");
+				if (reward.length == 2)
+				{
+					RewardHolder simpleReward = new RewardHolder(Integer.parseInt(reward[0].trim()), Integer.parseInt(reward[1].trim()));
+					TOURNAMENT_FIGHT_REWARD_LOOSER.add(simpleReward);
+				}
+			}
+		}
+		
+		TOURNAMENT_FIGHT_START_TIME.clear();
+		int startTime1x1 = tournament.getProperty("FightStartTime_1x1", 10);
+		int startTime2x2 = tournament.getProperty("FightStartTime_2x2", 10);
+		int startTime3x3 = tournament.getProperty("FightStartTime_3x3", 10);
+		int startTime4x4 = tournament.getProperty("FightStartTime_4x4", 10);
+		int startTime5x5 = tournament.getProperty("FightStartTime_5x5", 10);
+		int startTime9x9 = tournament.getProperty("FightStartTime_9x9", 10);
+		
+		TOURNAMENT_FIGHT_START_TIME.put(TournamentFightType.F1X1, startTime1x1);
+		TOURNAMENT_FIGHT_START_TIME.put(TournamentFightType.F2X2, startTime2x2);
+		TOURNAMENT_FIGHT_START_TIME.put(TournamentFightType.F3X3, startTime3x3);
+		TOURNAMENT_FIGHT_START_TIME.put(TournamentFightType.F4X4, startTime4x4);
+		TOURNAMENT_FIGHT_START_TIME.put(TournamentFightType.F5X5, startTime5x5);
+		TOURNAMENT_FIGHT_START_TIME.put(TournamentFightType.F9X9, startTime9x9);
+		
+		TOURNAMENT_FIGHT_DURATION.clear();
+		int fightTime1x1 = tournament.getProperty("FightDuration_1x1", 1);
+		int fightTime2x2 = tournament.getProperty("FightDuration_2x2", 1);
+		int fightTime3x3 = tournament.getProperty("FightDuration_3x3", 1);
+		int fightTime4x4 = tournament.getProperty("FightDuration_4x4", 1);
+		int fightTime5x5 = tournament.getProperty("FightDuration_5x5", 1);
+		int fightTime9x9 = tournament.getProperty("FightDuration_9x9", 1);
+		
+		TOURNAMENT_FIGHT_DURATION.put(TournamentFightType.F1X1, fightTime1x1);
+		TOURNAMENT_FIGHT_DURATION.put(TournamentFightType.F2X2, fightTime2x2);
+		TOURNAMENT_FIGHT_DURATION.put(TournamentFightType.F3X3, fightTime3x3);
+		TOURNAMENT_FIGHT_DURATION.put(TournamentFightType.F4X4, fightTime4x4);
+		TOURNAMENT_FIGHT_DURATION.put(TournamentFightType.F5X5, fightTime5x5);
+		TOURNAMENT_FIGHT_DURATION.put(TournamentFightType.F9X9, fightTime9x9);
+		
+		TOURNAMENT_DUELIST_ALLOWED.clear();
+		TOURNAMENT_DREADNOUGHT_ALLOWED.clear();
+		TOURNAMENT_TANKER_ALLOWED.clear();
+		TOURNAMENT_DAGGER_ALLOWED.clear();
+		TOURNAMENT_ARCHER_ALLOWED.clear();
+		TOURNAMENT_HEALER_ALLOWED.clear();
+		TOURNAMENT_ARCHMAGE_ALLOWED.clear();
+		TOURNAMENT_SOULTAKER_ALLOWED.clear();
+		TOURNAMENT_MYSTICMUSE_ALLOWED.clear();
+		TOURNAMENT_STORMSCREAMER_ALLOWED.clear();
+		TOURNAMENT_TITAN_ALLOWED.clear();
+		TOURNAMENT_DOMINATOR_ALLOWED.clear();
+		TOURNAMENT_DOOMCRYER_ALLOWED.clear();
+		
+		// ARCHERS
+		int archer1x1 = tournament.getProperty("ArchersCountAllowed_1x1", 1);
+		int archer2x2 = tournament.getProperty("ArchersCountAllowed_2x2", 1);
+		int archer3x3 = tournament.getProperty("ArchersCountAllowed_3x3", 1);
+		int archer4x4 = tournament.getProperty("ArchersCountAllowed_4x4", 1);
+		int archer5x5 = tournament.getProperty("ArchersCountAllowed_5x5", 1);
+		int archer9x9 = tournament.getProperty("ArchersCountAllowed_9x9", 1);
+		
+		TOURNAMENT_ARCHER_ALLOWED.put(TournamentFightType.F1X1, archer1x1);
+		TOURNAMENT_ARCHER_ALLOWED.put(TournamentFightType.F2X2, archer2x2);
+		TOURNAMENT_ARCHER_ALLOWED.put(TournamentFightType.F3X3, archer3x3);
+		TOURNAMENT_ARCHER_ALLOWED.put(TournamentFightType.F4X4, archer4x4);
+		TOURNAMENT_ARCHER_ALLOWED.put(TournamentFightType.F5X5, archer5x5);
+		TOURNAMENT_ARCHER_ALLOWED.put(TournamentFightType.F9X9, archer9x9);
+		
+		// ARCHMAGES
+		int archmage1X1 = tournament.getProperty("ArchmagesCountAllowed_1x1", 1);
+		int archmage2x2 = tournament.getProperty("ArchmagesCountAllowed_2x2", 1);
+		int archmage3x3 = tournament.getProperty("ArchmagesCountAllowed_3x3", 1);
+		int archmage4x4 = tournament.getProperty("ArchmagesCountAllowed_4x4", 1);
+		int archmage5x5 = tournament.getProperty("ArchmagesCountAllowed_5x5", 1);
+		int archmage9x9 = tournament.getProperty("ArchmagesCountAllowed_9x9", 1);
+		
+		TOURNAMENT_ARCHMAGE_ALLOWED.put(TournamentFightType.F1X1, archmage1X1);
+		TOURNAMENT_ARCHMAGE_ALLOWED.put(TournamentFightType.F2X2, archmage2x2);
+		TOURNAMENT_ARCHMAGE_ALLOWED.put(TournamentFightType.F3X3, archmage3x3);
+		TOURNAMENT_ARCHMAGE_ALLOWED.put(TournamentFightType.F4X4, archmage4x4);
+		TOURNAMENT_ARCHMAGE_ALLOWED.put(TournamentFightType.F5X5, archmage5x5);
+		TOURNAMENT_ARCHMAGE_ALLOWED.put(TournamentFightType.F9X9, archmage9x9);
+		
+		// DAGGERS
+		int dagger1x1 = tournament.getProperty("DaggersCountAllowed_1x1", 1);
+		int dagger2x2 = tournament.getProperty("DaggersCountAllowed_2x2", 1);
+		int dagger3x3 = tournament.getProperty("DaggersCountAllowed_3x3", 1);
+		int dagger4x4 = tournament.getProperty("DaggersCountAllowed_4x4", 1);
+		int dagger5x5 = tournament.getProperty("DaggersCountAllowed_5x5", 1);
+		int dagger9x9 = tournament.getProperty("DaggersCountAllowed_9x9", 1);
+		
+		TOURNAMENT_DAGGER_ALLOWED.put(TournamentFightType.F1X1, dagger1x1);
+		TOURNAMENT_DAGGER_ALLOWED.put(TournamentFightType.F2X2, dagger2x2);
+		TOURNAMENT_DAGGER_ALLOWED.put(TournamentFightType.F3X3, dagger3x3);
+		TOURNAMENT_DAGGER_ALLOWED.put(TournamentFightType.F4X4, dagger4x4);
+		TOURNAMENT_DAGGER_ALLOWED.put(TournamentFightType.F5X5, dagger5x5);
+		TOURNAMENT_DAGGER_ALLOWED.put(TournamentFightType.F9X9, dagger9x9);
+		
+		// DOMINATOR
+		int dominator1x1 = tournament.getProperty("DominatorsCountAllowed_1x1", 1);
+		int dominator2x2 = tournament.getProperty("DominatorsCountAllowed_2x2", 1);
+		int dominator3x3 = tournament.getProperty("DominatorsCountAllowed_3x3", 1);
+		int dominator4x4 = tournament.getProperty("DominatorsCountAllowed_4x4", 1);
+		int dominator5x5 = tournament.getProperty("DominatorsCountAllowed_5x5", 1);
+		int dominator9x9 = tournament.getProperty("DominatorsCountAllowed_9x9", 1);
+		
+		TOURNAMENT_DOMINATOR_ALLOWED.put(TournamentFightType.F1X1, dominator1x1);
+		TOURNAMENT_DOMINATOR_ALLOWED.put(TournamentFightType.F2X2, dominator2x2);
+		TOURNAMENT_DOMINATOR_ALLOWED.put(TournamentFightType.F3X3, dominator3x3);
+		TOURNAMENT_DOMINATOR_ALLOWED.put(TournamentFightType.F4X4, dominator4x4);
+		TOURNAMENT_DOMINATOR_ALLOWED.put(TournamentFightType.F5X5, dominator5x5);
+		TOURNAMENT_DOMINATOR_ALLOWED.put(TournamentFightType.F9X9, dominator9x9);
+		
+		// DOOMCRYER
+		int doomcryer1x1 = tournament.getProperty("DoomcryersCountAllowed_1x1", 1);
+		int doomcryer2x2 = tournament.getProperty("DoomcryersCountAllowed_2x2", 1);
+		int doomcryer3x3 = tournament.getProperty("DoomcryersCountAllowed_3x3", 1);
+		int doomcryer4x4 = tournament.getProperty("DoomcryersCountAllowed_4x4", 1);
+		int doomcryer5x5 = tournament.getProperty("DoomcryersCountAllowed_5x5", 1);
+		int doomcryer9x9 = tournament.getProperty("DoomcryersCountAllowed_9x9", 1);
+		
+		TOURNAMENT_DOOMCRYER_ALLOWED.put(TournamentFightType.F1X1, doomcryer1x1);
+		TOURNAMENT_DOOMCRYER_ALLOWED.put(TournamentFightType.F2X2, doomcryer2x2);
+		TOURNAMENT_DOOMCRYER_ALLOWED.put(TournamentFightType.F3X3, doomcryer3x3);
+		TOURNAMENT_DOOMCRYER_ALLOWED.put(TournamentFightType.F4X4, doomcryer4x4);
+		TOURNAMENT_DOOMCRYER_ALLOWED.put(TournamentFightType.F5X5, doomcryer5x5);
+		TOURNAMENT_DOOMCRYER_ALLOWED.put(TournamentFightType.F9X9, doomcryer9x9);
+		
+		// DREADNOUGHT
+		int dreadnought1x1 = tournament.getProperty("DreadnoughtsCountAllowed_1x1", 1);
+		int dreadnought2x2 = tournament.getProperty("DreadnoughtsCountAllowed_2x2", 1);
+		int dreadnought3x3 = tournament.getProperty("DreadnoughtsCountAllowed_3x3", 1);
+		int dreadnought4x4 = tournament.getProperty("DreadnoughtsCountAllowed_4x4", 1);
+		int dreadnought5x5 = tournament.getProperty("DreadnoughtsCountAllowed_5x5", 1);
+		int dreadnought9x9 = tournament.getProperty("DreadnoughtsCountAllowed_9x9", 1);
+		
+		TOURNAMENT_DREADNOUGHT_ALLOWED.put(TournamentFightType.F1X1, dreadnought1x1);
+		TOURNAMENT_DREADNOUGHT_ALLOWED.put(TournamentFightType.F2X2, dreadnought2x2);
+		TOURNAMENT_DREADNOUGHT_ALLOWED.put(TournamentFightType.F3X3, dreadnought3x3);
+		TOURNAMENT_DREADNOUGHT_ALLOWED.put(TournamentFightType.F4X4, dreadnought4x4);
+		TOURNAMENT_DREADNOUGHT_ALLOWED.put(TournamentFightType.F5X5, dreadnought5x5);
+		TOURNAMENT_DREADNOUGHT_ALLOWED.put(TournamentFightType.F9X9, dreadnought9x9);
+		
+		// DUELIST
+		int duelist1x1 = tournament.getProperty("DuelistsCountAllowed_1x1", 1);
+		int duelist2x2 = tournament.getProperty("DuelistsCountAllowed_2x2", 1);
+		int duelist3x3 = tournament.getProperty("DuelistsCountAllowed_3x3", 1);
+		int duelist4x4 = tournament.getProperty("DuelistsCountAllowed_4x4", 1);
+		int duelist5x5 = tournament.getProperty("DuelistsCountAllowed_5x5", 1);
+		int duelist9x9 = tournament.getProperty("DuelistsCountAllowed_9x9", 1);
+		
+		TOURNAMENT_DUELIST_ALLOWED.put(TournamentFightType.F1X1, duelist1x1);
+		TOURNAMENT_DUELIST_ALLOWED.put(TournamentFightType.F2X2, duelist2x2);
+		TOURNAMENT_DUELIST_ALLOWED.put(TournamentFightType.F3X3, duelist3x3);
+		TOURNAMENT_DUELIST_ALLOWED.put(TournamentFightType.F4X4, duelist4x4);
+		TOURNAMENT_DUELIST_ALLOWED.put(TournamentFightType.F5X5, duelist5x5);
+		TOURNAMENT_DUELIST_ALLOWED.put(TournamentFightType.F9X9, duelist9x9);
+		
+		// HEALER
+		int healer1x1 = tournament.getProperty("HealersCountAllowed_1x1", 1);
+		int healer2x2 = tournament.getProperty("HealersCountAllowed_2x2", 1);
+		int healer3x3 = tournament.getProperty("HealersCountAllowed_3x3", 1);
+		int healer4x4 = tournament.getProperty("HealersCountAllowed_4x4", 1);
+		int healer5x5 = tournament.getProperty("HealersCountAllowed_5x5", 1);
+		int healer9x9 = tournament.getProperty("HealersCountAllowed_9x9", 1);
+		
+		TOURNAMENT_HEALER_ALLOWED.put(TournamentFightType.F1X1, healer1x1);
+		TOURNAMENT_HEALER_ALLOWED.put(TournamentFightType.F2X2, healer2x2);
+		TOURNAMENT_HEALER_ALLOWED.put(TournamentFightType.F3X3, healer3x3);
+		TOURNAMENT_HEALER_ALLOWED.put(TournamentFightType.F4X4, healer4x4);
+		TOURNAMENT_HEALER_ALLOWED.put(TournamentFightType.F5X5, healer5x5);
+		TOURNAMENT_HEALER_ALLOWED.put(TournamentFightType.F9X9, healer9x9);
+		
+		// MYSTIC MUSE
+		int mysticmuse1x1 = tournament.getProperty("MysticMusesCountAllowed_1x1", 1);
+		int mysticmuse2x2 = tournament.getProperty("MysticMusesCountAllowed_2x2", 1);
+		int mysticmuse3x3 = tournament.getProperty("MysticMusesCountAllowed_3x3", 1);
+		int mysticmuse4x4 = tournament.getProperty("MysticMusesCountAllowed_4x4", 1);
+		int mysticmuse5x5 = tournament.getProperty("MysticMusesCountAllowed_5x5", 1);
+		int mysticmuse9x9 = tournament.getProperty("MysticMusesCountAllowed_9x9", 1);
+		
+		TOURNAMENT_MYSTICMUSE_ALLOWED.put(TournamentFightType.F1X1, mysticmuse1x1);
+		TOURNAMENT_MYSTICMUSE_ALLOWED.put(TournamentFightType.F2X2, mysticmuse2x2);
+		TOURNAMENT_MYSTICMUSE_ALLOWED.put(TournamentFightType.F3X3, mysticmuse3x3);
+		TOURNAMENT_MYSTICMUSE_ALLOWED.put(TournamentFightType.F4X4, mysticmuse4x4);
+		TOURNAMENT_MYSTICMUSE_ALLOWED.put(TournamentFightType.F5X5, mysticmuse5x5);
+		TOURNAMENT_MYSTICMUSE_ALLOWED.put(TournamentFightType.F9X9, mysticmuse9x9);
+		
+		// SOUL TAKER
+		int soulTaker1x1 = tournament.getProperty("SoulTakersCountAllowed_1x1", 1);
+		int soulTaker2x2 = tournament.getProperty("SoulTakersCountAllowed_2x2", 1);
+		int soulTaker3x3 = tournament.getProperty("SoulTakersCountAllowed_3x3", 1);
+		int soulTaker4x4 = tournament.getProperty("SoulTakersCountAllowed_4x4", 1);
+		int soulTaker5x5 = tournament.getProperty("SoulTakersCountAllowed_5x5", 1);
+		int soulTaker9x9 = tournament.getProperty("SoulTakersCountAllowed_9x9", 1);
+		
+		TOURNAMENT_SOULTAKER_ALLOWED.put(TournamentFightType.F1X1, soulTaker1x1);
+		TOURNAMENT_SOULTAKER_ALLOWED.put(TournamentFightType.F2X2, soulTaker2x2);
+		TOURNAMENT_SOULTAKER_ALLOWED.put(TournamentFightType.F3X3, soulTaker3x3);
+		TOURNAMENT_SOULTAKER_ALLOWED.put(TournamentFightType.F4X4, soulTaker4x4);
+		TOURNAMENT_SOULTAKER_ALLOWED.put(TournamentFightType.F5X5, soulTaker5x5);
+		TOURNAMENT_SOULTAKER_ALLOWED.put(TournamentFightType.F9X9, soulTaker9x9);
+		
+		// TITAN
+		int titan1x1 = tournament.getProperty("TitansCountAllowed_1x1", 1);
+		int titan2x2 = tournament.getProperty("TitansCountAllowed_2x2", 1);
+		int titan3x3 = tournament.getProperty("TitansCountAllowed_3x3", 1);
+		int titan4x4 = tournament.getProperty("TitansCountAllowed_4x4", 1);
+		int titan5x5 = tournament.getProperty("TitansCountAllowed_5x5", 1);
+		int titan9x9 = tournament.getProperty("TitansCountAllowed_9x9", 1);
+		
+		TOURNAMENT_TITAN_ALLOWED.put(TournamentFightType.F1X1, titan1x1);
+		TOURNAMENT_TITAN_ALLOWED.put(TournamentFightType.F2X2, titan2x2);
+		TOURNAMENT_TITAN_ALLOWED.put(TournamentFightType.F3X3, titan3x3);
+		TOURNAMENT_TITAN_ALLOWED.put(TournamentFightType.F4X4, titan4x4);
+		TOURNAMENT_TITAN_ALLOWED.put(TournamentFightType.F5X5, titan5x5);
+		TOURNAMENT_TITAN_ALLOWED.put(TournamentFightType.F9X9, titan9x9);
+		
+		// STORM SCREAMER
+		int stormScreamer1x1 = tournament.getProperty("StormScreamersCountAllowed_1x1", 1);
+		int stormScreamer2x2 = tournament.getProperty("StormScreamersCountAllowed_2x2", 1);
+		int stormScreamer3x3 = tournament.getProperty("StormScreamersCountAllowed_3x3", 1);
+		int stormScreamer4x4 = tournament.getProperty("StormScreamersCountAllowed_4x4", 1);
+		int stormScreamer5x5 = tournament.getProperty("StormScreamersCountAllowed_5x5", 1);
+		int stormScreamer9x9 = tournament.getProperty("StormScreamersCountAllowed_9x9", 1);
+		
+		TOURNAMENT_STORMSCREAMER_ALLOWED.put(TournamentFightType.F1X1, stormScreamer1x1);
+		TOURNAMENT_STORMSCREAMER_ALLOWED.put(TournamentFightType.F2X2, stormScreamer2x2);
+		TOURNAMENT_STORMSCREAMER_ALLOWED.put(TournamentFightType.F3X3, stormScreamer3x3);
+		TOURNAMENT_STORMSCREAMER_ALLOWED.put(TournamentFightType.F4X4, stormScreamer4x4);
+		TOURNAMENT_STORMSCREAMER_ALLOWED.put(TournamentFightType.F5X5, stormScreamer5x5);
+		TOURNAMENT_STORMSCREAMER_ALLOWED.put(TournamentFightType.F9X9, stormScreamer9x9);
+		
+		// TANKERS
+		int tanker1x1 = tournament.getProperty("TankersCountAllowed_1x1", 1);
+		int tanker2x2 = tournament.getProperty("TankersCountAllowed_2x2", 1);
+		int tanker3x3 = tournament.getProperty("TankersCountAllowed_3x3", 1);
+		int tanker4x4 = tournament.getProperty("TankersCountAllowed_4x4", 1);
+		int tanker5x5 = tournament.getProperty("TankersCountAllowed_5x5", 1);
+		int tanker9x9 = tournament.getProperty("TankersCountAllowed_9x9", 1);
+		
+		TOURNAMENT_TANKER_ALLOWED.put(TournamentFightType.F1X1, tanker1x1);
+		TOURNAMENT_TANKER_ALLOWED.put(TournamentFightType.F2X2, tanker2x2);
+		TOURNAMENT_TANKER_ALLOWED.put(TournamentFightType.F3X3, tanker3x3);
+		TOURNAMENT_TANKER_ALLOWED.put(TournamentFightType.F4X4, tanker4x4);
+		TOURNAMENT_TANKER_ALLOWED.put(TournamentFightType.F5X5, tanker5x5);
+		TOURNAMENT_TANKER_ALLOWED.put(TournamentFightType.F9X9, tanker9x9);
 	}
 	
 	public static final void loadLoginServer()

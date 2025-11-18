@@ -1,0 +1,689 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<list>
+	<!-- Skins 2011 - Armor Skins (fullarmor) -->
+	<item id="10100" type="Armor" name="Skin Jolly Jester">
+		<set name="default_action" val="equip" />
+		<set name="armor_type" val="HEAVY" />
+		<set name="bodypart" val="fullarmor" />
+		<set name="material" val="CLOTH" />
+		<set name="weight" val="9780" />
+		<set name="price" val="100000" />
+		<for>
+			<baseadd stat="pDef" val="278" />
+			<enchant stat="pDef" val="0" />
+		</for>
+	</item>
+	<item id="10101" type="Armor" name="Jolly Jester Hat">
+		<set name="default_action" val="equip" />
+		<set name="armor_type" val="NONE" />
+		<set name="bodypart" val="dhair" />
+		<set name="material" val="CLOTH" />
+		<set name="weight" val="570" />
+		<set name="price" val="50000" />
+		<for>
+			<baseadd stat="pDef" val="69" />
+			<enchant stat="pDef" val="0" />
+		</for>
+	</item>
+	<item id="10102" type="Armor" name="Skin Chinese">
+		<set name="default_action" val="equip" />
+		<set name="armor_type" val="HEAVY" />
+		<set name="bodypart" val="fullarmor" />
+		<set name="material" val="CLOTH" />
+		<set name="weight" val="9780" />
+		<set name="price" val="100000" />
+		<for>
+			<baseadd stat="pDef" val="278" />
+			<enchant stat="pDef" val="0" />
+		</for>
+	</item>
+	<item id="10103" type="Armor" name="Skin Cupid">
+		<set name="default_action" val="equip" />
+		<set name="armor_type" val="NONE" />
+		<set name="bodypart" val="fullarmor" />
+		<set name="material" val="CLOTH" />
+		<set name="weight" val="570" />
+		<set name="price" val="100000" />
+		<for>
+			<baseadd stat="pDef" val="69" />
+			<enchant stat="pDef" val="0" />
+		</for>
+	</item>
+	<item id="10104" type="Armor" name="Cupid Hair Style">
+		<set name="default_action" val="equip" />
+		<set name="armor_type" val="NONE" />
+		<set name="bodypart" val="dhair" />
+		<set name="material" val="CLOTH" />
+		<set name="weight" val="570" />
+		<set name="price" val="50000" />
+		<for>
+			<baseadd stat="pDef" val="69" />
+			<enchant stat="pDef" val="0" />
+		</for>
+	</item>
+	<item id="10105" type="Armor" name="Skin Zariche">
+		<set name="default_action" val="equip" />
+		<set name="armor_type" val="HEAVY" />
+		<set name="bodypart" val="fullarmor" />
+		<set name="material" val="CLOTH" />
+		<set name="weight" val="9780" />
+		<set name="price" val="100000" />
+		<for>
+			<baseadd stat="pDef" val="278" />
+			<enchant stat="pDef" val="0" />
+		</for>
+	</item>
+	<item id="10106" type="Armor" name="Zariche Mask">
+		<set name="default_action" val="equip" />
+		<set name="armor_type" val="NONE" />
+		<set name="bodypart" val="dhair" />
+		<set name="material" val="CLOTH" />
+		<set name="weight" val="570" />
+		<set name="price" val="50000" />
+		<for>
+			<baseadd stat="pDef" val="69" />
+			<enchant stat="pDef" val="0" />
+		</for>
+	</item>
+	<item id="10109" type="Armor" name="Skin Formal Wear">
+		<set name="default_action" val="equip" />
+		<set name="armor_type" val="HEAVY" />
+		<set name="bodypart" val="fullarmor" />
+		<set name="material" val="CLOTH" />
+		<set name="weight" val="9780" />
+		<set name="price" val="100000" />
+		<for>
+			<baseadd stat="pDef" val="278" />
+			<enchant stat="pDef" val="0" />
+		</for>
+	</item>
+	<item id="10110" type="Armor" name="Skin Cowboy">
+		<set name="default_action" val="equip" />
+		<set name="armor_type" val="HEAVY" />
+		<set name="bodypart" val="fullarmor" />
+		<set name="material" val="CLOTH" />
+		<set name="weight" val="9780" />
+		<set name="price" val="100000" />
+		<for>
+			<baseadd stat="pDef" val="278" />
+			<enchant stat="pDef" val="0" />
+		</for>
+	</item>
+	<item id="10111" type="Armor" name="Cowboy Hat">
+		<set name="default_action" val="equip" />
+		<set name="armor_type" val="NONE" />
+		<set name="bodypart" val="dhair" />
+		<set name="material" val="CLOTH" />
+		<set name="weight" val="570" />
+		<set name="price" val="50000" />
+		<for>
+			<baseadd stat="pDef" val="69" />
+			<enchant stat="pDef" val="0" />
+		</for>
+	</item>
+	<item id="10112" type="Armor" name="Skin Dark Knight">
+		<set name="default_action" val="equip" />
+		<set name="armor_type" val="HEAVY" />
+		<set name="bodypart" val="fullarmor" />
+		<set name="material" val="CLOTH" />
+		<set name="weight" val="9780" />
+		<set name="price" val="100000" />
+		<for>
+			<baseadd stat="pDef" val="278" />
+			<enchant stat="pDef" val="0" />
+		</for>
+	</item>
+	<item id="10113" type="Armor" name="Dark Knight Hat">
+		<set name="default_action" val="equip" />
+		<set name="armor_type" val="NONE" />
+		<set name="bodypart" val="dhair" />
+		<set name="material" val="CLOTH" />
+		<set name="weight" val="570" />
+		<set name="price" val="50000" />
+		<for>
+			<baseadd stat="pDef" val="69" />
+			<enchant stat="pDef" val="0" />
+		</for>
+	</item>
+	<item id="10114" type="Armor" name="Skin School Uniform A">
+		<set name="default_action" val="equip" />
+		<set name="armor_type" val="HEAVY" />
+		<set name="bodypart" val="fullarmor" />
+		<set name="material" val="CLOTH" />
+		<set name="weight" val="9780" />
+		<set name="price" val="100000" />
+		<for>
+			<baseadd stat="pDef" val="278" />
+			<enchant stat="pDef" val="0" />
+		</for>
+	</item>
+	<item id="10115" type="Armor" name="Skin School Uniform B">
+		<set name="default_action" val="equip" />
+		<set name="armor_type" val="HEAVY" />
+		<set name="bodypart" val="fullarmor" />
+		<set name="material" val="CLOTH" />
+		<set name="weight" val="9780" />
+		<set name="price" val="100000" />
+		<for>
+			<baseadd stat="pDef" val="278" />
+			<enchant stat="pDef" val="0" />
+		</for>
+	</item>
+	<item id="10116" type="Armor" name="Skin Red Hunter">
+		<set name="default_action" val="equip" />
+		<set name="armor_type" val="HEAVY" />
+		<set name="bodypart" val="fullarmor" />
+		<set name="material" val="CLOTH" />
+		<set name="weight" val="9780" />
+		<set name="price" val="100000" />
+		<for>
+			<baseadd stat="pDef" val="278" />
+			<enchant stat="pDef" val="0" />
+		</for>
+	</item>
+	<item id="10117" type="Armor" name="Red Hunter Hat">
+		<set name="default_action" val="equip" />
+		<set name="armor_type" val="NONE" />
+		<set name="bodypart" val="dhair" />
+		<set name="material" val="CLOTH" />
+		<set name="weight" val="570" />
+		<set name="price" val="50000" />
+		<for>
+			<baseadd stat="pDef" val="69" />
+			<enchant stat="pDef" val="0" />
+		</for>
+	</item>
+	<item id="10118" type="Armor" name="Skin Ninja">
+		<set name="default_action" val="equip" />
+		<set name="armor_type" val="HEAVY" />
+		<set name="bodypart" val="fullarmor" />
+		<set name="material" val="CLOTH" />
+		<set name="weight" val="9780" />
+		<set name="price" val="100000" />
+		<for>
+			<baseadd stat="pDef" val="278" />
+			<enchant stat="pDef" val="0" />
+		</for>
+	</item>
+	<item id="10119" type="Armor" name="Assasin Mask">
+		<set name="default_action" val="equip" />
+		<set name="armor_type" val="NONE" />
+		<set name="bodypart" val="dhair" />
+		<set name="material" val="CLOTH" />
+		<set name="weight" val="570" />
+		<set name="price" val="50000" />
+		<for>
+			<baseadd stat="pDef" val="69" />
+			<enchant stat="pDef" val="0" />
+		</for>
+	</item>
+	<item id="10120" type="Armor" name="Skin Light Assasin">
+		<set name="default_action" val="equip" />
+		<set name="armor_type" val="HEAVY" />
+		<set name="bodypart" val="fullarmor" />
+		<set name="material" val="CLOTH" />
+		<set name="weight" val="9780" />
+		<set name="price" val="100000" />
+		<for>
+			<baseadd stat="pDef" val="278" />
+			<enchant stat="pDef" val="0" />
+		</for>
+	</item>
+	<item id="10121" type="Armor" name="Light Assasin Hat">
+		<set name="default_action" val="equip" />
+		<set name="armor_type" val="NONE" />
+		<set name="bodypart" val="dhair" />
+		<set name="material" val="CLOTH" />
+		<set name="weight" val="570" />
+		<set name="price" val="50000" />
+		<for>
+			<baseadd stat="pDef" val="69" />
+			<enchant stat="pDef" val="0" />
+		</for>
+	</item>
+	<item id="10122" type="Armor" name="Skin Dark Assassin">
+		<set name="default_action" val="equip" />
+		<set name="armor_type" val="HEAVY" />
+		<set name="bodypart" val="fullarmor" />
+		<set name="material" val="CLOTH" />
+		<set name="weight" val="9780" />
+		<set name="price" val="100000" />
+		<for>
+			<baseadd stat="pDef" val="278" />
+			<enchant stat="pDef" val="0" />
+		</for>
+	</item>
+	<item id="10123" type="Armor" name="Dark Assasin Hat">
+		<set name="default_action" val="equip" />
+		<set name="armor_type" val="NONE" />
+		<set name="bodypart" val="dhair" />
+		<set name="material" val="CLOTH" />
+		<set name="weight" val="570" />
+		<set name="price" val="50000" />
+		<for>
+			<baseadd stat="pDef" val="69" />
+			<enchant stat="pDef" val="0" />
+		</for>
+	</item>
+	<item id="10124" type="Armor" name="Skin Beleth">
+		<set name="default_action" val="equip" />
+		<set name="armor_type" val="HEAVY" />
+		<set name="bodypart" val="fullarmor" />
+		<set name="material" val="CLOTH" />
+		<set name="weight" val="9780" />
+		<set name="price" val="100000" />
+		<for>
+			<baseadd stat="pDef" val="278" />
+			<enchant stat="pDef" val="0" />
+		</for>
+	</item>
+	<item id="10125" type="Armor" name="Beleth Mask">
+		<set name="default_action" val="equip" />
+		<set name="armor_type" val="NONE" />
+		<set name="bodypart" val="dhair" />
+		<set name="material" val="CLOTH" />
+		<set name="weight" val="570" />
+		<set name="price" val="50000" />
+		<for>
+			<baseadd stat="pDef" val="69" />
+			<enchant stat="pDef" val="0" />
+		</for>
+	</item>
+	<item id="10126" type="Armor" name="Skin Japan">
+		<set name="default_action" val="equip" />
+		<set name="armor_type" val="HEAVY" />
+		<set name="bodypart" val="fullarmor" />
+		<set name="material" val="CLOTH" />
+		<set name="weight" val="9780" />
+		<set name="price" val="100000" />
+		<for>
+			<baseadd stat="pDef" val="278" />
+			<enchant stat="pDef" val="0" />
+		</for>
+	</item>
+	<item id="10127" type="Armor" name="Skin Noble">
+		<set name="default_action" val="equip" />
+		<set name="armor_type" val="HEAVY" />
+		<set name="bodypart" val="fullarmor" />
+		<set name="material" val="CLOTH" />
+		<set name="weight" val="9780" />
+		<set name="price" val="100000" />
+		<for>
+			<baseadd stat="pDef" val="278" />
+			<enchant stat="pDef" val="0" />
+		</for>
+	</item>
+	<item id="10128" type="Armor" name="Noble Hat">
+		<set name="default_action" val="equip" />
+		<set name="armor_type" val="NONE" />
+		<set name="bodypart" val="dhair" />
+		<set name="material" val="CLOTH" />
+		<set name="weight" val="570" />
+		<set name="price" val="50000" />
+		<for>
+			<baseadd stat="pDef" val="69" />
+			<enchant stat="pDef" val="0" />
+		</for>
+	</item>
+	<item id="10129" type="Armor" name="Skin White Knight">
+		<set name="default_action" val="equip" />
+		<set name="armor_type" val="HEAVY" />
+		<set name="bodypart" val="fullarmor" />
+		<set name="material" val="CLOTH" />
+		<set name="weight" val="9780" />
+		<set name="price" val="100000" />
+		<for>
+			<baseadd stat="pDef" val="278" />
+			<enchant stat="pDef" val="0" />
+		</for>
+	</item>
+	<item id="10130" type="Armor" name="White Knight Mask">
+		<set name="default_action" val="equip" />
+		<set name="armor_type" val="NONE" />
+		<set name="bodypart" val="dhair" />
+		<set name="material" val="CLOTH" />
+		<set name="weight" val="570" />
+		<set name="price" val="50000" />
+		<for>
+			<baseadd stat="pDef" val="69" />
+			<enchant stat="pDef" val="0" />
+		</for>
+	</item>
+	<item id="10131" type="Armor" name="Skin Barbarian">
+		<set name="default_action" val="equip" />
+		<set name="armor_type" val="HEAVY" />
+		<set name="bodypart" val="fullarmor" />
+		<set name="material" val="CLOTH" />
+		<set name="weight" val="9780" />
+		<set name="price" val="100000" />
+		<for>
+			<baseadd stat="pDef" val="278" />
+			<enchant stat="pDef" val="0" />
+		</for>
+	</item>
+	<item id="10132" type="Armor" name="Barbarian Mask">
+		<set name="default_action" val="equip" />
+		<set name="armor_type" val="NONE" />
+		<set name="bodypart" val="dhair" />
+		<set name="material" val="CLOTH" />
+		<set name="weight" val="570" />
+		<set name="price" val="50000" />
+		<for>
+			<baseadd stat="pDef" val="69" />
+			<enchant stat="pDef" val="0" />
+		</for>
+	</item>
+	<item id="10133" type="Armor" name="Skin Valkyrie">
+		<set name="default_action" val="equip" />
+		<set name="armor_type" val="HEAVY" />
+		<set name="bodypart" val="fullarmor" />
+		<set name="material" val="CLOTH" />
+		<set name="weight" val="9780" />
+		<set name="price" val="100000" />
+		<for>
+			<baseadd stat="pDef" val="278" />
+			<enchant stat="pDef" val="0" />
+		</for>
+	</item>
+	<item id="10134" type="Armor" name="Valkyrie Mask">
+		<set name="default_action" val="equip" />
+		<set name="armor_type" val="NONE" />
+		<set name="bodypart" val="dhair" />
+		<set name="material" val="CLOTH" />
+		<set name="weight" val="570" />
+		<set name="price" val="50000" />
+		<for>
+			<baseadd stat="pDef" val="69" />
+			<enchant stat="pDef" val="0" />
+		</for>
+	</item>
+	<item id="10135" type="Armor" name="Skin Single Mesh">
+		<set name="default_action" val="equip" />
+		<set name="armor_type" val="HEAVY" />
+		<set name="bodypart" val="fullarmor" />
+		<set name="material" val="CLOTH" />
+		<set name="weight" val="9780" />
+		<set name="price" val="100000" />
+		<for>
+			<baseadd stat="pDef" val="278" />
+			<enchant stat="pDef" val="0" />
+		</for>
+	</item>
+	<item id="10136" type="Armor" name="Skin Zaken">
+		<set name="default_action" val="equip" />
+		<set name="armor_type" val="HEAVY" />
+		<set name="bodypart" val="fullarmor" />
+		<set name="material" val="CLOTH" />
+		<set name="weight" val="9780" />
+		<set name="price" val="100000" />
+		<for>
+			<baseadd stat="pDef" val="278" />
+			<enchant stat="pDef" val="0" />
+		</for>
+	</item>
+	<item id="10137" type="Armor" name="Zaken Hat">
+		<set name="default_action" val="equip" />
+		<set name="armor_type" val="NONE" />
+		<set name="bodypart" val="dhair" />
+		<set name="material" val="CLOTH" />
+		<set name="weight" val="570" />
+		<set name="price" val="50000" />
+		<for>
+			<baseadd stat="pDef" val="69" />
+			<enchant stat="pDef" val="0" />
+		</for>
+	</item>
+	<item id="10138" type="Armor" name="Skin Dragon Claw">
+		<set name="default_action" val="equip" />
+		<set name="armor_type" val="HEAVY" />
+		<set name="bodypart" val="fullarmor" />
+		<set name="material" val="CLOTH" />
+		<set name="weight" val="9780" />
+		<set name="price" val="100000" />
+		<for>
+			<baseadd stat="pDef" val="278" />
+			<enchant stat="pDef" val="0" />
+		</for>
+	</item>
+	<item id="10139" type="Armor" name="Dragon Claw Mask">
+		<set name="default_action" val="equip" />
+		<set name="armor_type" val="NONE" />
+		<set name="bodypart" val="dhair" />
+		<set name="material" val="CLOTH" />
+		<set name="weight" val="570" />
+		<set name="price" val="50000" />
+		<for>
+			<baseadd stat="pDef" val="69" />
+			<enchant stat="pDef" val="0" />
+		</for>
+	</item>
+	<item id="10140" type="Armor" name="Skin Kiborg">
+		<set name="default_action" val="equip" />
+		<set name="armor_type" val="HEAVY" />
+		<set name="bodypart" val="fullarmor" />
+		<set name="material" val="CLOTH" />
+		<set name="weight" val="9780" />
+		<set name="price" val="100000" />
+		<for>
+			<baseadd stat="pDef" val="278" />
+			<enchant stat="pDef" val="0" />
+		</for>
+	</item>
+	<item id="10141" type="Armor" name="Kiborg Hat">
+		<set name="default_action" val="equip" />
+		<set name="armor_type" val="NONE" />
+		<set name="bodypart" val="dhair" />
+		<set name="material" val="CLOTH" />
+		<set name="weight" val="570" />
+		<set name="price" val="50000" />
+		<for>
+			<baseadd stat="pDef" val="69" />
+			<enchant stat="pDef" val="0" />
+		</for>
+	</item>
+	<item id="10142" type="Armor" name="Skin Halloween">
+		<set name="default_action" val="equip" />
+		<set name="armor_type" val="HEAVY" />
+		<set name="bodypart" val="fullarmor" />
+		<set name="material" val="CLOTH" />
+		<set name="weight" val="9780" />
+		<set name="price" val="100000" />
+		<for>
+			<baseadd stat="pDef" val="278" />
+			<enchant stat="pDef" val="0" />
+		</for>
+	</item>
+	<item id="10143" type="Armor" name="Halloween Hat">
+		<set name="default_action" val="equip" />
+		<set name="armor_type" val="NONE" />
+		<set name="bodypart" val="dhair" />
+		<set name="material" val="CLOTH" />
+		<set name="weight" val="570" />
+		<set name="price" val="50000" />
+		<for>
+			<baseadd stat="pDef" val="69" />
+			<enchant stat="pDef" val="0" />
+		</for>
+	</item>
+	<item id="10144" type="Armor" name="Skin Baseball">
+		<set name="default_action" val="equip" />
+		<set name="armor_type" val="HEAVY" />
+		<set name="bodypart" val="fullarmor" />
+		<set name="material" val="CLOTH" />
+		<set name="weight" val="9780" />
+		<set name="price" val="100000" />
+		<for>
+			<baseadd stat="pDef" val="278" />
+			<enchant stat="pDef" val="0" />
+		</for>
+	</item>
+	<item id="10145" type="Armor" name="Baseball Hat">
+		<set name="default_action" val="equip" />
+		<set name="armor_type" val="NONE" />
+		<set name="bodypart" val="dhair" />
+		<set name="material" val="CLOTH" />
+		<set name="weight" val="570" />
+		<set name="price" val="50000" />
+		<for>
+			<baseadd stat="pDef" val="69" />
+			<enchant stat="pDef" val="0" />
+		</for>
+	</item>
+	<item id="10146" type="Armor" name="Skin Alicia">
+		<set name="default_action" val="equip" />
+		<set name="armor_type" val="HEAVY" />
+		<set name="bodypart" val="fullarmor" />
+		<set name="material" val="CLOTH" />
+		<set name="weight" val="9780" />
+		<set name="price" val="100000" />
+		<for>
+			<baseadd stat="pDef" val="278" />
+			<enchant stat="pDef" val="0" />
+		</for>
+	</item>
+	<item id="10147" type="Armor" name="Alicia Hat">
+		<set name="default_action" val="equip" />
+		<set name="armor_type" val="NONE" />
+		<set name="bodypart" val="dhair" />
+		<set name="material" val="CLOTH" />
+		<set name="weight" val="570" />
+		<set name="price" val="50000" />
+		<for>
+			<baseadd stat="pDef" val="69" />
+			<enchant stat="pDef" val="0" />
+		</for>
+	</item>
+	<item id="10148" type="Armor" name="Skin Skeleton">
+		<set name="default_action" val="equip" />
+		<set name="armor_type" val="HEAVY" />
+		<set name="bodypart" val="fullarmor" />
+		<set name="material" val="CLOTH" />
+		<set name="weight" val="9780" />
+		<set name="price" val="100000" />
+		<for>
+			<baseadd stat="pDef" val="278" />
+			<enchant stat="pDef" val="0" />
+		</for>
+	</item>
+	<item id="10149" type="Armor" name="Skeleton Hat">
+		<set name="default_action" val="equip" />
+		<set name="armor_type" val="NONE" />
+		<set name="bodypart" val="dhair" />
+		<set name="material" val="CLOTH" />
+		<set name="weight" val="570" />
+		<set name="price" val="50000" />
+		<for>
+			<baseadd stat="pDef" val="69" />
+			<enchant stat="pDef" val="0" />
+		</for>
+	</item>
+	<item id="10150" type="Armor" name="Skin Demonic Deathly Angel">
+		<set name="default_action" val="equip" />
+		<set name="armor_type" val="HEAVY" />
+		<set name="bodypart" val="fullarmor" />
+		<set name="material" val="CLOTH" />
+		<set name="weight" val="9780" />
+		<set name="price" val="100000" />
+		<for>
+			<baseadd stat="pDef" val="278" />
+			<enchant stat="pDef" val="0" />
+		</for>
+	</item>
+	<item id="10151" type="Armor" name="Demonic Deathly Angel Hat">
+		<set name="default_action" val="equip" />
+		<set name="armor_type" val="NONE" />
+		<set name="bodypart" val="dhair" />
+		<set name="material" val="CLOTH" />
+		<set name="weight" val="570" />
+		<set name="price" val="50000" />
+		<for>
+			<baseadd stat="pDef" val="69" />
+			<enchant stat="pDef" val="0" />
+		</for>
+	</item>
+	<item id="10152" type="Armor" name="Skin Lilith">
+		<set name="default_action" val="equip" />
+		<set name="armor_type" val="HEAVY" />
+		<set name="bodypart" val="fullarmor" />
+		<set name="material" val="CLOTH" />
+		<set name="weight" val="9780" />
+		<set name="price" val="100000" />
+		<for>
+			<baseadd stat="pDef" val="278" />
+			<enchant stat="pDef" val="0" />
+		</for>
+	</item>
+	<item id="10153" type="Armor" name="Lilith Hat">
+		<set name="default_action" val="equip" />
+		<set name="armor_type" val="NONE" />
+		<set name="bodypart" val="dhair" />
+		<set name="material" val="CLOTH" />
+		<set name="weight" val="570" />
+		<set name="price" val="50000" />
+		<for>
+			<baseadd stat="pDef" val="69" />
+			<enchant stat="pDef" val="0" />
+		</for>
+	</item>
+	<item id="10154" type="Armor" name="Skin Elite">
+		<set name="default_action" val="equip" />
+		<set name="armor_type" val="HEAVY" />
+		<set name="bodypart" val="fullarmor" />
+		<set name="material" val="CLOTH" />
+		<set name="weight" val="9780" />
+		<set name="price" val="100000" />
+		<for>
+			<baseadd stat="pDef" val="278" />
+			<enchant stat="pDef" val="0" />
+		</for>
+	</item>
+	<item id="10155" type="Armor" name="Skin Antharas">
+		<set name="default_action" val="equip" />
+		<set name="armor_type" val="HEAVY" />
+		<set name="bodypart" val="fullarmor" />
+		<set name="material" val="CLOTH" />
+		<set name="weight" val="9780" />
+		<set name="price" val="100000" />
+		<for>
+			<baseadd stat="pDef" val="278" />
+			<enchant stat="pDef" val="0" />
+		</for>
+	</item>
+	<item id="10156" type="Armor" name="Skin Valakas">
+		<set name="default_action" val="equip" />
+		<set name="armor_type" val="HEAVY" />
+		<set name="bodypart" val="fullarmor" />
+		<set name="material" val="CLOTH" />
+		<set name="weight" val="9780" />
+		<set name="price" val="100000" />
+		<for>
+			<baseadd stat="pDef" val="278" />
+			<enchant stat="pDef" val="0" />
+		</for>
+	</item>
+	<item id="10157" type="Armor" name="Skin Thorns">
+		<set name="default_action" val="equip" />
+		<set name="armor_type" val="HEAVY" />
+		<set name="bodypart" val="fullarmor" />
+		<set name="material" val="CLOTH" />
+		<set name="weight" val="9780" />
+		<set name="price" val="100000" />
+		<for>
+			<baseadd stat="pDef" val="278" />
+			<enchant stat="pDef" val="0" />
+		</for>
+	</item>
+	<item id="10158" type="Armor" name="Thorns Hat">
+		<set name="default_action" val="equip" />
+		<set name="armor_type" val="NONE" />
+		<set name="bodypart" val="dhair" />
+		<set name="material" val="CLOTH" />
+		<set name="weight" val="570" />
+		<set name="price" val="50000" />
+		<for>
+			<baseadd stat="pDef" val="69" />
+			<enchant stat="pDef" val="0" />
+		</for>
+	</item>
+</list>
+

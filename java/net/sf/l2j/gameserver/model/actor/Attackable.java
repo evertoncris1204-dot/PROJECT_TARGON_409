@@ -87,6 +87,33 @@ public class Attackable extends Npc
 		if (!super.doDie(killer))
 			return false;
 		
+		// Boss Event handling
+		if (dev.bossInstancedEvent.BossEvent.getInstance().getState() == net.sf.l2j.gameserver.enums.EventState.STARTED)
+		{
+			if (dev.bossInstancedEvent.BossEvent.getInstance().bossSpawn != null && dev.bossInstancedEvent.BossEvent.getInstance().bossSpawn.getNpc() == this)
+			{
+				dev.bossInstancedEvent.BossEvent.getInstance().finishEvent();
+				dev.bossInstancedEvent.BossEvent.getInstance().bossKilled = true;
+				if (killer instanceof Player)
+				{
+					Player lastAttacker = killer.getActingPlayer();
+					dev.bossInstancedEvent.BossEvent.getInstance().setLastAttacker(lastAttacker);
+					net.sf.l2j.commons.logging.CLogger logger = new net.sf.l2j.commons.logging.CLogger(dev.bossInstancedEvent.BossEvent.class.getName());
+					logger.info("Boss Event Finished. Last Attacker : " + lastAttacker.getName());
+					logger.info("Players rewarded: " + dev.bossInstancedEvent.BossEvent.getInstance().eventPlayers.size());
+					if (net.sf.l2j.Config.BOSS_EVENT_REWARD_LAST_ATTACKER)
+					{
+						if (lastAttacker.getBossEventDamage() > net.sf.l2j.Config.BOSS_EVENT_MIN_DAMAGE_TO_OBTAIN_REWARD)
+						{
+							dev.bossInstancedEvent.BossEvent.getInstance().reward(lastAttacker, net.sf.l2j.Config.BOSS_EVENT_LAST_ATTACKER_REWARDS);
+							lastAttacker.sendPacket(new net.sf.l2j.gameserver.network.serverpackets.CreatureSay(0, net.sf.l2j.gameserver.enums.SayType.CRITICAL_ANNOUNCE, "[Boss Event]", "Congratulations, you was the last attacker! So you will receive wonderful rewards."));
+						}
+					}
+				}
+			}
+		}
+		
+		
 		_attackedBy.clear();
 		
 		return true;

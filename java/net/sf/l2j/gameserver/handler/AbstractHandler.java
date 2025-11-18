@@ -56,9 +56,14 @@ public abstract class AbstractHandler<K, H>
 				else if (resource.getProtocol().equals("jar"))
 				{
 					final JarURLConnection conn = (JarURLConnection) resource.openConnection();
-					try (JarFile jarFile = conn.getJarFile())
+					conn.setUseCaches(false); // Prevent caching issues
+					final JarFile jarFile = conn.getJarFile();
+					try
 					{
+						// Collect entries first to avoid issues with closed JAR
 						final Enumeration<JarEntry> entries = jarFile.entries();
+						final java.util.List<String> classNames = new java.util.ArrayList<>();
+						
 						while (entries.hasMoreElements())
 						{
 							final JarEntry entry = entries.nextElement();
@@ -67,11 +72,36 @@ public abstract class AbstractHandler<K, H>
 							if (!entryName.startsWith(packagePath) || !entryName.endsWith(".class"))
 								continue;
 							
-							final Class<?> clazz = Class.forName(entryName.replace('/', '.').replace(".class", ""));
-							if (!handlerInterface.isAssignableFrom(clazz) || clazz.isInterface() || Modifier.isAbstract(clazz.getModifiers()))
-								continue;
-							
-							registerHandler(handlerInterface.cast(clazz.getDeclaredConstructor().newInstance()));
+							classNames.add(entryName.replace('/', '.').replace(".class", ""));
+						}
+						
+						// Now instantiate classes after JAR iteration is complete
+						for (String clsName : classNames)
+						{
+							try
+							{
+								final Class<?> clazz = Class.forName(clsName);
+								if (!handlerInterface.isAssignableFrom(clazz) || clazz.isInterface() || Modifier.isAbstract(clazz.getModifiers()))
+									continue;
+								
+								registerHandler(handlerInterface.cast(clazz.getDeclaredConstructor().newInstance()));
+							}
+							catch (Exception e)
+							{
+								LOGGER.warn("Failed to instantiate class {}: {}", e, clsName, e.getMessage());
+							}
+						}
+					}
+					finally
+					{
+						// Close the JAR file manually
+						try
+						{
+							jarFile.close();
+						}
+						catch (Exception e)
+						{
+							// Ignore close errors
 						}
 					}
 				}

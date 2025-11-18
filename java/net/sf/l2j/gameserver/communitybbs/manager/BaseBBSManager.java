@@ -48,6 +48,45 @@ public abstract class BaseBBSManager
 			player.sendPacket(new ShowBoard(html.substring(4090, 8180), "102"));
 			player.sendPacket(new ShowBoard(html.substring(8180, html.length()), "103"));
 		}
+		else
+		{
+			// For HTML larger than 12270, split into multiple packets
+			// Each packet can hold up to 4090 characters
+			int packetCount = (html.length() / 4090) + (html.length() % 4090 > 0 ? 1 : 0);
+			
+			for (int i = 0; i < packetCount; i++)
+			{
+				int start = i * 4090;
+				int end = Math.min(start + 4090, html.length());
+				String packetId = i == 0 ? "101" : (i == 1 ? "102" : "103");
+				
+				if (i < 3)
+				{
+					player.sendPacket(new ShowBoard(html.substring(start, end), packetId));
+				}
+				else
+				{
+					// If more than 3 packets needed, send remaining as continuation
+					// Note: The client may not support more than 3 packets, so we truncate
+					break;
+				}
+			}
+			
+			// Fill remaining packets with empty content if needed
+			if (packetCount < 3)
+			{
+				for (int i = packetCount; i < 3; i++)
+				{
+					String packetId = i == 0 ? "101" : (i == 1 ? "102" : "103");
+					if (i == 0 && packetCount == 0)
+						player.sendPacket(new ShowBoard("", "101"));
+					else if (i == 1 && packetCount <= 1)
+						player.sendPacket(ShowBoard.STATIC_SHOWBOARD_102);
+					else if (i == 2 && packetCount <= 2)
+						player.sendPacket(ShowBoard.STATIC_SHOWBOARD_103);
+				}
+			}
+		}
 	}
 	
 	protected static void send1001(String html, Player player)

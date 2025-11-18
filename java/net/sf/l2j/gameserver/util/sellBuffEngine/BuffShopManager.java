@@ -47,6 +47,8 @@ public final class BuffShopManager
 	
 	private BuffShopManager()
 	{
+		// Garante que as configurações sejam carregadas
+		BuffShopConfigs.getInstance();
 		this.dao = new BuffShopDAO();
 		this.factory = BuffShopFactory.getInstance();
 		_log.info("BuffShopManager: Sistema de Lojas de Buffs inicializado.");
@@ -54,9 +56,11 @@ public final class BuffShopManager
 	
 	public void startShopSetup(final Player player)
 	{
-		if (!BuffShopConfigs.BUFFSHOP_ALLOW_CLASS.contains(player.getClassId().getId()))
+		int classId = player.getClassId().getId();
+		if (!BuffShopConfigs.BUFFSHOP_ALLOW_CLASS.contains(classId))
 		{
-			player.sendMessage("Sua classe n�o tem permiss�o para criar uma loja de buffs.");
+			_log.warning("BuffShop: Player " + player.getName() + " (Class: " + player.getClassId() + ", ID: " + classId + ") tentou abrir loja mas não tem permissão.");
+			player.sendMessage("Sua classe não tem permissão para criar uma loja de buffs.");
 			return;
 		}
 		BuffShopUIManager.getInstance().showManagementWindow(player, 1);
@@ -67,29 +71,53 @@ public final class BuffShopManager
 		final ShopObject shopProfile = getProfile(player);
 		if (shopProfile.getBuffList().size() >= BuffShopConfigs.BUFFSHOP_BUFFS_MAX_COUNT)
 		{
-			player.sendMessage("Voc� atingiu o limite m�ximo de buffs na loja.");
+			player.sendMessage("Você atingiu o limite máximo de buffs na loja.");
 			return;
 		}
 		shopProfile.addBuff(skillId, skillLevel, price);
+		
+		// Se a loja já está aberta, atualiza o objeto da loja ativa também e salva
+		if (shops.containsKey(player.getObjectId()))
+		{
+			final ShopObject activeShop = shops.get(player.getObjectId());
+			activeShop.addBuff(skillId, skillLevel, price);
+			// Salva no banco de dados (a loja ativa já tem todos os dados necessários)
+			ThreadPool.execute(() -> dao.saveShop(activeShop));
+		}
+		// Não salvamos se a loja não estiver aberta, pois faltam dados (aparência, localização, etc.)
+		// Os buffs serão salvos quando a loja for aberta
 	}
 	
 	public void removeBuffFromProfile(final Player player, final int skillId)
 	{
-		getProfile(player).removeBuff(skillId);
+		final ShopObject shopProfile = getProfile(player);
+		shopProfile.removeBuff(skillId);
+		
+		// Se a loja já está aberta, atualiza o objeto da loja ativa também e salva
+		if (shops.containsKey(player.getObjectId()))
+		{
+			final ShopObject activeShop = shops.get(player.getObjectId());
+			activeShop.removeBuff(skillId);
+			// Salva no banco de dados (a loja ativa já tem todos os dados necessários)
+			ThreadPool.execute(() -> dao.saveShop(activeShop));
+		}
+		// Não salvamos se a loja não estiver aberta, pois faltam dados (aparência, localização, etc.)
+		// Os buffs serão salvos quando a loja for aberta
 	}
 	
 	public void startShop(final Player player)
 	{
 		final ShopObject shopConfig = getProfile(player);
-		// Chama o m�todo de verifica��o do core primeiro
+		
+		// Chama o método de verificação do core primeiro
 		if (!player.canOpenPrivateStore(true))
 		{
-			return; // Impede a abertura da loja se qualquer condi��o do jogo n�o for atendida
+			return; // Impede a abertura da loja se qualquer condição do jogo não for atendida
 		}
 		
 		if (shopConfig.getBuffList().isEmpty())
 		{
-			player.sendMessage("Voc� precisa adicionar pelo menos um buff para vender.");
+			player.sendMessage("Você precisa adicionar pelo menos um buff para vender.");
 			return;
 		}
 		if (shops.containsKey(player.getObjectId()))
@@ -110,12 +138,11 @@ public final class BuffShopManager
 		this.sellers.put(sellerNpc.getObjectId(), player.getObjectId());
 		
 		sellerNpc.getManufactureList().setStoreName(shopConfig.getStoreMessage());
-		sellerNpc.setPrivateStoreType(PrivateStoreType.MANUFACTURE);
 		sellerNpc.spawnMe(player.getX(), player.getY(), player.getZ());
 		World.getInstance().addPlayer(sellerNpc);
 		sellerNpc.setOnlineStatus(true, false);
 		sellerNpc.sitDown();
-		sellerNpc.broadcastUserInfo();
+		sellerNpc.setPrivateStoreType(PrivateStoreType.MANUFACTURE);
 		sellerNpc.broadcastPacket(new RecipeShopMsg(sellerNpc));
 		
 		ThreadPool.execute(() -> dao.saveShop(shopConfig));
@@ -171,14 +198,11 @@ public final class BuffShopManager
 	 */
 	public void restoreOfflineTraders()
 	{
-		_log.info("BuffShopManager: Agendando restaura��o de lojas de buffs offline...");
-		
 		// 1. DAO carrega a lista de ShopObjects de forma r�pida, pois � s� uma query.
 		final List<ShopObject> offlineShops = dao.loadShops();
 		
 		if (offlineShops.isEmpty())
 		{
-			_log.info("BuffShopManager: Nenhuma loja de buffs offline para restaurar.");
 			return;
 		}
 		
@@ -221,12 +245,11 @@ public final class BuffShopManager
 						sellers.put(sellerNpc.getObjectId(), shopConfig.getOwnerId());
 						
 						sellerNpc.getManufactureList().setStoreName(shopConfig.getStoreMessage());
-						sellerNpc.setPrivateStoreType(PrivateStoreType.MANUFACTURE);
 						sellerNpc.spawnMe(shopConfig.getX(), shopConfig.getY(), shopConfig.getZ());
 						World.getInstance().addPlayer(sellerNpc);
 						sellerNpc.setOnlineStatus(true, false);
 						sellerNpc.sitDown();
-						sellerNpc.broadcastUserInfo();
+						sellerNpc.setPrivateStoreType(PrivateStoreType.MANUFACTURE);
 						sellerNpc.broadcastPacket(new RecipeShopMsg(sellerNpc));
 						
 						_restoredCount++;

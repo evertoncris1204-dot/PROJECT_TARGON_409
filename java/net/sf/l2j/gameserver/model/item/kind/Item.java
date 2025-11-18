@@ -85,6 +85,7 @@ public abstract class Item
 		SLOTS.put("hair", SLOT_HAIR);
 		SLOTS.put("face", SLOT_FACE);
 		SLOTS.put("hairall", SLOT_HAIRALL);
+		SLOTS.put("dhair", SLOT_FACE); // disguise hair/mask
 		SLOTS.put("underwear", SLOT_UNDERWEAR);
 		SLOTS.put("back", SLOT_BACK);
 		SLOTS.put("neck", SLOT_NECK);
@@ -142,7 +143,8 @@ public abstract class Item
 		_weight = set.getInteger("weight", 0);
 		_materialType = set.getEnum("material", MaterialType.class, MaterialType.STEEL);
 		_duration = set.getInteger("duration", -1);
-		_bodyPart = SLOTS.get(set.getString("bodypart", "none"));
+		Integer bodyPartSlot = SLOTS.get(set.getString("bodypart", "none"));
+		_bodyPart = (bodyPartSlot != null) ? bodyPartSlot : SLOT_NONE;
 		_referencePrice = set.getInteger("price", 0);
 		_crystalType = set.getEnum("crystal_type", CrystalType.class, CrystalType.NONE);
 		_crystalCount = set.getInteger("crystal_count", 0);

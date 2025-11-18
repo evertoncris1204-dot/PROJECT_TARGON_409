@@ -10,6 +10,8 @@ import net.sf.l2j.gameserver.model.pledge.Clan;
 import net.sf.l2j.gameserver.model.residence.castle.Siege;
 import net.sf.l2j.gameserver.model.residence.clanhall.ClanHallSiege;
 
+import Base.AutoFarm.AutofarmPlayerRoutine;
+
 public class Die extends L2GameServerPacket
 {
 	private final Creature _creature;
@@ -28,9 +30,15 @@ public class Die extends L2GameServerPacket
 		
 		if (creature instanceof Player player)
 		{
+			final AutofarmPlayerRoutine bot = player.getBot();
 			_allowFixedRes = player.getAccessLevel().allowFixedRes();
 			_clan = player.getClan();
 			
+			if (player.isAutoFarm())
+			{
+				bot.stop();
+				player.setAutoFarm(false);
+			}
 		}
 		else if (creature instanceof Monster monster)
 			_sweepable = monster.getSpoilState().isSweepable();
@@ -44,7 +52,25 @@ public class Die extends L2GameServerPacket
 		
 		writeC(0x06);
 		writeD(_objectId);
-		writeD(0x01); // to nearest village
+		
+		// Check if player is in TvT Event or Tournament - disable "to village" option
+		boolean allowToVillage = true;
+		if (_creature instanceof Player player)
+		{
+			dev.tvtEvent.TvTEvent tvtEvent = dev.tvtEvent.TvTEvent.getInstance();
+			if (tvtEvent.isRegistered(player))
+			{
+				allowToVillage = false;
+			}
+			
+			// Check if player is in Tournament match
+			if (player.isInTournamentMatch())
+			{
+				allowToVillage = false;
+			}
+		}
+		
+		writeD(allowToVillage ? 0x01 : 0x00); // to nearest village
 		
 		if (_clan != null)
 		{

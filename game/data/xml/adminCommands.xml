@@ -36,6 +36,7 @@
 	<aCar name="admin_party_info" accessLevel="7" params="[name]" desc="Show selected Player's Party infos."/>
 	<aCar name="admin_remove" accessLevel="7" params="clan_penalty|death_penalty|skill_reuse" desc="Remove the penalty from the selected target."/>
 	<aCar name="admin_set" accessLevel="7" params="access|class|color|exp|karma|level|name|..." desc="Set the value to the selected target."/>
+	<aCar name="admin_clearskins" accessLevel="7" params="[name]" desc="Remove all purchased and applied skins from the target Player."/>
 
 	<!-- EFFECTS -->
 	<aCar name="admin_abnormal" accessLevel="7" params="mask" desc="Affect your target (or you) with the abnormal effect."/>
@@ -144,6 +145,11 @@
 	<aCar name="admin_deletefence" accessLevel="7" params="" desc=""/>
 	<aCar name="admin_listfence" accessLevel="7" params="" desc=""/>
 	<aCar name="admin_delete" accessLevel="7" params="" desc=""/>
+	<aCar name="admin_customspawn" accessLevel="7" params="" desc="Custom Spawnlist Manager"/>
+	<aCar name="admin_customspawn_add" accessLevel="7" params="[npcId|npcName] [respawnDelay] [respawnRandom] [periodOfDay]" desc="Add a custom spawn at your current location"/>
+	<aCar name="admin_customspawn_delete" accessLevel="7" params="[spawnId]" desc="Delete a custom spawn"/>
+	<aCar name="admin_customspawn_list" accessLevel="7" params="[page]" desc="List all custom spawns"/>
+	<aCar name="admin_customspawn_reload" accessLevel="7" params="" desc="Reload custom spawns from database"/>
 
 	<!-- SPAWN -->
 	<aCar name="admin_maker" accessLevel="7" params="[delete|respawn|switch|scripts|spawn [name]]" desc="Open the Maker panel."/>
@@ -173,4 +179,29 @@
 
 	<!-- ZONE -->
 	<aCar name="admin_zone" accessLevel="7" params="[show - all|clear|id]" desc="Show the zone panel, or the zone visually."/>
+
+	<!-- BOSS EVENT -->
+	<aCar name="admin_bossevent" accessLevel="1" params="" desc="Open the Boss Event admin panel."/>
+	<aCar name="admin_bossevent_start" accessLevel="1" params="" desc="Start the Boss Event registration."/>
+	<aCar name="admin_bossevent_stop" accessLevel="1" params="" desc="Stop the Boss Event."/>
+	<aCar name="admin_bossevent_status" accessLevel="1" params="" desc="Show Boss Event status."/>
+	<aCar name="bossevent" accessLevel="1" params="" desc="Open the Boss Event admin panel."/>
+	<aCar name="bossevent_start" accessLevel="1" params="" desc="Start the Boss Event registration."/>
+	<aCar name="bossevent_stop" accessLevel="1" params="" desc="Stop the Boss Event."/>
+	<aCar name="bossevent_status" accessLevel="1" params="" desc="Show Boss Event status."/>
+
+	<!-- TVT EVENT -->
+	<aCar name="admin_tvt" accessLevel="1" params="" desc="Open the TvT Event admin panel."/>
+	<aCar name="admin_tvt_start" accessLevel="1" params="" desc="Start the TvT Event registration."/>
+	<aCar name="admin_tvt_stop" accessLevel="1" params="" desc="Stop the TvT Event."/>
+	<aCar name="admin_tvt_status" accessLevel="1" params="" desc="Show TvT Event status."/>
+	<aCar name="tvt" accessLevel="1" params="" desc="Open the TvT Event admin panel."/>
+	<aCar name="tvt_start" accessLevel="1" params="" desc="Start the TvT Event registration."/>
+	<aCar name="tvt_stop" accessLevel="1" params="" desc="Stop the TvT Event."/>
+	<aCar name="tvt_status" accessLevel="1" params="" desc="Show TvT Event status."/>
+
+	<!-- TOURNAMENT EVENT -->
+	<aCar name="admin_tour" accessLevel="7" params="" desc="Activate or Deactivate the Tournament event."/>
+	<aCar name="tour" accessLevel="7" params="" desc="Activate or Deactivate the Tournament event."/>
+
 </list>

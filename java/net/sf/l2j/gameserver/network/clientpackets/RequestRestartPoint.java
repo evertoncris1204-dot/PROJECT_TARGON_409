@@ -44,6 +44,21 @@ public final class RequestRestartPoint extends L2GameClientPacket
 		if (!player.isDead())
 			return;
 		
+		// Block "to village" option during TvT Event
+		dev.tvtEvent.TvTEvent tvtEvent = dev.tvtEvent.TvTEvent.getInstance();
+		if (tvtEvent.isRegistered(player))
+		{
+			player.sendMessage("You cannot return to village during TvT Event!");
+			return;
+		}
+		
+		// Block "to village" option during Tournament match
+		if (player.isInTournamentMatch())
+		{
+			player.sendMessage("You cannot return to village during Tournament match!");
+			return;
+		}
+		
 		// Schedule a respawn delay if player is part of a clan registered in an active siege.
 		if (player.getClan() != null)
 		{

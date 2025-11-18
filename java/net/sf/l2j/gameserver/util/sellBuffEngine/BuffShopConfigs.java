@@ -100,16 +100,18 @@ public class BuffShopConfigs
             BUFFSHOP_BUFFS_MAX_COUNT = 8;
         }
         
-        String[] classIds = DhousefeBuffProperties.getProperty("BuffShopAllowClassId", "").split(",");
+        String classIdsStr = DhousefeBuffProperties.getProperty("BuffShopAllowClassId", "");
+        String[] classIds = classIdsStr.split(",");
         for (String id : classIds)
         {
             try
             {
-                BUFFSHOP_ALLOW_CLASS.add(Integer.parseInt(id.trim()));
+                int classId = Integer.parseInt(id.trim());
+                BUFFSHOP_ALLOW_CLASS.add(classId);
             }
             catch (NumberFormatException e)
             {
-                _log.info("BuffShop System: Error parsing Class id '" + id + "' from property 'BuffShopAllowClassId'. Skipping.");
+                _log.warning("BuffShop System: Error parsing Class id '" + id + "' from property 'BuffShopAllowClassId'. Skipping.");
             }
         }
         
@@ -122,7 +124,7 @@ public class BuffShopConfigs
             }
             catch (NumberFormatException e)
             {
-                _log.info("BuffShop System: Error parsing Skill id '" + id + "' from property 'BuffShopForbiddenSkill'. Skipping.");
+                _log.warning("BuffShop System: Error parsing Skill id '" + id + "' from property 'BuffShopForbiddenSkill'. Skipping.");
             }
         }
         String[] allowedSelfSkillIds = DhousefeBuffProperties.getProperty("BuffShopAllowedSelfSkill", "").split(",");
@@ -168,7 +170,6 @@ public class BuffShopConfigs
                     
                     if (!rules.isEmpty()) {
                         BUFFSHOP_GRANT_SKILLS.put(classIdKey, rules);
-                        _log.log(Level.SEVERE, "BuffShop System: Loaded {} skill grant rules for class {}.", className);
                     }
                 } catch (Exception e) {
                 	_log.log(Level.SEVERE, "BuffShop System: Error parsing property '{}'. Please check format (LvlReq:SkillID:SkillLvl,...).", e);
@@ -203,7 +204,6 @@ public class BuffShopConfigs
                     // Armazena a lista de IDs de skill associada ao nome da classe
                     if (!classSkillIds.isEmpty()) {
                         BUFFSHOP_CLASS_SPECIFIC_SKILLS.put(className, classSkillIds);
-                        _log.log(Level.SEVERE, "BuffShop System: Loaded {} specific skills for class {}.", classSkillIds.size());
                     }
                 } catch (Exception e) {
                 	_log.log(Level.SEVERE, "BuffShop System: Error parsing property '{}'. Please check the format.", e);
@@ -305,6 +305,12 @@ public class BuffShopConfigs
     public static BuffShopConfigs getInstance()
     {
         return SingletonHolder._instance;
+    }
+    
+    private BuffShopConfigs()
+    {
+        // Carrega as configurações automaticamente quando a instância é criada
+        loadConfigs();
     }
     
     public static void restoreOfflineTraders()

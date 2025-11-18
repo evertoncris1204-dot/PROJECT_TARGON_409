@@ -2,12 +2,13 @@ package net.sf.l2j.gameserver.network.serverpackets;
 
 public class ExSetCompassZoneCode extends L2GameServerPacket
 {
-	public static final int SIEGEWARZONE1 = 0x0A;
-	public static final int SIEGEWARZONE2 = 0x0B;
-	public static final int PEACEZONE = 0x0C;
-	public static final int SEVENSIGNSZONE = 0x0D;
-	public static final int PVPZONE = 0x0E;
-	public static final int GENERALZONE = 0x0F;
+	public static final int SIEGEWARZONE1 = 10;
+	public static final int SIEGEWARZONE2 = 11;
+	public static final int PEACEZONE = 12;
+	public static final int SEVENSIGNSZONE = 13;
+	public static final int PVPZONE = 14;
+	public static final int GENERALZONE = 15;
+	public static final int CHAOTIC = 16;
 	
 	private final int _zoneType;
 	
@@ -19,8 +20,8 @@ public class ExSetCompassZoneCode extends L2GameServerPacket
 	@Override
 	protected void writeImpl()
 	{
-		writeC(0xFE);
-		writeH(0x32);
+		writeC(254);
+		writeH(50);
 		writeD(_zoneType);
 	}
 }

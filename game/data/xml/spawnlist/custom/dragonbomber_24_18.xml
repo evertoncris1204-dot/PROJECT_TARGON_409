@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<list>
+	<territory name="dragonbomber_1763193842328" minZ="-832" maxZ="-816">
+		<node x="147950" y="11921" />
+		<node x="147850" y="11921" />
+		<node x="147850" y="11821" />
+		<node x="147950" y="11821" />
+	</territory>
+	<npcmaker name="dragonbomber_120255987945700" territory="dragonbomber_1763193842328" maximumNpcs="1">
+		<npc id="29070" pos="147900;11871;-832;50241" total="1" respawn="60sec" /> <!-- Dragon Bomber -->
+	</npcmaker>
+	<territory name="dragonbomber_1763193902936" minZ="-888" maxZ="-872">
+		<node x="147609" y="11957" />
+		<node x="147509" y="11957" />
+		<node x="147509" y="11857" />
+		<node x="147609" y="11857" />
+	</territory>
+	<npcmaker name="dragonbomber_120316596111300" territory="dragonbomber_1763193902936" maximumNpcs="1">
+		<npc id="29070" pos="147559;11907;-888;27446" total="1" respawn="60sec" /> <!-- Dragon Bomber -->
+	</npcmaker>
+</list>

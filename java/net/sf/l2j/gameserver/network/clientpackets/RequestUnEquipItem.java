@@ -43,7 +43,38 @@ public class RequestUnEquipItem extends L2GameClientPacket
 		final ItemInstance[] unequipped = player.getInventory().unequipItemInBodySlotAndRecord(_slot);
 		
 		for (ItemInstance itm : unequipped)
+		{
 			itm.unChargeAllShots();
+			
+			// If removing a weapon, check if weapon skin should be removed
+			if ((itm.getItem().getBodyPart() & net.sf.l2j.gameserver.model.item.kind.Item.SLOT_ALLWEAPON) != 0)
+			{
+				// Check if no weapon is equipped after removal (check both RHAND and LHAND slots)
+				net.sf.l2j.gameserver.model.item.instance.ItemInstance rhandItem = player.getInventory().getItemFrom(net.sf.l2j.gameserver.enums.Paperdoll.RHAND);
+				net.sf.l2j.gameserver.model.item.instance.ItemInstance lhandItem = player.getInventory().getItemFrom(net.sf.l2j.gameserver.enums.Paperdoll.LHAND);
+				
+				boolean hasWeapon = false;
+				if (rhandItem != null && rhandItem.getItem() instanceof net.sf.l2j.gameserver.model.item.kind.Weapon)
+				{
+					net.sf.l2j.gameserver.model.item.kind.Weapon weapon = (net.sf.l2j.gameserver.model.item.kind.Weapon) rhandItem.getItem();
+					if (weapon.getItemType() != net.sf.l2j.gameserver.enums.items.WeaponType.NONE && weapon.getItemType() != net.sf.l2j.gameserver.enums.items.WeaponType.FIST)
+						hasWeapon = true;
+				}
+				if (!hasWeapon && lhandItem != null && lhandItem.getItem() instanceof net.sf.l2j.gameserver.model.item.kind.Weapon)
+				{
+					net.sf.l2j.gameserver.model.item.kind.Weapon weapon = (net.sf.l2j.gameserver.model.item.kind.Weapon) lhandItem.getItem();
+					if (weapon.getItemType() != net.sf.l2j.gameserver.enums.items.WeaponType.NONE && weapon.getItemType() != net.sf.l2j.gameserver.enums.items.WeaponType.FIST)
+						hasWeapon = true;
+				}
+				
+				// If no weapon is equipped, remove weapon skin
+				if (!hasWeapon && player.getWeaponSkinOption() > 0)
+				{
+					player.setWeaponSkinOption(0);
+					player.storeDressMeData();
+				}
+			}
+		}
 		
 		player.broadcastUserInfo();
 		

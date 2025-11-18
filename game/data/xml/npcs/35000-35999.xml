@@ -33287,4 +33287,190 @@
 			<skill id="4416" level="15" type="PASSIVE"/>
 		</skills>
 	</npc>
+	<npc id="35070" name="Boss Event" title="Event Manager">
+		<set name="usingServerSideName" val="true"/>
+		<set name="usingServerSideTitle" val="true"/>
+		<set name="type" val="BossEventNpc"/>
+		<set name="level" val="20"/>
+		<set name="radius" val="46"/>
+		<set name="height" val="72.5"/>
+		<set name="hitTimeFactor" val="0.6"/>
+		<set name="rHand" val="0"/>
+		<set name="lHand" val="0"/>
+		<set name="canSeeThrough" val="true"/>
+		<set name="exp" val="0"/>
+		<set name="sp" val="10"/>
+		<set name="hp" val="342.5127"/>
+		<set name="mp" val="192"/>
+		<set name="hpRegen" val="2.5"/>
+		<set name="mpRegen" val="1.2"/>
+		<set name="baseAttackRange" val="40"/>
+		<set name="baseDamageRange" val="0;0;80;120"/>
+		<set name="baseRandomDamage" val="5"/>
+		<set name="pAtk" val="44.32863"/>
+		<set name="pDef" val="86.87049"/>
+		<set name="mAtk" val="30.2707"/>
+		<set name="mDef" val="63.56806"/>
+		<set name="crit" val="4"/>
+		<set name="atkSpd" val="253"/>
+		<set name="str" val="40"/>
+		<set name="int" val="21"/>
+		<set name="dex" val="30"/>
+		<set name="wit" val="20"/>
+		<set name="con" val="43"/>
+		<set name="men" val="20"/>
+		<set name="ssCount" val="0"/>
+		<set name="spsCount" val="0"/>
+		<set name="undying" val="true"/>
+		<set name="canBeAttacked" val="false"/>
+		<set name="corpseTime" val="7"/>
+		<set name="noSleepMode" val="false"/>
+		<set name="aggroRange" val="0"/>
+		<set name="walkSpd" val="50"/>
+		<set name="runSpd" val="1"/>
+		<set name="dropHerbGroup" val="0"/>
+		<set name="canMove" val="false"/>
+		<set name="seedable" val="false"/>
+		<ai type="DEFAULT" ssCount="0" ssRate="0" spsCount="0" spsRate="0" aggro="0" canMove="false" seedable="false">
+		</ai>
+		<skills>
+			<skill id="4045" level="1" type="PASSIVE"/>
+			<skill id="4416" level="19" type="PASSIVE"/>
+		</skills>
+	</npc>
+	<npc id="35071" name="TvT Event" title="Event Manager">
+		<set name="usingServerSideName" val="true"/>
+		<set name="usingServerSideTitle" val="true"/>
+		<set name="type" val="TvTEventNpc"/>
+		<set name="level" val="20"/>
+		<set name="radius" val="46"/>
+		<set name="height" val="72.5"/>
+		<set name="hitTimeFactor" val="0.6"/>
+		<set name="rHand" val="0"/>
+		<set name="lHand" val="0"/>
+		<set name="canSeeThrough" val="true"/>
+		<set name="exp" val="0"/>
+		<set name="sp" val="10"/>
+		<set name="hp" val="342.5127"/>
+		<set name="mp" val="192"/>
+		<set name="hpRegen" val="2.5"/>
+		<set name="mpRegen" val="1.2"/>
+		<set name="baseAttackRange" val="40"/>
+		<set name="baseDamageRange" val="0;0;80;120"/>
+		<set name="baseRandomDamage" val="5"/>
+		<set name="pAtk" val="44.32863"/>
+		<set name="pDef" val="86.87049"/>
+		<set name="mAtk" val="30.2707"/>
+		<set name="mDef" val="63.56806"/>
+		<set name="crit" val="4"/>
+		<set name="atkSpd" val="253"/>
+		<set name="str" val="40"/>
+		<set name="int" val="21"/>
+		<set name="dex" val="30"/>
+		<set name="wit" val="20"/>
+		<set name="con" val="43"/>
+		<set name="men" val="20"/>
+		<set name="ssCount" val="0"/>
+		<set name="spsCount" val="0"/>
+		<set name="undying" val="true"/>
+		<set name="canBeAttacked" val="false"/>
+		<set name="corpseTime" val="7"/>
+		<set name="noSleepMode" val="false"/>
+		<set name="aggroRange" val="0"/>
+		<set name="walkSpd" val="50"/>
+		<set name="runSpd" val="1"/>
+		<set name="dropHerbGroup" val="0"/>
+		<set name="canMove" val="false"/>
+		<set name="seedable" val="false"/>
+		<ai type="DEFAULT" ssCount="0" ssRate="0" spsCount="0" spsRate="0" aggro="0" canMove="false" seedable="false">
+		</ai>
+		<skills>
+			<skill id="4045" level="1" type="PASSIVE"/>
+			<skill id="4416" level="19" type="PASSIVE"/>
+		</skills>
+	</npc>
+	<npc id="35073" name="Farm Dungeon Manager" title="" alias="farm_dungeon_manager">
+		<set name="type" val="FarmDungeonNpc"/>
+		<set name="level" val="1"/>
+		<set name="radius" val="8.0"/>
+		<set name="height" val="23.5"/>
+		<set name="hitTimeFactor" val="0.6"/>
+		<set name="rHand" val="0"/>
+		<set name="lHand" val="0"/>
+		<set name="canSeeThrough" val="true"/>
+		<set name="exp" val="0.0"/>
+		<set name="sp" val="0.0"/>
+		<set name="hp" val="100.0"/>
+		<set name="mp" val="100.0"/>
+		<set name="hpRegen" val="1.0"/>
+		<set name="mpRegen" val="1.0"/>
+		<set name="baseAttackRange" val="40"/>
+		<set name="baseDamageRange" val="0;0;0;0"/>
+		<set name="baseRandomDamage" val="0"/>
+		<set name="pAtk" val="0.0"/>
+		<set name="pDef" val="100.0"/>
+		<set name="mAtk" val="0.0"/>
+		<set name="mDef" val="100.0"/>
+		<set name="crit" val="4.0"/>
+		<set name="atkSpd" val="200.0"/>
+		<set name="walkSpd" val="49.5"/>
+		<set name="runSpd" val="118.8"/>
+		<set name="str" val="1"/>
+		<set name="int" val="1"/>
+		<set name="dex" val="1"/>
+		<set name="wit" val="1"/>
+		<set name="con" val="1"/>
+		<set name="men" val="1"/>
+		<set name="ssCount" val="0"/>
+		<set name="spsCount" val="0"/>
+		<set name="undying" val="true"/>
+		<set name="canBeAttacked" val="false"/>
+		<set name="corpseTime" val="7"/>
+		<set name="noSleepMode" val="false"/>
+		<set name="aggroRange" val="0"/>
+		<set name="canMove" val="false"/>
+		<set name="seedable" val="false"/>
+	</npc>
+	<npc id="35074" name="Farm Dungeon Exit" title="" alias="farm_dungeon_exit">
+		<set name="type" val="FarmDungeonExitNpc"/>
+		<set name="level" val="1"/>
+		<set name="radius" val="8.0"/>
+		<set name="height" val="23.5"/>
+		<set name="hitTimeFactor" val="0.6"/>
+		<set name="rHand" val="0"/>
+		<set name="lHand" val="0"/>
+		<set name="canSeeThrough" val="true"/>
+		<set name="exp" val="0.0"/>
+		<set name="sp" val="0.0"/>
+		<set name="hp" val="100.0"/>
+		<set name="mp" val="100.0"/>
+		<set name="hpRegen" val="1.0"/>
+		<set name="mpRegen" val="1.0"/>
+		<set name="baseAttackRange" val="40"/>
+		<set name="baseDamageRange" val="0;0;0;0"/>
+		<set name="baseRandomDamage" val="0"/>
+		<set name="pAtk" val="0.0"/>
+		<set name="pDef" val="100.0"/>
+		<set name="mAtk" val="0.0"/>
+		<set name="mDef" val="100.0"/>
+		<set name="crit" val="4.0"/>
+		<set name="atkSpd" val="200.0"/>
+		<set name="walkSpd" val="49.5"/>
+		<set name="runSpd" val="118.8"/>
+		<set name="str" val="1"/>
+		<set name="int" val="1"/>
+		<set name="dex" val="1"/>
+		<set name="wit" val="1"/>
+		<set name="con" val="1"/>
+		<set name="men" val="1"/>
+		<set name="ssCount" val="0"/>
+		<set name="spsCount" val="0"/>
+		<set name="undying" val="true"/>
+		<set name="canBeAttacked" val="false"/>
+		<set name="corpseTime" val="7"/>
+		<set name="noSleepMode" val="false"/>
+		<set name="aggroRange" val="0"/>
+		<set name="canMove" val="false"/>
+		<set name="seedable" val="false"/>
+	</npc>
 </list>

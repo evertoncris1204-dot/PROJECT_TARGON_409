@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<list>
+	<territory name="antharas_1763189285795" minZ="-7704" maxZ="-7688">
+		<node x="178405" y="115623" />
+		<node x="178305" y="115623" />
+		<node x="178305" y="115523" />
+		<node x="178405" y="115523" />
+	</territory>
+	<npcmaker name="antharas_115699457275200" territory="antharas_1763189285795" maximumNpcs="1">
+		<npc id="29019" pos="178355;115573;-7704;29562" total="1" respawn="60sec" /> <!-- Antharas -->
+	</npcmaker>
+</list>

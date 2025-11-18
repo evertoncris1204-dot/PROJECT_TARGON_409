@@ -165,26 +165,20 @@ public final class BuffShopBypassHandler
 		}
 		
 		// --- PASSO 2: Usar o ID do Dono para pegar o ShopObject ---
-		// _log.info("[HANDLE-SHOW-SHOP] 5. Buscando no mapa 'shops' com a chave OwnerID: " + ownerId);
 		final ShopObject shop = manager.getShops().get(ownerId);
 		
 		if (shop == null)
 		{
-			buyer.sendMessage("Erro: A configura��o da loja n�o foi encontrada.");
-			// _log.warning("[HANDLE-SHOW-SHOP] ERRO: O mapa 'shops' n�o cont�m uma entrada para o OwnerID " + ownerId);
+			buyer.sendMessage("Erro: A configuração da loja não foi encontrada.");
+			_log.warning("[BuffShop] ShopObject não encontrado para ownerId: " + ownerId);
 			return;
 		}
-		// _log.info("[HANDLE-SHOW-SHOP] 6. ShopObject encontrado! Detalhes -> OwnerID interno: " + shop.getOwnerId() + " | Total de buffs: " + shop.getBuffList().size());
 		
 		// --- PASSO 3: Processar o resto do bypass e chamar a UI ---
 		int tabId = st.hasMoreTokens() ? Integer.parseInt(st.nextToken()) : 1;
 		int page = st.hasMoreTokens() ? Integer.parseInt(st.nextToken()) : 1;
-		// _log.info("[HANDLE-SHOW-SHOP] 7. Aba: " + tabId + " | P�gina: " + page);
 		
-		// _log.info("[HANDLE-SHOW-SHOP] 8. Todos os dados s�o v�lidos. Chamando UIManager para renderizar a janela.");
 		uiManager.showPublicShopWindow(buyer, sellerNpc, shop, tabId, page);
-		
-		// _log.info("[HANDLE-SHOW-SHOP] ----- Finalizado handleShowShop para: " + buyer.getName() + " -----");
 	}
 	
 	private void handleStopShop(Player player)

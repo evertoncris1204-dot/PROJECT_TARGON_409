@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<list>
+	<territory name="sailren_1763193615016" minZ="-848" maxZ="-832">
+		<node x="147811" y="12077" />
+		<node x="147711" y="12077" />
+		<node x="147711" y="11977" />
+		<node x="147811" y="11977" />
+	</territory>
+	<npcmaker name="sailren_120028675842800" territory="sailren_1763193615016" maximumNpcs="1">
+		<npc id="29065" pos="147761;12027;-848;42114" total="1" respawn="60sec" /> <!-- Sailren -->
+	</npcmaker>
+</list>

@@ -226,6 +226,41 @@ public class CreatureCast<T extends Creature>
 					stop();
 					return;
 				}
+				
+				// Boss Event PvP Protection - Prevent offensive skills between event participants
+				if (playable instanceof Player attacker && targetPlayable instanceof Player targetPlayer)
+				{
+					dev.bossInstancedEvent.BossEvent bossEvent = dev.bossInstancedEvent.BossEvent.getInstance();
+					if (bossEvent.getState() == net.sf.l2j.gameserver.enums.EventState.STARTED || 
+					    bossEvent.getState() == net.sf.l2j.gameserver.enums.EventState.STARTING)
+					{
+						if (bossEvent.isRegistered(attacker) && bossEvent.isRegistered(targetPlayer))
+						{
+							attacker.sendPacket(SystemMessageId.TARGET_IS_INCORRECT);
+							
+							stop();
+							return;
+						}
+					}
+					
+					// TvT Event PvP Protection - Prevent offensive skills between same team members
+					dev.tvtEvent.TvTEvent tvtEvent = dev.tvtEvent.TvTEvent.getInstance();
+					if (tvtEvent.getState() == net.sf.l2j.gameserver.enums.EventState.STARTED || 
+					    tvtEvent.getState() == net.sf.l2j.gameserver.enums.EventState.STARTING)
+					{
+						if (tvtEvent.isRegistered(attacker) && tvtEvent.isRegistered(targetPlayer))
+						{
+							// Check if same team
+							if (tvtEvent.getTeam(attacker) == tvtEvent.getTeam(targetPlayer) && tvtEvent.getTeam(attacker) > 0)
+							{
+								attacker.sendPacket(SystemMessageId.TARGET_IS_INCORRECT);
+								
+								stop();
+								return;
+							}
+						}
+					}
+				}
 			}
 		}
 		

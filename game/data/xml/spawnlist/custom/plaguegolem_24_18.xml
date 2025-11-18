@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<list>
+	<territory name="plaguegolem_1763193825710" minZ="-832" maxZ="-816">
+		<node x="147950" y="11921" />
+		<node x="147850" y="11921" />
+		<node x="147850" y="11821" />
+		<node x="147950" y="11821" />
+	</territory>
+	<npcmaker name="plaguegolem_120239369802100" territory="plaguegolem_1763193825710" maximumNpcs="1">
+		<npc id="25523" pos="147900;11871;-832;50241" total="1" respawn="60sec" /> <!-- Plague Golem -->
+	</npcmaker>
+	<territory name="plaguegolem_1763194410381" minZ="-688" maxZ="-672">
+		<node x="149175" y="10866" />
+		<node x="149075" y="10866" />
+		<node x="149075" y="10766" />
+		<node x="149175" y="10766" />
+	</territory>
+	<npcmaker name="plaguegolem_120824041431700" territory="plaguegolem_1763194410381" maximumNpcs="1">
+		<npc id="25523" pos="149125;10816;-688;59737" total="1" respawn="6sec" /> <!-- Plague Golem -->
+	</npcmaker>
+</list>

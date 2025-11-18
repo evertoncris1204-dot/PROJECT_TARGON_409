@@ -83,6 +83,12 @@ public final class TradeRequest extends L2GameClientPacket
 			return;
 		}
 		
+		if (target.getTradeRefusal())
+		{
+			player.sendPacket(SystemMessage.getSystemMessage(SystemMessageId.S1_BLOCKED_EVERYTHING).addCharName(target));
+			return;
+		}
+		
 		if (RelationManager.getInstance().isInBlockList(target, player))
 		{
 			player.sendPacket(SystemMessage.getSystemMessage(SystemMessageId.S1_HAS_ADDED_YOU_TO_IGNORE_LIST).addCharName(target));

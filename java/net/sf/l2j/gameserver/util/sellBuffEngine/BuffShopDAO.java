@@ -34,10 +34,24 @@ public class BuffShopDAO
 			ps.setInt(7, shop.getZ());
 			ps.setInt(8, shop.getHeading());
 			ps.setInt(9, shop.getClassId());
-			ps.setInt(10, shop.getAppearance().getSex().ordinal());
-			ps.setInt(11, shop.getAppearance().getFace());
-			ps.setInt(12, shop.getAppearance().getHairStyle());
-			ps.setInt(13, shop.getAppearance().getHairColor());
+			
+			// Verifica se a aparência existe antes de usar
+			if (shop.getAppearance() != null)
+			{
+				ps.setInt(10, shop.getAppearance().getSex().ordinal());
+				ps.setInt(11, shop.getAppearance().getFace());
+				ps.setInt(12, shop.getAppearance().getHairStyle());
+				ps.setInt(13, shop.getAppearance().getHairColor());
+			}
+			else
+			{
+				// Valores padrão se a aparência não estiver definida
+				ps.setInt(10, 0); // Sex.MALE
+				ps.setInt(11, 0);
+				ps.setInt(12, 0);
+				ps.setInt(13, 0);
+			}
+			
 			ps.setString(14, String.join(",", shop.getEquippedItems().stream().map(String::valueOf).toList()));
 			
 			ps.executeUpdate();
@@ -94,9 +108,6 @@ public class BuffShopDAO
 					}
 				}
 				
-				// Log para confirmar que o objeto foi populado corretamente ANTES de sair do DAO
-				_log.info(String.format("[DAO-LOAD] Carregado ShopObject para ownerId: %d. Total de buffs: %d.", ownerId, shop.getBuffList().size()));
-				
 				// Adiciona o objeto completo � lista de retorno
 				shops.add(shop);
 			}
@@ -121,10 +132,6 @@ public class BuffShopDAO
 			if (affectedRows == 0)
 			{
 				_log.warning("BuffShopDAO: Tentativa de remover loja para ownerId " + ownerId + ", mas nenhuma linha foi encontrada/deletada.");
-			}
-			else
-			{
-				_log.info("BuffShopDAO: Loja para ownerId " + ownerId + " removida do banco de dados com sucesso.");
 			}
 			
 		}

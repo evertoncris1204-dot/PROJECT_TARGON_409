@@ -15,6 +15,7 @@ import net.sf.l2j.gameserver.communitybbs.manager.ClanBBSManager;
 import net.sf.l2j.gameserver.communitybbs.manager.FavoriteBBSManager;
 import net.sf.l2j.gameserver.communitybbs.manager.FriendsBBSManager;
 import net.sf.l2j.gameserver.communitybbs.manager.MailBBSManager;
+import net.sf.l2j.gameserver.communitybbs.manager.MarketBBSManager;
 import net.sf.l2j.gameserver.communitybbs.manager.PostBBSManager;
 import net.sf.l2j.gameserver.communitybbs.manager.RankingBBSManager;
 import net.sf.l2j.gameserver.communitybbs.manager.RegionBBSManager;
@@ -122,6 +123,8 @@ public class CommunityBoard
 			PostBBSManager.getInstance().parseCmd(command, player);
 		else if (command.startsWith("_bbsranking"))
 				RankingBBSManager.getInstance().parseCmd(command, player);
+		else if (command.startsWith("_bbsmarket"))
+			MarketBBSManager.getInstance().parseCmd(command, player);
 		else
 			BaseBBSManager.separateAndSend("<html><body><br><br><center>The command: " + command + " isn't implemented.</center></body></html>", player);
 	}
@@ -150,8 +153,16 @@ public class CommunityBoard
 			MailBBSManager.getInstance().parseWrite(arg1, arg2, arg3, arg4, arg5, player);
 		else if (url.equals("_friend"))
 			FriendsBBSManager.getInstance().parseWrite(arg1, arg2, arg3, arg4, arg5, player);
+		else if (url.equals("Market"))
+		{
+			System.out.println("[DEBUG] CommunityBoard.handleWriteCommands - Routing to MarketBBSManager");
+			MarketBBSManager.getInstance().parseWrite(arg1, arg2, arg3, arg4, arg5, player);
+		}
 		else
+		{
+			System.out.println("[DEBUG] CommunityBoard.handleWriteCommands - Unknown url: " + url);
 			BaseBBSManager.separateAndSend("<html><body><br><br><center>The command: " + url + " isn't implemented.</center></body></html>", player);
+		}
 	}
 	
 	public void addForum(Forum forum)

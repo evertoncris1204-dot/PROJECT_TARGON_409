@@ -1,0 +1,43 @@
+<html><body><title>Market - Confirm Purchase</title>
+<center>
+<img src=L2UI.SquareGray width=300 height=1>
+<br>
+<img src="L2UI.SquareGray" width="300" height="1">
+<table width=296 bgcolor=000000>
+	<tr>
+		<td width=1></td>
+		<td width=53><font color=LEVEL>Confirm Purchase</font></td>
+		<td width=240><font color=00FFFF>Review your purchase before confirming</font></td>
+	</tr>
+</table>
+<img src="L2UI.SquareGray" width="300" height="1">
+<table width=280>
+	<tr>
+		<td width=10 align=center><table bgcolor=FFFFFF cellpadding=6 cellspacing="-5"><tr><td><button width=32 height=32 back=L2UI_CH3.mainwndtabicon2 fore=L2UI_CH3.mainwndtabicon2></td></tr></table></td>
+		<td width=100>Item: %itemname%%enchant%</td>
+		<td width=40>Quantity: %quantity%</td>
+	</tr>
+</table>
+<img src="L2UI.SquareGray" width=270 height=1><br1>
+<table width=280 bgcolor="000000">
+	<tr>
+		<td width=100><font color=B09878>Price:</font></td>
+		<td width=180><font color=FF9900>%price% Adena</font></td>
+	</tr>
+	<tr>
+		<td width=100><font color=B09878>Seller:</font></td>
+		<td width=180>%seller%</td>
+	</tr>
+</table>
+<img src="L2UI.SquareGray" width="280" height="1">
+<table width=280 bgcolor="000000">
+	<tr>
+		<td width=140 align=center><button value="Confirm Purchase" action="bypass _marketbuyconfirm %listingid%" width=120 height=21 back="L2UI.DefaultButton_click" fore="L2UI.DefaultButton"></td>
+		<td width=140 align=center><a action="bypass _market">Cancel</a></td>
+	</tr>
+</table>
+<img src="L2UI.SquareGray" width="300" height="1">
+<font color=FF0000>Are you sure you want to buy this item?</font>
+</center>
+</body></html>
+

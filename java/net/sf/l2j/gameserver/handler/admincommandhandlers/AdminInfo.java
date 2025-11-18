@@ -13,6 +13,7 @@ import net.sf.l2j.commons.data.Pagination;
 import net.sf.l2j.commons.lang.StringUtil;
 
 import net.sf.l2j.gameserver.data.manager.BuyListManager;
+import net.sf.l2j.gameserver.data.xml.IconTable;
 import net.sf.l2j.gameserver.data.xml.ItemData;
 import net.sf.l2j.gameserver.data.xml.ScriptData;
 import net.sf.l2j.gameserver.enums.DropType;
@@ -51,6 +52,7 @@ public class AdminInfo implements IAdminCommandHandler
 	};
 	
 	private static final DecimalFormat PERCENT = new DecimalFormat("#.###");
+	private static final int PAGE_LIMIT_1 = 5;
 	
 	@Override
 	public void useAdminCommand(String command, Player player)
@@ -371,6 +373,12 @@ public class AdminInfo implements IAdminCommandHandler
 			return;
 		}
 		
+		// Add header with drop type legend
+		final StringBuilder header = new StringBuilder();
+		header.append("<br><center><font color=\"LEVEL\">Drop Info</font></center>");
+		header.append("<br>Drop type legend: <font color=\"C12869\">Quest</font> <font color=\"00ff00\">Sweep</font> <font color=\"3BB9FF\">Drop</font>");
+		header.append("<table border=0 width=\"100%\">");
+		
 		int row = 0;
 		
 		for (DropCategory category : list)
@@ -381,10 +389,11 @@ public class AdminInfo implements IAdminCommandHandler
 			for (DropData drop : droplist)
 			{
 				final double chance = drop.chance();
-				final String color = (chance > 80.) ? "90EE90" : (chance > 5.) ? "BDB76B" : "F08080";
-				final String percent = PERCENT.format(chance);
-				final String amount = (drop.minDrop() == drop.maxDrop()) ? drop.minDrop() + "" : drop.minDrop() + " - " + drop.maxDrop();
+				final double szansa = chance / 10000.0;
 				final Item item = ItemData.getInstance().getTemplate(drop.itemId());
+				
+				// Color based on drop type: Sweep (green) or Drop (blue)
+				final String color = (category.getDropType() == DropType.SPOIL) ? "00ff00" : "3BB9FF";
 				
 				String name = item.getName();
 				if (name.startsWith("Recipe: "))
@@ -392,10 +401,15 @@ public class AdminInfo implements IAdminCommandHandler
 				
 				name = StringUtil.trimAndDress(name, 45);
 				
+				// Get icon for the item
+				String iconPath = IconTable.getInstance().getIcon(drop.itemId());
+				if (iconPath == null || iconPath.isEmpty())
+					iconPath = "icon.noimage";
+				
 				droplist.append(((row % 2) == 0 ? "<table width=280 bgcolor=000000><tr>" : "<table width=280><tr>"));
-				droplist.append("<td width=34 height=40><img src=icon.noimage width=32 height=32></td>");
-				droplist.append("<td width=246>&nbsp;", name, "<br1>");
-				droplist.append("<table width=240><tr><td width=80><font color=B09878>Rate:</font> <font color=", color, ">", percent, "%</font></td><td width=160><font color=B09878>Amount: </font>", amount, "</td></tr></table>");
+				droplist.append("<td width=34 height=40><img src=", iconPath, " width=32 height=32></td>");
+				droplist.append("<td width=246>&nbsp;<font color=\"", color, "\">", name, "</font><br1>");
+				droplist.append("<table width=240><tr><td width=80><font color=B09878>Rate:</font> <font color=", color, ">", PERCENT.format(szansa), "%</font></td></tr></table>");
 				droplist.append("</td></tr></table><img src=L2UI.SquareGray width=280 height=1>");
 				
 				row++;
@@ -410,7 +424,10 @@ public class AdminInfo implements IAdminCommandHandler
 		list.generateSpace(30);
 		list.generatePages("bypass admin_info " + ((isDrop) ? "drop" : "spoil") + " %page% 1");
 		
-		html.replace("%content%", list.getContent());
+		header.append(list.getContent());
+		header.append("</table>");
+		
+		html.replace("%content%", header.toString());
 	}
 	
 	/**
@@ -604,34 +621,55 @@ public class AdminInfo implements IAdminCommandHandler
 	 */
 	private static void sendStatsInfos(Npc npc, NpcHtmlMessage html)
 	{
-		html.setFile("data/html/admin/npcinfo/stat.htm");
+		html.setFile("data/html/admin/npcinfo/default.htm");
 		
-		html.replace("%hp%", (int) npc.getStatus().getHp());
-		html.replace("%hpmax%", npc.getStatus().getMaxHp());
-		html.replace("%mp%", (int) npc.getStatus().getMp());
-		html.replace("%mpmax%", npc.getStatus().getMaxMp());
-		html.replace("%patk%", npc.getStatus().getPAtk(null));
-		html.replace("%matk%", npc.getStatus().getMAtk(null, null));
-		html.replace("%pdef%", npc.getStatus().getPDef(null));
-		html.replace("%mdef%", npc.getStatus().getMDef(null, null));
-		html.replace("%accu%", npc.getStatus().getAccuracy());
-		html.replace("%evas%", npc.getStatus().getEvasionRate(null));
-		html.replace("%crit%", npc.getStatus().getCriticalHit(null, null));
-		html.replace("%rspd%", (int) npc.getStatus().getMoveSpeed());
-		html.replace("%aspd%", npc.getStatus().getPAtkSpd());
-		html.replace("%cspd%", npc.getStatus().getMAtkSpd());
-		html.replace("%str%", npc.getStatus().getSTR());
-		html.replace("%dex%", npc.getStatus().getDEX());
-		html.replace("%con%", npc.getStatus().getCON());
-		html.replace("%int%", npc.getStatus().getINT());
-		html.replace("%wit%", npc.getStatus().getWIT());
-		html.replace("%men%", npc.getStatus().getMEN());
-		html.replace("%ele_fire%", npc.getStatus().getDefenseElementValue(ElementType.FIRE));
-		html.replace("%ele_water%", npc.getStatus().getDefenseElementValue(ElementType.WATER));
-		html.replace("%ele_wind%", npc.getStatus().getDefenseElementValue(ElementType.WIND));
-		html.replace("%ele_earth%", npc.getStatus().getDefenseElementValue(ElementType.EARTH));
-		html.replace("%ele_holy%", npc.getStatus().getDefenseElementValue(ElementType.HOLY));
-		html.replace("%ele_dark%", npc.getStatus().getDefenseElementValue(ElementType.DARK));
+		final StringBuilder sb = new StringBuilder(1000);
+		
+		// Calculate HP multiplier if needed
+		int hpMul = 1;
+		if (npc.getStatus().getMaxHp() > 1000000)
+			hpMul = 1000;
+		else if (npc.getStatus().getMaxHp() > 10000)
+			hpMul = 100;
+		else if (npc.getStatus().getMaxHp() > 1000)
+			hpMul = 10;
+		
+		// Basic Info section
+		sb.append("<html><head><title>");
+		sb.append(npc.getName());
+		sb.append("</title></head><body>");
+		sb.append("<br><center><font color=\"LEVEL\">Basic Info</font></center>");
+		sb.append("<table border=0 width=\"100%\">");
+		sb.append("<tr><td>Name: </td><td align=right>").append(npc.getName()).append("</td></tr>");
+		sb.append("<tr><td>Level: </td><td align=right>").append(npc.getTemplate().getLevel()).append("</td></tr>");
+		sb.append("<tr><td>Aggressive: </td><td align=right>").append((npc instanceof Attackable) ? "Yes" : "No").append("</td></tr>");
+		
+		final ASpawn spawn = npc.getSpawn();
+		if (spawn != null)
+			sb.append("<tr><td>Respawn: </td><td align=right>").append(spawn.getRespawnDelay() / 1000).append("s</td></tr>");
+		else
+			sb.append("<tr><td>Respawn: </td><td align=right>N/A</td></tr>");
+		
+		sb.append("</table>");
+		
+		// Combat Stats section
+		sb.append("<table border=0 width=\"100%\">");
+		sb.append("<tr><td>Max.HP</td><td><font color=FF0000>");
+		sb.append(npc.getStatus().getMaxHp() / hpMul);
+		if (hpMul > 1)
+			sb.append("*").append(hpMul);
+		sb.append("</font></td><td>Max.MP</td><td><font color=0099FF>");
+		sb.append(npc.getStatus().getMaxMp());
+		sb.append("</font></td></tr>");
+		sb.append("<tr><td>P.Atk.</td><td>").append(npc.getStatus().getPAtk(null)).append("</td><td>M.Atk.</td><td>").append(npc.getStatus().getMAtk(null, null)).append("</td></tr>");
+		sb.append("<tr><td>P.Def.</td><td>").append(npc.getStatus().getPDef(null)).append("</td><td>M.Def.</td><td>").append(npc.getStatus().getMDef(null, null)).append("</td></tr>");
+		sb.append("<tr><td>Accuracy</td><td>").append(npc.getStatus().getAccuracy()).append("</td><td>Evasion</td><td>").append(npc.getStatus().getEvasionRate(null)).append("</td></tr>");
+		sb.append("<tr><td>Critical</td><td>").append(npc.getStatus().getCriticalHit(null, null)).append("</td><td>Speed</td><td>").append((int) npc.getStatus().getMoveSpeed()).append("</td></tr>");
+		sb.append("<tr><td>Atk.Speed</td><td>").append(npc.getStatus().getPAtkSpd()).append("</td><td>Cast.Speed</td><td>").append(npc.getStatus().getMAtkSpd()).append("</td></tr>");
+		sb.append("<tr><td>Race</td><td>").append(npc.getTemplate().getRace().toString()).append("</td><td></td><td></td></tr>");
+		sb.append("</table>");
+		
+		html.replace("%content%", sb.toString());
 	}
 	
 	/**

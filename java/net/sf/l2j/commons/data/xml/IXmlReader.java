@@ -65,6 +65,11 @@ public interface IXmlReader
 					@Override
 					public FileVisitResult visitFile(Path file, BasicFileAttributes attrs)
 					{
+						// Skip temporary files (.tmp) and backup files (.bak)
+						String fileName = file.getFileName().toString().toLowerCase();
+						if (fileName.endsWith(".tmp") || fileName.endsWith(".bak"))
+							return FileVisitResult.CONTINUE;
+						
 						pathsToParse.add(file);
 						return FileVisitResult.CONTINUE;
 					}
@@ -470,6 +475,20 @@ public interface IXmlReader
 		public void fatalError(SAXParseException e) throws SAXParseException
 		{
 			throw e;
+		}
+	}
+	
+	/**
+	 * This method parses the content of a NamedNodeMap and feed the given StatsSet.
+	 * @param attrs : The NamedNodeMap to parse.
+	 * @param set : The StatsSet to feed.
+	 */
+	default void parseAndFeed(NamedNodeMap attrs, StatSet set)
+	{
+		for (int i = 0; i < attrs.getLength(); i++)
+		{
+			final Node attr = attrs.item(i);
+			set.set(attr.getNodeName(), attr.getNodeValue());
 		}
 	}
 }

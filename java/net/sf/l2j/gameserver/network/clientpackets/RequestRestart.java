@@ -1,5 +1,6 @@
 package net.sf.l2j.gameserver.network.clientpackets;
 
+import net.sf.l2j.Config;
 import net.sf.l2j.gameserver.data.manager.FestivalOfDarknessManager;
 import net.sf.l2j.gameserver.enums.ZoneId;
 import net.sf.l2j.gameserver.model.actor.Player;
@@ -9,6 +10,8 @@ import net.sf.l2j.gameserver.network.SystemMessageId;
 import net.sf.l2j.gameserver.network.serverpackets.CharSelectInfo;
 import net.sf.l2j.gameserver.network.serverpackets.RestartResponse;
 import net.sf.l2j.gameserver.taskmanager.AttackStanceTaskManager;
+
+import Base.AutoFarm.AutofarmPlayerRoutine;
 
 public final class RequestRestart extends L2GameClientPacket
 {
@@ -27,6 +30,13 @@ public final class RequestRestart extends L2GameClientPacket
 		
 		if (player.getActiveEnchantItem() != null || player.isLocked())
 		{
+			sendPacket(RestartResponse.valueOf(false));
+			return;
+		}
+		
+		if (Config.NORESTART_ZONE && player.isInsideZone(ZoneId.CHAOTIC))
+		{
+			player.sendMessage("You cannot restart while inside a Chaotic zone.");
 			sendPacket(RestartResponse.valueOf(false));
 			return;
 		}
@@ -50,6 +60,15 @@ public final class RequestRestart extends L2GameClientPacket
 			player.sendPacket(SystemMessageId.NO_RESTART_HERE);
 			sendPacket(RestartResponse.valueOf(false));
 			return;
+		}
+		
+		// AutoFarm
+		if (player.isAutoFarm())
+		{
+			if (AutofarmPlayerRoutine.isIpAllowed(player.getIP()))
+			{
+				AutofarmPlayerRoutine.removeIpEntry(player.getObjectId());
+			}
 		}
 		
 		player.removeFromBossZone();

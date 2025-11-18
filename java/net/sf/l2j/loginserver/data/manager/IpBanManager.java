@@ -68,6 +68,25 @@ public class IpBanManager
 	}
 	
 	/**
+	 * Remove the {@link InetAddress} set as parameter from the ban list.
+	 * @param address : The {@link InetAddress} to unban.
+	 * @return True if the IP was banned and removed, false otherwise.
+	 */
+	public boolean removeBanForAddress(InetAddress address)
+	{
+		if (address == null)
+			return false;
+		
+		final Long removed = _bannedIps.remove(address);
+		if (removed != null)
+		{
+			LOGGER.info("Removed IP address ban for {}.", address.getHostAddress());
+			return true;
+		}
+		return false;
+	}
+	
+	/**
 	 * @param address : The {@link InetAddress} to test.
 	 * @return True if the {@link InetAddress} set as parameter is actually banned, otherwise false.<br>
 	 *         <br>

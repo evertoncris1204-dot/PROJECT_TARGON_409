@@ -1,0 +1,85 @@
+<html><body><title>Auto Farm System</title>
+   <center>
+<img src=L2UI.SquareGray width=300 height=1>
+<br>
+   <img src="L2UI.SquareGray" width="300" height="1">
+   <table width=296 bgcolor=000000>
+		<tr>
+			<td width=1></td><td width=53><font color=LEVEL>Priorities :</font></td>
+			<td width=240><font color=00FFFF>1st 'Attack' that using F1, F2, F3 & F4</font></td></tr>
+			<tr><td width=1></td><td width=53></td>
+			<td width=240><font color=AB82FF>2nd 'Chance' that using F5, F6, F7 & F8</font></td></tr>
+		<tr>
+			<td width=1></td><td width=53></td>
+			<td width=240><font color=FF00FF>3rd 'Low Life' that using F9, F10, F11 & F12</font></td>
+		</tr>
+	</table><img src="L2UI.SquareGray" width="300" height="1">
+   <table width=280>
+	<tr>
+		<td width=10 align=center><table bgcolor=FFFFFF cellpadding=6 cellspacing="-5"><tr><td><button width=32 height=32 back=L2UI_CH3.mainwndtabicon2 fore=L2UI_CH3.mainwndtabicon2></td></tr></table></td>
+		<td width=100>System current state:  [ %autofarm% ]<br1>Disable Auto Farm after losing all buffs</td>
+		<td width=40></td>
+		<td width=10><button action="bypass _enableAutoFarm" value="%button%" width="60" height="21" back="L2UI.DefaultButton_click" fore="L2UI.DefaultButton"><br1><button action="bypass _enableBuffProtect" %noBuff% width="16" height="16"></td>
+	</tr>
+  </table><img src="L2UI.SquareGray" width=270 height=1><br1>
+  <table width=280 bgcolor="000000">
+	   <tr>
+		  <td width=5></td>
+		   <td width=100 valign="top" align="center"><font color=B09878>Select page of your shortcuts: </font></td>
+		   <td width=20 align=center><button action="bypass _pageAutoFarm dec_page" width=16 height=16 back=L2UI_CH3.prev1_down fore=L2UI_CH3.prev1></td>
+		   <td width=40 align=center><font color=CC9933>%page%</font></td>
+		   <td width=20 align=center><button action="bypass _pageAutoFarm inc_page" width=16 height=16 back=L2UI_CH3.next1_down fore=L2UI_CH3.next1></td>
+	   </tr> 
+  </table><img src="L2UI.SquareGray" width="280" height="1">
+  <table width=280>
+	   <tr>
+		  <td width=5></td>
+		   <td width=100 valign="top" align="center">Heal Percent: </td>
+		   <td width=20 align=center><button action="bypass _healAutoFarm dec_heal" width=16 height=16 back=L2UI_CH3.prev1_down fore=L2UI_CH3.prev1></td>
+		   <td width=40 align=center><font color=CC9933>%heal%</font></td>
+		   <td width=20 align=center><button action="bypass _healAutoFarm inc_heal" width=16 height=16 back=L2UI_CH3.next1_down fore=L2UI_CH3.next1></td>
+	   </tr> 
+  </table><img src="L2UI.SquareGray" width="280" height="1">
+  <table width=280 bgcolor="000000">
+	   <tr>
+		  <td width=5></td>
+		   <td width=100 valign="top" align="center">HP Potion: </td>
+		   <td width=20 align=center><button action="bypass _hpAutoFarm dec_hp_pot" width=16 height=16 back=L2UI_CH3.prev1_down fore=L2UI_CH3.prev1></td>
+		   <td width=40 align=center><font color=CC9933>%hpPotion%</font></td>
+		   <td width=20 align=center><button action="bypass _hpAutoFarm inc_hp_pot" width=16 height=16 back=L2UI_CH3.next1_down fore=L2UI_CH3.next1></td>
+	   </tr> 
+  </table><img src="L2UI.SquareGray" width="280" height="1">
+  <table width=280>
+	   <tr>
+		  <td width=5></td>
+		   <td width=100 valign="top" align="center">MP Potion: </td>
+		   <td width=20 align=center><button action="bypass _mpAutoFarm dec_mp_pot" width=16 height=16 back=L2UI_CH3.prev1_down fore=L2UI_CH3.prev1></td>
+		   <td width=40 align=center><font color=CC9933>%mpPotion%</font></td>
+		   <td width=20 align=center><button action="bypass _mpAutoFarm inc_mp_pot" width=16 height=16 back=L2UI_CH3.next1_down fore=L2UI_CH3.next1></td>
+	   </tr> 
+  </table><img src="L2UI.SquareGray" width="280" height="1">
+  <table width=280 bgcolor="000000">
+	   <tr>
+		  <td width=5></td>
+		   <td width=100 valign="top" align="center">Target Range: </td>
+		   <td width=20 align=center><button action="bypass _radiusAutoFarm dec_radius" width=16 height=16 back=L2UI_CH3.prev1_down fore=L2UI_CH3.prev1></td>
+		   <td width=40 align=center><font color=CC9933>%radius%</font></td>
+		   <td width=20 align=center><button action="bypass _radiusAutoFarm inc_radius" width=16 height=16 back=L2UI_CH3.next1_down fore=L2UI_CH3.next1></td>
+	   </tr> 
+  </table><img src="L2UI.SquareGray" width="280" height="1">
+  <table width=280>
+	   <tr>
+		  <td width=5></td>
+		   <td width=100 valign="top" align="center">Summon Skill %: </td>
+		   <td width=20 align=center><button action="bypass _summonSkillAutoFarm dec_summonSkill" width=16 height=16 back=L2UI_CH3.prev1_down fore=L2UI_CH3.prev1></td>
+		   <td width=40 align=center><font color=CC9933>%summonSkill%</font></td>
+		   <td width=20 align=center><button action="bypass _summonSkillAutoFarm inc_summonSkill" width=16 height=16 back=L2UI_CH3.next1_down fore=L2UI_CH3.next1></td>
+	   </tr> 
+  </table><img src="L2UI.SquareGray" width="280" height="1">
+  <table width=280 bgcolor=000000>
+		 <tr>
+		    <td width=80 valign="top" align="center"><a action="bypass voiced_menu">Return</a></td>
+	   </tr>
+  </table><img src="L2UI.SquareGray" width="300" height="1">
+</center>
+</body></html>

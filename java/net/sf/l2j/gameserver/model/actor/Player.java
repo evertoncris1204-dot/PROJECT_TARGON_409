@@ -13,6 +13,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentSkipListMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.Future;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -90,7 +91,6 @@ import net.sf.l2j.gameserver.handler.IItemHandler;
 import net.sf.l2j.gameserver.handler.ItemHandler;
 import net.sf.l2j.gameserver.handler.skillhandlers.SummonFriend;
 import net.sf.l2j.gameserver.model.AccessLevel;
-import net.sf.l2j.gameserver.model.L2AutoFarmTask;
 import net.sf.l2j.gameserver.model.World;
 import net.sf.l2j.gameserver.model.WorldObject;
 import net.sf.l2j.gameserver.model.actor.ai.type.PlayerAI;
@@ -127,6 +127,7 @@ import net.sf.l2j.gameserver.model.craft.ManufactureList;
 import net.sf.l2j.gameserver.model.group.CommandChannel;
 import net.sf.l2j.gameserver.model.group.Party;
 import net.sf.l2j.gameserver.model.group.PartyMatchRoom;
+import net.sf.l2j.gameserver.model.holder.IntIntHolder;
 import net.sf.l2j.gameserver.model.holder.skillnode.GeneralSkillNode;
 import net.sf.l2j.gameserver.model.item.instance.ItemInstance;
 import net.sf.l2j.gameserver.model.item.kind.Item;
@@ -140,6 +141,9 @@ import net.sf.l2j.gameserver.model.location.Location;
 import net.sf.l2j.gameserver.model.location.ObserverLocation;
 import net.sf.l2j.gameserver.model.memo.PlayerMemo;
 import net.sf.l2j.gameserver.model.multisell.PreparedListContainer;
+import net.sf.l2j.gameserver.model.entity.Tournament.enums.TournamentFightType;
+import net.sf.l2j.gameserver.model.entity.Tournament.model.TournamentTeam;
+import net.sf.l2j.gameserver.model.entity.instance.Instance;
 import net.sf.l2j.gameserver.model.olympiad.OlympiadGameManager;
 import net.sf.l2j.gameserver.model.olympiad.OlympiadGameTask;
 import net.sf.l2j.gameserver.model.olympiad.OlympiadManager;
@@ -178,6 +182,7 @@ import net.sf.l2j.gameserver.network.serverpackets.ObserverStart;
 import net.sf.l2j.gameserver.network.serverpackets.PartySmallWindowUpdate;
 import net.sf.l2j.gameserver.network.serverpackets.PledgeShowMemberListDelete;
 import net.sf.l2j.gameserver.network.serverpackets.PledgeShowMemberListUpdate;
+import net.sf.l2j.gameserver.network.serverpackets.PlaySound;
 import net.sf.l2j.gameserver.network.serverpackets.PrivateStoreListBuy;
 import net.sf.l2j.gameserver.network.serverpackets.PrivateStoreListSell;
 import net.sf.l2j.gameserver.network.serverpackets.PrivateStoreManageListBuy;
@@ -188,6 +193,9 @@ import net.sf.l2j.gameserver.network.serverpackets.RecipeShopManageList;
 import net.sf.l2j.gameserver.network.serverpackets.RecipeShopMsg;
 import net.sf.l2j.gameserver.network.serverpackets.RecipeShopSellList;
 import net.sf.l2j.gameserver.network.serverpackets.RelationChanged;
+import net.sf.l2j.gameserver.util.sellBuffEngine.BuffShopManager;
+import net.sf.l2j.gameserver.util.sellBuffEngine.BuffShopUIManager;
+import net.sf.l2j.gameserver.util.sellBuffEngine.ShopObject;
 import net.sf.l2j.gameserver.network.serverpackets.Revive;
 import net.sf.l2j.gameserver.network.serverpackets.Ride;
 import net.sf.l2j.gameserver.network.serverpackets.SendTradeDone;
@@ -336,6 +344,7 @@ public final class Player extends Playable
 	private int _duelId;
 	private SystemMessageId _noDuelReason = SystemMessageId.THERE_IS_NO_OPPONENT_TO_RECEIVE_YOUR_CHALLENGE_FOR_A_DUEL;
 	
+	
 	private boolean _canFeed;
 	protected PetTemplate _petTemplate;
 	private PetDataEntry _petData;
@@ -444,6 +453,44 @@ public final class Player extends Playable
 	
 	private ItemInstance _activeEnchantItem;
 	
+	// Farm Dungeon Instance
+	private int _farmDungeonInstanceId = -1;
+	private int _tournamentInstanceId = -1;
+	
+	// AutoFarm settings
+	private boolean _autoFarm = false;
+	private int _radius = 1200;
+	private int _page = 9; // Barra 10 (0-based = page 9)
+	private int _healPercent = 30;
+	private boolean _noBuffProtection = false;
+	private boolean _antiKsProtection = false;
+	private boolean _summonAttack = false;
+	private int _summonSkillPercent = 50;
+	private int _hpPotionPercentage = 60;
+	private int _mpPotionPercentage = 60;
+	private final List<Integer> _ignoredMonsters = new CopyOnWriteArrayList<>();
+	
+	// --------------------------------------------------
+	// Tournament System
+	// --------------------------------------------------
+	private boolean _tournamentTeamBeingInvited;
+	private int _tournamentFightId;
+	private TournamentFightType _tournamentFightType = TournamentFightType.NONE;
+	private boolean _inTournamentMatch;
+	private int _lastX;
+	private int _lastY;
+	private int _lastZ;
+	private int _tournamentPoints;
+	private int _tournamentMatchDamage;
+	private Map<TournamentFightType, Integer> _tournamentKills = new HashMap<>();
+	private Map<TournamentFightType, Integer> _tournamentVictories = new HashMap<>();
+	private Map<TournamentFightType, Integer> _tournamentDefeats = new HashMap<>();
+	private Map<TournamentFightType, Integer> _tournamentTies = new HashMap<>();
+	private Map<TournamentFightType, Integer> _tournamentDamage = new HashMap<>();
+	private TournamentTeam _tournamentTeam;
+	private int _tournamentTeamRequesterId;
+	private boolean _tournamentTeleportRequested;
+	
 	protected boolean _inventoryDisable;
 	
 	private final Set<Integer> _activeSoulShots = ConcurrentHashMap.newKeySet(1);
@@ -489,6 +536,10 @@ public final class Player extends Playable
 	private BoatInfo _boatInfo = new BoatInfo(this);
 	
 	private boolean _isBlockingAll;
+	private boolean _partyRefusal = false;
+	private boolean _tradeRefusal = false;
+	private boolean _buffsRefusal = false;
+	private boolean _messageRefusal = false;
 	
 	private final Set<Integer> _selectedBlocksList = ConcurrentHashMap.newKeySet();
 	private final Set<Integer> _selectedFriendList = ConcurrentHashMap.newKeySet();
@@ -977,6 +1028,14 @@ public final class Player extends Playable
 			_lastCompassZone = ExSetCompassZoneCode.SEVENSIGNSZONE;
 			sendPacket(new ExSetCompassZoneCode(ExSetCompassZoneCode.SEVENSIGNSZONE));
 		}
+		else if (isInsideZone(ZoneId.CHAOTIC))
+		{
+			if (_lastCompassZone == ExSetCompassZoneCode.CHAOTIC)
+				return;
+			
+			_lastCompassZone = ExSetCompassZoneCode.CHAOTIC;
+			sendPacket(new ExSetCompassZoneCode(ExSetCompassZoneCode.CHAOTIC));
+		}
 		else if (isInsideZone(ZoneId.PEACE))
 		{
 			if (_lastCompassZone == ExSetCompassZoneCode.PEACEZONE)
@@ -1323,7 +1382,40 @@ public final class Player extends Playable
 			else
 				sendPacket(SystemMessage.getSystemMessage(SystemMessageId.S1_DISARMED).addItemName(item));
 			
-			getInventory().unequipItemInBodySlotAndRecord(item);
+			// Check if removing a weapon - if so, remove weapon skin
+			if ((item.getItem().getBodyPart() & Item.SLOT_ALLWEAPON) != 0)
+			{
+				getInventory().unequipItemInBodySlotAndRecord(item);
+				
+				// Check if no weapon is equipped after removal (check both RHAND and LHAND slots)
+				ItemInstance rhandItem = getInventory().getItemFrom(net.sf.l2j.gameserver.enums.Paperdoll.RHAND);
+				ItemInstance lhandItem = getInventory().getItemFrom(net.sf.l2j.gameserver.enums.Paperdoll.LHAND);
+				
+				boolean hasWeapon = false;
+				if (rhandItem != null && rhandItem.getItem() instanceof net.sf.l2j.gameserver.model.item.kind.Weapon)
+				{
+					net.sf.l2j.gameserver.model.item.kind.Weapon weapon = (net.sf.l2j.gameserver.model.item.kind.Weapon) rhandItem.getItem();
+					if (weapon.getItemType() != net.sf.l2j.gameserver.enums.items.WeaponType.NONE && weapon.getItemType() != net.sf.l2j.gameserver.enums.items.WeaponType.FIST)
+						hasWeapon = true;
+				}
+				if (!hasWeapon && lhandItem != null && lhandItem.getItem() instanceof net.sf.l2j.gameserver.model.item.kind.Weapon)
+				{
+					net.sf.l2j.gameserver.model.item.kind.Weapon weapon = (net.sf.l2j.gameserver.model.item.kind.Weapon) lhandItem.getItem();
+					if (weapon.getItemType() != net.sf.l2j.gameserver.enums.items.WeaponType.NONE && weapon.getItemType() != net.sf.l2j.gameserver.enums.items.WeaponType.FIST)
+						hasWeapon = true;
+				}
+				
+				// If no weapon is equipped, remove weapon skin
+				if (!hasWeapon && _weaponSkinOption > 0)
+				{
+					_weaponSkinOption = 0;
+					storeDressMeData();
+				}
+			}
+			else
+			{
+				getInventory().unequipItemInBodySlotAndRecord(item);
+			}
 		}
 		else
 		{
@@ -1337,7 +1429,64 @@ public final class Player extends Playable
 					sendPacket(SystemMessage.getSystemMessage(SystemMessageId.S1_EQUIPPED).addItemName(item));
 				
 				if ((item.getItem().getBodyPart() & Item.SLOT_ALLWEAPON) != 0)
+				{
 					rechargeShots(true, true);
+					
+					// Check if equipped item is a weapon - if not, remove weapon skin
+					// Also check if weapon skin is still compatible with new weapon
+					ItemInstance rhandItem = getInventory().getItemFrom(net.sf.l2j.gameserver.enums.Paperdoll.RHAND);
+					ItemInstance lhandItem = getInventory().getItemFrom(net.sf.l2j.gameserver.enums.Paperdoll.LHAND);
+					
+					boolean hasWeapon = false;
+					net.sf.l2j.gameserver.model.item.kind.Weapon equippedWeapon = null;
+					
+					if (rhandItem != null && rhandItem.getItem() instanceof net.sf.l2j.gameserver.model.item.kind.Weapon)
+					{
+						net.sf.l2j.gameserver.model.item.kind.Weapon weapon = (net.sf.l2j.gameserver.model.item.kind.Weapon) rhandItem.getItem();
+						if (weapon.getItemType() != net.sf.l2j.gameserver.enums.items.WeaponType.NONE && weapon.getItemType() != net.sf.l2j.gameserver.enums.items.WeaponType.FIST)
+						{
+							hasWeapon = true;
+							equippedWeapon = weapon;
+						}
+					}
+					if (!hasWeapon && lhandItem != null && lhandItem.getItem() instanceof net.sf.l2j.gameserver.model.item.kind.Weapon)
+					{
+						net.sf.l2j.gameserver.model.item.kind.Weapon weapon = (net.sf.l2j.gameserver.model.item.kind.Weapon) lhandItem.getItem();
+						if (weapon.getItemType() != net.sf.l2j.gameserver.enums.items.WeaponType.NONE && weapon.getItemType() != net.sf.l2j.gameserver.enums.items.WeaponType.FIST)
+						{
+							hasWeapon = true;
+							equippedWeapon = weapon;
+						}
+					}
+					
+					// If no weapon is equipped, remove weapon skin
+					if (!hasWeapon && _weaponSkinOption > 0)
+					{
+						_weaponSkinOption = 0;
+						storeDressMeData();
+					}
+					// If weapon skin exists, check if it's compatible with new weapon
+					else if (hasWeapon && _weaponSkinOption > 0 && equippedWeapon != null)
+					{
+						final net.sf.l2j.gameserver.model.skin.SkinPackage weaponSkin = net.sf.l2j.gameserver.data.xml.DressMeData.getInstance().getWeaponSkinsPackage(_weaponSkinOption);
+						if (weaponSkin != null && weaponSkin.getWeaponId() > 0)
+						{
+							final net.sf.l2j.gameserver.model.item.kind.Item skinWeaponItem = net.sf.l2j.gameserver.data.xml.ItemData.getInstance().getTemplate(weaponSkin.getWeaponId());
+							if (skinWeaponItem instanceof net.sf.l2j.gameserver.model.item.kind.Weapon)
+							{
+								final net.sf.l2j.gameserver.enums.items.WeaponType skinType = ((net.sf.l2j.gameserver.model.item.kind.Weapon) skinWeaponItem).getItemType();
+								final net.sf.l2j.gameserver.enums.items.WeaponType equippedType = equippedWeapon.getItemType();
+								
+								// If types don't match, remove weapon skin
+								if (equippedType != skinType)
+								{
+									_weaponSkinOption = 0;
+									storeDressMeData();
+								}
+							}
+						}
+					}
+				}
 			}
 			else
 				sendPacket(SystemMessageId.CANNOT_EQUIP_ITEM_DUE_TO_BAD_CONDITION);
@@ -2140,8 +2289,10 @@ public final class Player extends Playable
 	 */
 	public ItemInstance dropItem(int objectId, int count, int x, int y, int z, boolean sendMessage)
 	{
-		final ItemInstance item = _inventory.dropItem(objectId, count);
-		if (item == null)
+		final ItemInstance item = _inventory.getItemByObjectId(objectId);
+		
+		final ItemInstance droppedItem = _inventory.dropItem(objectId, count);
+		if (droppedItem == null)
 		{
 			if (sendMessage)
 				sendPacket(SystemMessageId.NOT_ENOUGH_ITEMS);
@@ -2149,13 +2300,13 @@ public final class Player extends Playable
 			return null;
 		}
 		
-		item.dropMe(this, x, y, z);
+		droppedItem.dropMe(this, x, y, z);
 		
 		// Send message to client, if requested.
 		if (sendMessage)
-			sendPacket(SystemMessage.getSystemMessage(SystemMessageId.YOU_DROPPED_S1).addItemName(item));
+			sendPacket(SystemMessage.getSystemMessage(SystemMessageId.YOU_DROPPED_S1).addItemName(droppedItem));
 		
-		return item;
+		return droppedItem;
 	}
 	
 	@Override
@@ -2282,6 +2433,13 @@ public final class Player extends Playable
 	 */
 	public void logout(boolean closeClient)
 	{
+		// Stop autofarm bot before logout
+		if (getBot() != null && _autoFarm)
+		{
+			getBot().stop();
+			_autoFarm = false;
+		}
+		
 		final GameClient client = _client;
 		if (client == null)
 			return;
@@ -2401,6 +2559,31 @@ public final class Player extends Playable
 	@Override
 	public void sendPacket(L2GameServerPacket packet)
 	{
+		// Block teleport confirmation dialogs when autofarm is active
+		if (packet instanceof net.sf.l2j.gameserver.network.serverpackets.ConfirmDlg)
+		{
+			net.sf.l2j.gameserver.network.serverpackets.ConfirmDlg confirm = (net.sf.l2j.gameserver.network.serverpackets.ConfirmDlg) packet;
+			
+			try
+			{
+				java.lang.reflect.Field messageIdField = confirm.getClass().getDeclaredField("_messageId");
+				messageIdField.setAccessible(true);
+				int messageId = messageIdField.getInt(confirm);
+				
+				// Block teleport/summon confirmation (1842) when autofarm is active or bot is running
+				if (messageId == 1842 && (isAutoFarm() || (_bot != null && _bot.running())))
+				{
+					_summonTargetRequest = null;
+					_summonSkillRequest = null;
+					return; // Don't send the packet
+				}
+			}
+			catch (Exception e)
+			{
+				// Ignore reflection errors
+			}
+		}
+		
 		if (_client != null)
 			_client.sendPacket(packet);
 	}
@@ -2548,9 +2731,9 @@ public final class Player extends Playable
 				newTarget = null;
 			
 			// Can't target and attack festival monsters if not participant.
-			if (newTarget instanceof FestivalMonster && !isFestivalParticipant())
-				newTarget = null;
-		}
+		if (newTarget instanceof FestivalMonster && !isFestivalParticipant())
+			newTarget = null;
+	}
 		
 		// Get the current target
 		final WorldObject oldTarget = getTarget();
@@ -2711,8 +2894,8 @@ public final class Player extends Playable
 		{
 			if (isFakeDeath())
 				stopFakeDeath(true);
-			if (getFarm().running())
-				getFarm().stop();
+			if (getBot() != null && _autoFarm)
+				getBot().stop();
 		}
 		
 		if (killer != null)
@@ -2730,22 +2913,18 @@ public final class Player extends Playable
 				{
 					onDieDropItem(killer); // Check if any item should be dropped
 					
-					// if the area isn't an arena
-					if (!isInArena())
+					// if both victim and attacker got clans & aren't academicians
+					if (pk != null && pk.getClan() != null && getClan() != null && !isAcademyMember() && !pk.isAcademyMember())
 					{
-						// if both victim and attacker got clans & aren't academicians
-						if (pk != null && pk.getClan() != null && getClan() != null && !isAcademyMember() && !pk.isAcademyMember())
+						// if clans got mutual war, then use the reputation calcul
+						if (_clan.isAtWarWith(pk.getClanId()) && pk.getClan().isAtWarWith(_clan.getClanId()))
 						{
-							// if clans got mutual war, then use the reputation calcul
-							if (_clan.isAtWarWith(pk.getClanId()) && pk.getClan().isAtWarWith(_clan.getClanId()))
-							{
-								// when your reputation score is 0 or below, the other clan cannot acquire any reputation points
-								if (getClan().getReputationScore() > 0)
-									pk.getClan().addReputationScore(1);
-								// when the opposing sides reputation score is 0 or below, your clans reputation score doesn't decrease
-								if (pk.getClan().getReputationScore() > 0)
-									_clan.takeReputationScore(1);
-							}
+							// when your reputation score is 0 or below, the other clan cannot acquire any reputation points
+							if (getClan().getReputationScore() > 0)
+								pk.getClan().addReputationScore(1);
+							// when the opposing sides reputation score is 0 or below, your clans reputation score doesn't decrease
+							if (pk.getClan().getReputationScore() > 0)
+								_clan.takeReputationScore(1);
 						}
 					}
 					
@@ -2884,8 +3063,9 @@ public final class Player extends Playable
 		if (isInDuel() && targetPlayer.isInDuel())
 			return;
 		
-		// If in pvp zone, do nothing.
-		if (isInsideZone(ZoneId.PVP) && targetPlayer.isInsideZone(ZoneId.PVP))
+		// If in pvp zone or chaotic zone, do nothing.
+		if ((isInsideZone(ZoneId.PVP) && targetPlayer.isInsideZone(ZoneId.PVP)) || 
+			(isInsideZone(ZoneId.CHAOTIC) && targetPlayer.isInsideZone(ZoneId.CHAOTIC)))
 		{
 			// Until the zone was a siege zone. Check also if victim was a player. Randomers aren't counted.
 			if (target instanceof Player && getSiegeState() > 0 && targetPlayer.getSiegeState() > 0 && getSiegeState() != targetPlayer.getSiegeState())
@@ -2903,12 +3083,23 @@ public final class Player extends Playable
 		}
 		
 		// Check if it's pvp (cases : regular, wars, victim is PKer)
-		if (checkIfPvP(target) || (targetPlayer.getClan() != null && getClan() != null && getClan().isAtWarWith(targetPlayer.getClanId()) && targetPlayer.getClan().isAtWarWith(getClanId()) && targetPlayer.getPledgeType() != Clan.SUBUNIT_ACADEMY && getPledgeType() != Clan.SUBUNIT_ACADEMY) || (targetPlayer.getKarma() > 0 && Config.KARMA_AWARD_PK_KILL))
+		// Don't drop karma in chaotic zone
+		if ((!isInsideZone(ZoneId.CHAOTIC)) && (checkIfPvP(target) || (targetPlayer.getClan() != null && getClan() != null && getClan().isAtWarWith(targetPlayer.getClanId()) && targetPlayer.getClan().isAtWarWith(getClanId()) && targetPlayer.getPledgeType() != Clan.SUBUNIT_ACADEMY && getPledgeType() != Clan.SUBUNIT_ACADEMY) || (targetPlayer.getKarma() > 0 && Config.KARMA_AWARD_PK_KILL)))
 		{
 			if (target instanceof Player)
 			{
-				// Add PvP point to attacker.
-				setPvpKills(getPvpKills() + 1);
+			// Add PvP point to attacker.
+			setPvpKills(getPvpKills() + 1);
+			
+			// Update ranking data
+			net.sf.l2j.gameserver.data.manager.RankingManager.getInstance().updatePlayerRanking(this);
+			
+			// Announce PvP kill
+			if (Config.ANNOUNCE_KILL)
+			{
+				String msg = Config.ANNOUNCE_PVP_MSG.replace("$killer", getName()).replace("$target", targetPlayer.getName());
+				World.announceToOnlinePlayers(msg, true);
+			}
 				
 				// Send UserInfo packet to attacker with its Karma and PK Counter
 				sendPacket(new UserInfo(this));
@@ -2919,7 +3110,19 @@ public final class Player extends Playable
 		{
 			// PK Points are increased only if you kill a player.
 			if (target instanceof Player)
+			{
 				setPkKills(getPkKills() + 1);
+				
+				// Update ranking data
+				net.sf.l2j.gameserver.data.manager.RankingManager.getInstance().updatePlayerRanking(this);
+				
+				// Announce PK kill
+				if (Config.ANNOUNCE_KILL)
+				{
+					String msg = Config.ANNOUNCE_PK_MSG.replace("$killer", getName()).replace("$target", targetPlayer.getName());
+					World.announceToOnlinePlayers(msg, true);
+				}
+			}
 			
 			// Calculate new karma.
 			setKarma(getKarma() + Formulas.calculateKarmaGain(getPkKills(), target instanceof Summon));
@@ -2934,7 +3137,7 @@ public final class Player extends Playable
 	
 	public void updatePvPStatus()
 	{
-		if (isInsideZone(ZoneId.PVP))
+		if (isInsideZone(ZoneId.PVP) || isInsideZone(ZoneId.CHAOTIC))
 			return;
 		
 		PvpFlagTaskManager.getInstance().add(this, Config.PVP_NORMAL_TIME);
@@ -2952,7 +3155,9 @@ public final class Player extends Playable
 		if (isInDuel() && player.getDuelId() == getDuelId())
 			return;
 		
-		if ((!isInsideZone(ZoneId.PVP) || !target.isInsideZone(ZoneId.PVP)) && player.getKarma() == 0)
+		if ((!isInsideZone(ZoneId.PVP) || !target.isInsideZone(ZoneId.PVP)) && 
+			(!isInsideZone(ZoneId.CHAOTIC) || !target.isInsideZone(ZoneId.CHAOTIC)) && 
+			player.getKarma() == 0)
 		{
 			PvpFlagTaskManager.getInstance().add(this, checkIfPvP(player) ? Config.PVP_PVP_TIME : Config.PVP_NORMAL_TIME);
 			
@@ -2981,6 +3186,10 @@ public final class Player extends Playable
 	 */
 	public void applyDeathPenalty(boolean atWar, boolean killedByPlayable)
 	{
+		// No death penalty in CHAOTIC zone
+		if (isInsideZone(ZoneId.CHAOTIC))
+			return;
+		
 		if (isInsideZone(ZoneId.PVP))
 		{
 			// No xp loss inside siege zone if a Charm of Courage is active.
@@ -4381,11 +4590,15 @@ public final class Player extends Playable
 		storeCharBase();
 		storeCharSub();
 		storeEffect(storeActiveEffects);
+		storeDressMeData();
 	}
 	
 	public void store()
 	{
 		store(true);
+		
+		// Update ranking data on logout
+		net.sf.l2j.gameserver.data.manager.RankingManager.getInstance().updatePlayerRanking(this);
 	}
 	
 	public void storeCharBase()
@@ -4939,6 +5152,13 @@ public final class Player extends Playable
 			return true;
 		
 		final Player targetPlayer = target.getActingPlayer();
+		
+		// Check if target has buffs refusal enabled
+		if (targetPlayer != null && targetPlayer.getBuffsRefusal() && !isGM())
+		{
+			sendMessage(targetPlayer.getName() + " is refusing buffs.");
+			return false;
+		}
 		
 		// No checks if both players are in Arena ; CTRL check if caster is on PEACE zone.
 		if (targetPlayer.isInsideZone(ZoneId.PVP))
@@ -6091,6 +6311,8 @@ public final class Player extends Playable
 		revalidateZone(true);
 		
 		RelationManager.getInstance().notifyFriends(this, true);
+		
+		net.sf.l2j.gameserver.model.entity.Tournament.TournamentManager.getInstance().onPlayerEnter(this);
 	}
 	
 	public long getLastAccess()
@@ -6236,12 +6458,32 @@ public final class Player extends Playable
 		// If under shop mode, cancel it. Leave the Player sat down.
 		if (isInStoreMode())
 			setOperateType(OperateType.NONE);
+		
+		// Desativa AutoFarm ao teleportar (para o cliente)
+		if (isAutoFarm() && getBot() != null)
+		{
+			getBot().stop();
+			setAutoFarm(false);
+			sendPacket(new SystemMessage(SystemMessageId.AUTO_FARM_TELEPORT));
+		}
+		
+		// Clean instance known list after teleport if in an instance
+		if (isInTournamentInstance() || isInFarmDungeonInstance())
+		{
+			net.sf.l2j.commons.pool.ThreadPool.schedule(() -> cleanInstanceKnownList(), 500);
+		}
 	}
 	
 	@Override
 	public void addExpAndSp(long addToExp, int addToSp)
 	{
 		getStatus().addExpAndSp(addToExp, addToSp);
+		
+		// Track PvE stats for ranking (only if exp was gained from killing monsters)
+		if (addToExp > 0)
+		{
+			net.sf.l2j.gameserver.data.manager.RankingManager.getInstance().updatePvEStats(this);
+		}
 	}
 	
 	public void addExpAndSp(long addToExp, int addToSp, Map<Creature, RewardInfo> rewards)
@@ -6261,6 +6503,9 @@ public final class Player extends Playable
 			getStatus().reduceHp(value, attacker, awake, isDOT, skill.isToggle(), skill.getDmgDirectlyToHP());
 		else
 			getStatus().reduceHp(value, attacker, awake, isDOT, false, false);
+		
+		if (isInTournamentMatch() && attacker instanceof Player && ((Player) attacker).isInTournamentMatch() && ((Player) attacker).getTournamentFightId() == getTournamentFightId())
+			addTournamentMatchDamage((int) value);
 	}
 	
 	public synchronized void addBypass(String bypass)
@@ -6364,6 +6609,8 @@ public final class Player extends Playable
 	public void deleteMe()
 	{
 		super.deleteMe();
+		
+		net.sf.l2j.gameserver.model.entity.Tournament.TournamentManager.getInstance().storeTournamentData(this);
 		
 		cleanup();
 		store();
@@ -6624,7 +6871,7 @@ public final class Player extends Playable
 		if (_deathPenaltyBuffLevel >= 15) // maximum level reached
 			return;
 		
-		if ((getKarma() > 0 || Rnd.get(1, 100) <= Config.DEATH_PENALTY_CHANCE) && !(killer instanceof Player) && !(getCharmOfLuck() && (killer == null || killer.isRaidRelated())) && !isPhoenixBlessed() && !(isInsideZone(ZoneId.PVP) || isInsideZone(ZoneId.SIEGE)))
+		if ((getKarma() > 0 || Rnd.get(1, 100) <= Config.DEATH_PENALTY_CHANCE) && !(killer instanceof Player) && !(getCharmOfLuck() && (killer == null || killer.isRaidRelated())) && !isPhoenixBlessed() && !(isInsideZone(ZoneId.PVP) || isInsideZone(ZoneId.SIEGE)) && !isInsideZone(ZoneId.CHAOTIC))
 		{
 			if (_deathPenaltyBuffLevel != 0)
 				removeSkill(5076, false);
@@ -6950,6 +7197,10 @@ public final class Player extends Playable
 	@Override
 	public void sendInfo(Player player)
 	{
+		// Check instance compatibility before sending info
+		if (!player.canSeeInInstance(this))
+			return;
+		
 		if (getPolymorphTemplate() != null)
 			player.sendPacket(new AbstractNpcInfo.PcMorphInfo(this, getPolymorphTemplate()));
 		else
@@ -7010,6 +7261,22 @@ public final class Player extends Playable
 	
 	public boolean teleportRequest(Player requester, L2Skill skill)
 	{
+		// If clearing request (both null), always allow it
+		if (requester == null && skill == null)
+		{
+			_summonTargetRequest = null;
+			_summonSkillRequest = null;
+			return true;
+		}
+		
+		// Block NEW teleport request if autofarm is active or bot is running
+		if (isAutoFarm() || (_bot != null && _bot.running()))
+		{
+			_summonTargetRequest = null;
+			_summonSkillRequest = null;
+			return false;
+		}
+		
 		if (_summonTargetRequest != null && requester != null)
 			return false;
 		
@@ -7072,7 +7339,67 @@ public final class Player extends Playable
 	@Override
 	public void addKnownObject(WorldObject object)
 	{
+		// Check instance compatibility before adding to known list
+		if (!canSeeInInstance(object))
+			return;
+		
 		sendInfoFrom(object);
+	}
+	
+	/**
+	 * Check if this player can see the given object based on instance rules
+	 */
+	public boolean canSeeInInstance(WorldObject object)
+	{
+		// Tournament instance check
+		if (isInTournamentInstance())
+		{
+			if (object instanceof Player targetPlayer)
+			{
+				// Can only see players in the same tournament instance
+				if (!targetPlayer.isInTournamentInstance() || targetPlayer.getTournamentInstanceId() != getTournamentInstanceId())
+					return false;
+			}
+			else if (object instanceof net.sf.l2j.gameserver.model.actor.Npc npc)
+			{
+				// Tournament players can't see world NPCs or Farm Dungeon NPCs
+				return false;
+			}
+		}
+		// Farm Dungeon instance check
+		else if (isInFarmDungeonInstance())
+		{
+			if (object instanceof Player targetPlayer)
+			{
+				// Can only see players in the same Farm Dungeon instance
+				if (!targetPlayer.isInFarmDungeonInstance() || targetPlayer.getFarmDungeonInstanceId() != getFarmDungeonInstanceId())
+					return false;
+			}
+			else if (object instanceof net.sf.l2j.gameserver.model.actor.Npc npc)
+			{
+				// Can only see NPCs from the same Farm Dungeon instance
+				if (npc.getFarmDungeonInstanceId() != getFarmDungeonInstanceId())
+					return false;
+			}
+		}
+		// Not in any instance - check if target is in an instance
+		else
+		{
+			if (object instanceof Player targetPlayer)
+			{
+				// Can't see players in Tournament or Farm Dungeon instances
+				if (targetPlayer.isInTournamentInstance() || targetPlayer.isInFarmDungeonInstance())
+					return false;
+			}
+			else if (object instanceof net.sf.l2j.gameserver.model.actor.Npc npc)
+			{
+				// Can't see NPCs from Farm Dungeon instances
+				if (npc.getFarmDungeonInstanceId() >= 0)
+					return false;
+			}
+		}
+		
+		return true;
 	}
 	
 	@Override
@@ -7091,7 +7418,9 @@ public final class Player extends Playable
 			if (object instanceof Player player && player.isInObserverMode())
 				return;
 			
-			sendInfoFrom(object);
+			// Check instance compatibility before refreshing info
+			if (canSeeInInstance(object))
+				sendInfoFrom(object);
 		});
 	}
 	
@@ -7179,6 +7508,22 @@ public final class Player extends Playable
 				break;
 			
 			case MANUFACTURE:
+				// Verifica se é uma loja de buffs
+				if (BuffShopManager.getInstance().getSellers().containsKey(getObjectId()))
+				{
+					Integer ownerId = BuffShopManager.getInstance().getSellers().get(getObjectId());
+					if (ownerId != null)
+					{
+						ShopObject shop = BuffShopManager.getInstance().getShops().get(ownerId);
+						if (shop != null)
+						{
+							// Abre a janela do BuffShop ao invés da janela padrão de Recipe Shop
+							BuffShopUIManager.getInstance().showPublicShopWindow(player, this, shop, 1, 1);
+							return;
+						}
+					}
+				}
+				// Se não for loja de buffs, usa o comportamento padrão
 				player.sendPacket(new RecipeShopSellList(player, this));
 				break;
 		}
@@ -7224,6 +7569,46 @@ public final class Player extends Playable
 		sendPacket(new EtcStatusUpdate(this));
 	}
 	
+	public boolean getPartyRefusal()
+	{
+		return _partyRefusal;
+	}
+	
+	public void setPartyRefusal(boolean refusal)
+	{
+		_partyRefusal = refusal;
+	}
+	
+	public boolean getTradeRefusal()
+	{
+		return _tradeRefusal;
+	}
+	
+	public void setTradeRefusal(boolean refusal)
+	{
+		_tradeRefusal = refusal;
+	}
+	
+	public boolean getBuffsRefusal()
+	{
+		return _buffsRefusal;
+	}
+	
+	public void setBuffsRefusal(boolean refusal)
+	{
+		_buffsRefusal = refusal;
+	}
+	
+	public boolean getMessageRefusal()
+	{
+		return _messageRefusal;
+	}
+	
+	public void setMessageRefusal(boolean refusal)
+	{
+		_messageRefusal = refusal;
+	}
+	
 	public void selectFriend(int friendId)
 	{
 		_selectedFriendList.add(friendId);
@@ -7254,6 +7639,984 @@ public final class Player extends Playable
 		return _selectedBlocksList;
 	}
 	
+	// Farm Dungeon Instance methods
+	public int getFarmDungeonInstanceId()
+	{
+		return _farmDungeonInstanceId;
+	}
+	
+	public void setFarmDungeonInstanceId(int instanceId)
+	{
+		_farmDungeonInstanceId = instanceId;
+	}
+	
+	public boolean isInFarmDungeonInstance()
+	{
+		return _farmDungeonInstanceId >= 0;
+	}
+	
+	public void cleanInstanceKnownList()
+	{
+		// Remove objects from other instances from known list
+		if (!isInTournamentInstance() && !isInFarmDungeonInstance())
+			return;
+		
+		final int myInstanceId = isInTournamentInstance() ? getTournamentInstanceId() : getFarmDungeonInstanceId();
+		
+		// Remove players from different instances
+		forEachKnownType(Player.class, player ->
+		{
+			if (player == this)
+				return;
+			
+			boolean shouldRemove = false;
+			
+			// Tournament instance check
+			if (isInTournamentInstance())
+			{
+				if (!player.isInTournamentInstance() || player.getTournamentInstanceId() != myInstanceId)
+					shouldRemove = true;
+			}
+			// Farm Dungeon instance check
+			else if (isInFarmDungeonInstance())
+			{
+				if (!player.isInFarmDungeonInstance() || player.getFarmDungeonInstanceId() != myInstanceId)
+					shouldRemove = true;
+			}
+			
+			if (shouldRemove)
+			{
+				removeKnownObject(player);
+				player.removeKnownObject(this);
+			}
+		});
+		
+		// Remove NPCs from different instances
+		forEachKnownType(net.sf.l2j.gameserver.model.actor.Npc.class, npc ->
+		{
+			if (isInTournamentInstance())
+			{
+				// Tournament players can't see any world NPCs (they don't have tournament instance ID)
+				// Remove all NPCs that are not in the same tournament instance
+				// Since NPCs don't have tournament instance ID yet, remove all NPCs
+				removeKnownObject(npc);
+			}
+			else if (isInFarmDungeonInstance())
+			{
+				// Farm Dungeon players can only see NPCs from their instance
+				if (npc.getFarmDungeonInstanceId() != myInstanceId)
+				{
+					removeKnownObject(npc);
+				}
+			}
+		});
+	}
+	
+	// --------------------------------------------------
+	// Tournament System Methods
+	// --------------------------------------------------
+	public TournamentTeam getTournamentTeam()
+	{
+		return _tournamentTeam;
+	}
+	
+	public void setTournamentTeam(TournamentTeam team)
+	{
+		_tournamentTeam = team;
+	}
+	
+	public boolean isInTournamentTeam()
+	{
+		return _tournamentTeam != null;
+	}
+	
+	public int getTournamentFightId()
+	{
+		return _tournamentFightId;
+	}
+	
+	public void setTournamentFightId(int id)
+	{
+		_tournamentFightId = id;
+	}
+	
+	public TournamentFightType getTournamentFightType()
+	{
+		return _tournamentFightType;
+	}
+	
+	public void setTournamentFightType(TournamentFightType type)
+	{
+		_tournamentFightType = type;
+	}
+	
+	public boolean isInTournamentMatch()
+	{
+		return _inTournamentMatch;
+	}
+	
+	public void setInTournamentMatch(boolean val)
+	{
+		_inTournamentMatch = val;
+	}
+	
+	public int getLastX()
+	{
+		return _lastX;
+	}
+	
+	public void setLastX(int x)
+	{
+		_lastX = x;
+	}
+	
+	public int getLastY()
+	{
+		return _lastY;
+	}
+	
+	public void setLastY(int y)
+	{
+		_lastY = y;
+	}
+	
+	public int getLastZ()
+	{
+		return _lastZ;
+	}
+	
+	public void setLastZ(int z)
+	{
+		_lastZ = z;
+	}
+	
+	public int getTournamentPoints()
+	{
+		return _tournamentPoints;
+	}
+	
+	public void setTournamentPoints(int points)
+	{
+		_tournamentPoints = points;
+	}
+	
+	public int getTournamentMatchDamage()
+	{
+		return _tournamentMatchDamage;
+	}
+	
+	public void setTournamentMatchDamage(int damage)
+	{
+		_tournamentMatchDamage = damage;
+	}
+	
+	public void addTournamentMatchDamage(int damage)
+	{
+		_tournamentMatchDamage += damage;
+	}
+	
+	public Map<TournamentFightType, Integer> getTournamentKills()
+	{
+		return _tournamentKills;
+	}
+	
+	public Map<TournamentFightType, Integer> getTournamentVictories()
+	{
+		return _tournamentVictories;
+	}
+	
+	public Map<TournamentFightType, Integer> getTournamentDefeats()
+	{
+		return _tournamentDefeats;
+	}
+	
+	public Map<TournamentFightType, Integer> getTournamentTies()
+	{
+		return _tournamentTies;
+	}
+	
+	public Map<TournamentFightType, Integer> getTournamentDamage()
+	{
+		return _tournamentDamage;
+	}
+	
+	public void addTournamentKill(TournamentFightType type)
+	{
+		_tournamentKills.put(type, _tournamentKills.getOrDefault(type, 0) + 1);
+	}
+	
+	public void addTournamentVictory(TournamentFightType type)
+	{
+		_tournamentVictories.put(type, _tournamentVictories.getOrDefault(type, 0) + 1);
+	}
+	
+	public void addTournamentDefeat(TournamentFightType type)
+	{
+		_tournamentDefeats.put(type, _tournamentDefeats.getOrDefault(type, 0) + 1);
+	}
+	
+	public void addTournamentTie(TournamentFightType type)
+	{
+		_tournamentTies.put(type, _tournamentTies.getOrDefault(type, 0) + 1);
+	}
+	
+	public void addTournamentDamage(TournamentFightType type, int damage)
+	{
+		_tournamentDamage.put(type, _tournamentDamage.getOrDefault(type, 0) + damage);
+	}
+	
+	public int getTournamentFightsDone(TournamentFightType type)
+	{
+		return getTournamentVictories().getOrDefault(type, 0) + getTournamentDefeats().getOrDefault(type, 0) + getTournamentTies().getOrDefault(type, 0);
+	}
+	
+	public int getTotalTournamentFightsDone()
+	{
+		int total = 0;
+		for (TournamentFightType type : TournamentFightType.values())
+		{
+			if (type != TournamentFightType.NONE)
+				total += getTournamentFightsDone(type);
+		}
+		return total;
+	}
+	
+	public int getTotalTournamentKills()
+	{
+		int total = 0;
+		for (Integer kills : _tournamentKills.values())
+		{
+			total += kills;
+		}
+		return total;
+	}
+	
+	public int getTournamentTotalDamage()
+	{
+		int total = 0;
+		for (Integer damage : _tournamentDamage.values())
+		{
+			total += damage;
+		}
+		return total;
+	}
+	
+	public int getTournamentTeamRequesterId()
+	{
+		return _tournamentTeamRequesterId;
+	}
+	
+	public void setTournamentTeamRequesterId(int id)
+	{
+		_tournamentTeamRequesterId = id;
+	}
+	
+	public boolean isTournamentTeamBeingInvited()
+	{
+		return _tournamentTeamBeingInvited;
+	}
+	
+	public void setTournamentTeamBeingInvited(boolean val)
+	{
+		_tournamentTeamBeingInvited = val;
+	}
+	
+	public boolean isTournamentTeleportRequested()
+	{
+		return _tournamentTeleportRequested;
+	}
+	
+	public void setTournamentTeleportRequested(boolean val)
+	{
+		_tournamentTeleportRequested = val;
+	}
+	
+	public int getTournamentInstanceId()
+	{
+		return _tournamentInstanceId;
+	}
+	
+	public void setTournamentInstanceId(int instanceId)
+	{
+		_tournamentInstanceId = instanceId;
+	}
+	
+	public boolean isInTournamentInstance()
+	{
+		return _tournamentInstanceId >= 0;
+	}
+	
+	public void prepareToFight()
+	{
+		setLastX(getX());
+		setLastY(getY());
+		setLastZ(getZ());
+	}
+	
+	public void teleportToLastLocation()
+	{
+		teleportTo(getLastX(), getLastY(), getLastZ(), 0);
+	}
+	
+	public void paralyze()
+	{
+		setTarget(null);
+		setInvul(true);
+		setIsParalyzed(true);
+		broadcastUserInfo();
+	}
+	
+	public void unParalyze()
+	{
+		setTarget(null);
+		setInvul(false);
+		setIsParalyzed(false);
+		broadcastUserInfo();
+	}
+	
+	public void removeAura()
+	{
+		stopEffects(EffectType.BUFF);
+	}
+	
+	public void removeSkills()
+	{
+		for (int skillId : Config.TOURNAMENT_RESTRICTED_SKILL_LIST)
+		{
+			L2Skill skill = getSkill(skillId);
+			if (skill != null)
+			{
+				removeSkill(skillId, true);
+			}
+		}
+	}
+	
+	public void removeItems()
+	{
+		for (int itemId : Config.TOURNAMENT_RESTRICTED_ITEM_LIST)
+		{
+			ItemInstance item = getInventory().getItemByItemId(itemId);
+			if (item != null)
+			{
+				destroyItem(item, item.getCount(), false);
+			}
+		}
+	}
+	
+	public void restoreTournamentSkills()
+	{
+		enableAllSkills();
+	}
+	
+	public void restoreTournamentItems()
+	{
+		// Items are not restored, they are removed permanently
+	}
+	
+	public void restoreTournamentAura()
+	{
+		// Aura is restored automatically when player logs in
+	}
+	
+	public void restoreTournamentStatus()
+	{
+		setInTournamentMatch(false);
+		setTournamentFightId(0);
+		setTournamentFightType(TournamentFightType.NONE);
+		setTournamentMatchDamage(0);
+		unParalyze();
+	}
+	
+	public void restoreTournamentLocation()
+	{
+		teleportToLastLocation();
+	}
+	
+	public void restoreTournamentHpMpCp()
+	{
+		getStatus().setCpHpMp(getStatus().getMaxCp(), getStatus().getMaxHp(), getStatus().getMaxMp());
+	}
+	
+	public void doAutoAttack(Monster monster)
+	{
+		if (monster == null || monster.isDead())
+			return;
+		
+		if (getAI() != null && monster.isAttackableBy(this))
+		{
+			getAI().tryToAttack(monster, false, false);
+		}
+	}
+	
+	// AutoFarm methods
+	public String getIP() 
+	{ 
+		return getClient() != null ? getClient().getConnection().getInetAddress().getHostAddress() : ""; 
+	}
+	
+	public boolean isNoBuffProtected() 
+	{ 
+		return _noBuffProtection; 
+	}
+	
+	public void setNoBuffProtection(boolean value) 
+	{ 
+		_noBuffProtection = value; 
+	}
+	
+	public void setAutoFarm(boolean value) 
+	{ 
+		_autoFarm = value; 
+	}
+	
+	public boolean isAutoFarm() 
+	{ 
+		return _autoFarm; 
+	}
+	
+	public int getHealPercent() 
+	{ 
+		return _healPercent; 
+	}
+	
+	public void setHealPercent(int value) 
+	{ 
+		_healPercent = Math.max(0, Math.min(100, value)); 
+	}
+	
+	public int getPage() 
+	{ 
+		return _page; 
+	}
+	
+	public void setPage(int value) 
+	{ 
+		_page = Math.max(0, Math.min(9, value)); 
+	}
+	
+	public boolean isSummonAttack() 
+	{ 
+		return _summonAttack; 
+	}
+	
+	public void setSummonAttack(boolean value) 
+	{ 
+		_summonAttack = value; 
+	}
+	
+	public int getSummonSkillPercent() 
+	{ 
+		return _summonSkillPercent; 
+	}
+	
+	public void setSummonSkillPercent(int value) 
+	{ 
+		_summonSkillPercent = Math.max(0, Math.min(100, value)); 
+	}
+	
+	public int getRadius() 
+	{ 
+		return _radius; 
+	}
+	
+	public void setRadius(int value) 
+	{ 
+		_radius = Math.max(200, Math.min(5000, value)); 
+	}
+	
+	public boolean isAntiKsProtected() 
+	{ 
+		return _antiKsProtection; 
+	}
+	
+	public void setAntiKsProtection(boolean value) 
+	{ 
+		_antiKsProtection = value; 
+	}
+	
+	public boolean ignoredMonsterContain(int npcId) 
+	{ 
+		return _ignoredMonsters.contains(npcId); 
+	}
+	
+	public void ignoredMonster(int npcId) 
+	{ 
+		if (!_ignoredMonsters.contains(npcId))
+			_ignoredMonsters.add(npcId);
+	}
+	
+	public void activeMonster(int npcId) 
+	{ 
+		_ignoredMonsters.remove(Integer.valueOf(npcId));
+	}
+	
+	public int getHpPotionPercentage() 
+	{ 
+		return _hpPotionPercentage; 
+	}
+	
+	public void setHpPotionPercentage(int value) 
+	{ 
+		_hpPotionPercentage = Math.max(0, Math.min(100, value)); 
+	}
+	
+	public int getMpPotionPercentage() 
+	{ 
+		return _mpPotionPercentage; 
+	}
+	
+	public void setMpPotionPercentage(int value) 
+	{ 
+		_mpPotionPercentage = Math.max(0, Math.min(100, value)); 
+	}
+	
+	public void saveAutoFarmSettings()
+	{
+		try (Connection con = ConnectionPool.getConnection())
+		{
+			// Check if record exists
+			try (PreparedStatement psCheck = con.prepareStatement("SELECT char_id FROM character_autofarm WHERE char_id=?"))
+			{
+				psCheck.setInt(1, getObjectId());
+				try (ResultSet rs = psCheck.executeQuery())
+				{
+					if (rs.next())
+					{
+						// Update existing record
+						try (PreparedStatement ps = con.prepareStatement("UPDATE character_autofarm SET char_name=?, radius=?, short_cut=?, heal_percent=?, buff_protection=?, anti_ks_protection=?, summon_attack=?, summon_skill_percent=?, hp_potion_percent=?, mp_potion_percent=? WHERE char_id=?"))
+						{
+							ps.setString(1, getName());
+							ps.setInt(2, _radius);
+							ps.setInt(3, _page);
+							ps.setInt(4, _healPercent);
+							ps.setInt(5, _noBuffProtection ? 1 : 0);
+							ps.setInt(6, _antiKsProtection ? 1 : 0);
+							ps.setInt(7, _summonAttack ? 1 : 0);
+							ps.setInt(8, _summonSkillPercent);
+							ps.setInt(9, _hpPotionPercentage);
+							ps.setInt(10, _mpPotionPercentage);
+							ps.setInt(11, getObjectId());
+							ps.executeUpdate();
+						}
+					}
+					else
+					{
+						// Insert new record
+						try (PreparedStatement ps = con.prepareStatement("INSERT INTO character_autofarm (char_id, char_name, radius, short_cut, heal_percent, buff_protection, anti_ks_protection, summon_attack, summon_skill_percent, hp_potion_percent, mp_potion_percent) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"))
+						{
+							ps.setInt(1, getObjectId());
+							ps.setString(2, getName());
+							ps.setInt(3, _radius);
+							ps.setInt(4, _page);
+							ps.setInt(5, _healPercent);
+							ps.setInt(6, _noBuffProtection ? 1 : 0);
+							ps.setInt(7, _antiKsProtection ? 1 : 0);
+							ps.setInt(8, _summonAttack ? 1 : 0);
+							ps.setInt(9, _summonSkillPercent);
+							ps.setInt(10, _hpPotionPercentage);
+							ps.setInt(11, _mpPotionPercentage);
+							ps.executeUpdate();
+						}
+					}
+				}
+			}
+		}
+		catch (Exception e)
+		{
+			// Table might not exist, ignore error
+		}
+	}
+	
+	public void loadAutoFarmSettings()
+	{
+		try (Connection con = ConnectionPool.getConnection();
+			PreparedStatement ps = con.prepareStatement("SELECT * FROM character_autofarm WHERE char_id=?"))
+		{
+			ps.setInt(1, getObjectId());
+			
+			try (ResultSet rs = ps.executeQuery())
+			{
+				if (rs.next())
+				{
+					_radius = rs.getInt("radius");
+					_page = rs.getInt("short_cut");
+					_healPercent = rs.getInt("heal_percent");
+					_noBuffProtection = rs.getInt("buff_protection") == 1;
+					_antiKsProtection = rs.getInt("anti_ks_protection") == 1;
+					_summonAttack = rs.getInt("summon_attack") == 1;
+					_summonSkillPercent = rs.getInt("summon_skill_percent");
+					_hpPotionPercentage = rs.getInt("hp_potion_percent");
+					_mpPotionPercentage = rs.getInt("mp_potion_percent");
+				}
+			}
+		}
+		catch (Exception e)
+		{
+			// Table might not exist, use defaults
+		}
+	}
+	
+	// Dummy methods for Boss Event compatibility
+	public int getBossEventDamage() { return 0; }
+	public void setBossEventDamage(int damage) { }
+	
+	// DressMe methods
+	private int _armorSkinOption = 0;
+	private int _weaponSkinOption = 0;
+	private int _hairSkinOption = 0;
+	private int _faceSkinOption = 0;
+	private int _shieldSkinOption = 0;
+	private boolean _isTryingSkin = false;
+	private List<Integer> _armorSkins = new CopyOnWriteArrayList<>();
+	private List<Integer> _weaponSkins = new CopyOnWriteArrayList<>();
+	private List<Integer> _hairSkins = new CopyOnWriteArrayList<>();
+	private List<Integer> _faceSkins = new CopyOnWriteArrayList<>();
+	private List<Integer> _shieldSkins = new CopyOnWriteArrayList<>();
+	
+	public int getWeaponSkinOption() { return _weaponSkinOption; }
+	public int getShieldSkinOption() { return _shieldSkinOption; }
+	public int getArmorSkinOption() { return _armorSkinOption; }
+	public int getHairSkinOption() { return _hairSkinOption; }
+	public int getFaceSkinOption() { return _faceSkinOption; }
+	
+	public void setWeaponSkinOption(int id) 
+	{ 
+		// Validate weapon type compatibility before setting
+		if (Config.ALLOW_DRESS_ME_SYSTEM && id > 0)
+		{
+			final net.sf.l2j.gameserver.model.skin.SkinPackage weaponSkin = net.sf.l2j.gameserver.data.xml.DressMeData.getInstance().getWeaponSkinsPackage(id);
+			if (weaponSkin != null && weaponSkin.getWeaponId() > 0)
+			{
+				// Get equipped weapon type
+				final Weapon equippedWeapon = getActiveWeaponItem();
+				if (equippedWeapon == null || equippedWeapon.getItemType() == WeaponType.NONE || equippedWeapon.getItemType() == WeaponType.FIST)
+				{
+					_weaponSkinOption = 0;
+					sendMessage("You must equip a weapon before applying a weapon skin.");
+					return;
+				}
+				
+				final WeaponType equippedType = equippedWeapon.getItemType();
+				
+				// Get skin weapon type
+				final net.sf.l2j.gameserver.model.item.kind.Item skinWeaponItem = ItemData.getInstance().getTemplate(weaponSkin.getWeaponId());
+				if (skinWeaponItem instanceof Weapon)
+				{
+					final WeaponType skinType = ((Weapon) skinWeaponItem).getItemType();
+					
+					// Check if types are compatible
+					if (equippedType != skinType)
+					{
+						_weaponSkinOption = 0; // Reset to no skin
+						sendMessage("You cannot equip this weapon skin. Your equipped weapon type (" + equippedType.name() + ") does not match the skin type (" + skinType.name() + ").");
+						sendPacket(new PlaySound("ItemSound3.sys_impossible"));
+						return;
+					}
+				}
+			}
+		}
+		
+		_weaponSkinOption = id;
+	}
+	public void setShieldSkinOption(int id) { _shieldSkinOption = id; }
+	public void setArmorSkinOption(int id) 
+	{ 
+		// If removing armor skin (id = 0), also remove corresponding hat
+		if (id == 0 && _armorSkinOption > 0)
+		{
+			final int currentHairSkinId = net.sf.l2j.gameserver.data.xml.DressMeData.getInstance().getCorrespondingHairSkinId(_armorSkinOption);
+			if (currentHairSkinId > 0 && _hairSkinOption == currentHairSkinId)
+			{
+				_hairSkinOption = 0; // Remove hat when removing armor skin
+			}
+		}
+		
+		// If applying new armor skin, check if it has corresponding hat
+		if (Config.ALLOW_DRESS_ME_SYSTEM && id > 0)
+		{
+			final int hairSkinId = net.sf.l2j.gameserver.data.xml.DressMeData.getInstance().getCorrespondingHairSkinId(id);
+			
+			if (hairSkinId > 0 && hasHairSkin(hairSkinId))
+			{
+				// New armor skin has hat - apply it
+				_hairSkinOption = hairSkinId;
+			}
+			else
+			{
+				// New armor skin doesn't have hat - remove current hat if it was from previous armor skin
+				if (_armorSkinOption > 0)
+				{
+					final int previousHairSkinId = net.sf.l2j.gameserver.data.xml.DressMeData.getInstance().getCorrespondingHairSkinId(_armorSkinOption);
+					if (previousHairSkinId > 0 && _hairSkinOption == previousHairSkinId)
+					{
+						_hairSkinOption = 0; // Remove hat from previous armor skin
+					}
+				}
+			}
+		}
+		
+		_armorSkinOption = id;
+	}
+	public void setHairSkinOption(int id) { _hairSkinOption = id; }
+	public void setFaceSkinOption(int id) { _faceSkinOption = id; }
+	
+	public boolean isTryingSkin() { return _isTryingSkin; }
+	public void setIsTryingSkin(boolean value) { _isTryingSkin = value; }
+	
+	public boolean hasArmorSkin(int id) { return _armorSkins.contains(id); }
+	public boolean hasWeaponSkin(int id) { return _weaponSkins.contains(id); }
+	public boolean hasHairSkin(int id) { return _hairSkins.contains(id); }
+	public boolean hasFaceSkin(int id) { return _faceSkins.contains(id); }
+	public boolean hasShieldSkin(int id) { return _shieldSkins.contains(id); }
+	
+	// Getters for skin lists (used for temporary skin removal during testing)
+	public List<Integer> getHairSkins() { return _hairSkins; }
+	
+	public void buyArmorSkin(int id) { if (!_armorSkins.contains(id)) _armorSkins.add(id); }
+	public void buyWeaponSkin(int id) { if (!_weaponSkins.contains(id)) _weaponSkins.add(id); }
+	public void buyHairSkin(int id) { if (!_hairSkins.contains(id)) _hairSkins.add(id); }
+	public void buyFaceSkin(int id) { if (!_faceSkins.contains(id)) _faceSkins.add(id); }
+	public void buyShieldSkin(int id) { if (!_shieldSkins.contains(id)) _shieldSkins.add(id); }
+	
+	/**
+	 * Clears all purchased skins and removes all applied skins for this player.
+	 * This will remove all skins from the player's inventory and reset all skin options.
+	 */
+	public void clearAllSkins()
+	{
+		// Clear all purchased skins
+		_armorSkins.clear();
+		_weaponSkins.clear();
+		_hairSkins.clear();
+		_faceSkins.clear();
+		_shieldSkins.clear();
+		
+		// Remove all applied skins
+		_armorSkinOption = 0;
+		_weaponSkinOption = 0;
+		_hairSkinOption = 0;
+		_faceSkinOption = 0;
+		_shieldSkinOption = 0;
+		
+		// Save to database
+		storeDressMeData();
+		
+		// Update player appearance
+		broadcastUserInfo();
+		
+		sendMessage("All your skins have been removed.");
+	}
+	
+	public void restoreDressMeData()
+	{
+		try (Connection con = ConnectionPool.getConnection();
+			PreparedStatement ps = con.prepareStatement("SELECT * FROM characters_dressme_data WHERE obj_Id=?"))
+		{
+			ps.setInt(1, getObjectId());
+			
+			try (ResultSet rs = ps.executeQuery())
+			{
+				if (rs.next())
+				{
+					// Restore armor skins
+					String armorSkinsStr = rs.getString("armor_skins");
+					if (armorSkinsStr != null && !armorSkinsStr.isEmpty())
+					{
+						String[] armorIds = armorSkinsStr.split(",");
+						for (String idStr : armorIds)
+						{
+							try
+							{
+								int id = Integer.parseInt(idStr.trim());
+								if (!_armorSkins.contains(id))
+									_armorSkins.add(id);
+							}
+							catch (NumberFormatException e)
+							{
+								// Skip invalid IDs
+							}
+						}
+					}
+					_armorSkinOption = rs.getInt("armor_skin_option");
+					
+					// Restore weapon skins
+					String weaponSkinsStr = rs.getString("weapon_skins");
+					if (weaponSkinsStr != null && !weaponSkinsStr.isEmpty())
+					{
+						String[] weaponIds = weaponSkinsStr.split(",");
+						for (String idStr : weaponIds)
+						{
+							try
+							{
+								int id = Integer.parseInt(idStr.trim());
+								if (!_weaponSkins.contains(id))
+									_weaponSkins.add(id);
+							}
+							catch (NumberFormatException e)
+							{
+								// Skip invalid IDs
+							}
+						}
+					}
+					_weaponSkinOption = rs.getInt("weapon_skin_option");
+					
+					// Restore hair skins
+					String hairSkinsStr = rs.getString("hair_skins");
+					if (hairSkinsStr != null && !hairSkinsStr.isEmpty())
+					{
+						String[] hairIds = hairSkinsStr.split(",");
+						for (String idStr : hairIds)
+						{
+							try
+							{
+								int id = Integer.parseInt(idStr.trim());
+								if (!_hairSkins.contains(id))
+									_hairSkins.add(id);
+							}
+							catch (NumberFormatException e)
+							{
+								// Skip invalid IDs
+							}
+						}
+					}
+					_hairSkinOption = rs.getInt("hair_skin_option");
+					
+					// Restore face skins
+					String faceSkinsStr = rs.getString("face_skins");
+					if (faceSkinsStr != null && !faceSkinsStr.isEmpty())
+					{
+						String[] faceIds = faceSkinsStr.split(",");
+						for (String idStr : faceIds)
+						{
+							try
+							{
+								int id = Integer.parseInt(idStr.trim());
+								if (!_faceSkins.contains(id))
+									_faceSkins.add(id);
+							}
+							catch (NumberFormatException e)
+							{
+								// Skip invalid IDs
+							}
+						}
+					}
+					_faceSkinOption = rs.getInt("face_skin_option");
+					
+					// Restore shield skins
+					String shieldSkinsStr = rs.getString("shield_skins");
+					if (shieldSkinsStr != null && !shieldSkinsStr.isEmpty())
+					{
+						String[] shieldIds = shieldSkinsStr.split(",");
+						for (String idStr : shieldIds)
+						{
+							try
+							{
+								int id = Integer.parseInt(idStr.trim());
+								if (!_shieldSkins.contains(id))
+									_shieldSkins.add(id);
+							}
+							catch (NumberFormatException e)
+							{
+								// Skip invalid IDs
+							}
+						}
+					}
+					_shieldSkinOption = rs.getInt("shield_skin_option");
+				}
+			}
+		}
+		catch (Exception e)
+		{
+			// Table might not exist, ignore error
+		}
+	}
+	
+	public void storeDressMeData()
+	{
+		if (!Config.ALLOW_DRESS_ME_SYSTEM)
+			return;
+		
+		// Não salva dados do DressMe para NPCs dummy (como lojas de buffs)
+		if (isDummy())
+			return;
+		
+		try (Connection con = ConnectionPool.getConnection())
+		{
+			// Check if record exists
+			try (PreparedStatement psCheck = con.prepareStatement("SELECT obj_Id FROM characters_dressme_data WHERE obj_Id=?"))
+			{
+				psCheck.setInt(1, getObjectId());
+				try (ResultSet rs = psCheck.executeQuery())
+				{
+					if (rs.next())
+					{
+						// Update existing record
+						try (PreparedStatement ps = con.prepareStatement("UPDATE characters_dressme_data SET armor_skins=?, armor_skin_option=?, weapon_skins=?, weapon_skin_option=?, hair_skins=?, hair_skin_option=?, face_skins=?, face_skin_option=?, shield_skins=?, shield_skin_option=? WHERE obj_Id=?"))
+						{
+							// Convert lists to comma-separated strings
+							String armorSkinsStr = _armorSkins.stream().map(String::valueOf).collect(Collectors.joining(","));
+							String weaponSkinsStr = _weaponSkins.stream().map(String::valueOf).collect(Collectors.joining(","));
+							String hairSkinsStr = _hairSkins.stream().map(String::valueOf).collect(Collectors.joining(","));
+							String faceSkinsStr = _faceSkins.stream().map(String::valueOf).collect(Collectors.joining(","));
+							String shieldSkinsStr = _shieldSkins.stream().map(String::valueOf).collect(Collectors.joining(","));
+							
+							ps.setString(1, armorSkinsStr);
+							ps.setInt(2, _armorSkinOption);
+							ps.setString(3, weaponSkinsStr);
+							ps.setInt(4, _weaponSkinOption);
+							ps.setString(5, hairSkinsStr);
+							ps.setInt(6, _hairSkinOption);
+							ps.setString(7, faceSkinsStr);
+							ps.setInt(8, _faceSkinOption);
+							ps.setString(9, shieldSkinsStr);
+							ps.setInt(10, _shieldSkinOption);
+							ps.setInt(11, getObjectId());
+							ps.executeUpdate();
+						}
+					}
+					else
+					{
+						// Insert new record
+						try (PreparedStatement ps = con.prepareStatement("INSERT INTO characters_dressme_data (obj_Id, armor_skins, armor_skin_option, weapon_skins, weapon_skin_option, hair_skins, hair_skin_option, face_skins, face_skin_option, shield_skins, shield_skin_option) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"))
+						{
+							// Convert lists to comma-separated strings
+							String armorSkinsStr = _armorSkins.stream().map(String::valueOf).collect(Collectors.joining(","));
+							String weaponSkinsStr = _weaponSkins.stream().map(String::valueOf).collect(Collectors.joining(","));
+							String hairSkinsStr = _hairSkins.stream().map(String::valueOf).collect(Collectors.joining(","));
+							String faceSkinsStr = _faceSkins.stream().map(String::valueOf).collect(Collectors.joining(","));
+							String shieldSkinsStr = _shieldSkins.stream().map(String::valueOf).collect(Collectors.joining(","));
+							
+							ps.setInt(1, getObjectId());
+							ps.setString(2, armorSkinsStr);
+							ps.setInt(3, _armorSkinOption);
+							ps.setString(4, weaponSkinsStr);
+							ps.setInt(5, _weaponSkinOption);
+							ps.setString(6, hairSkinsStr);
+							ps.setInt(7, _hairSkinOption);
+							ps.setString(8, faceSkinsStr);
+							ps.setInt(9, _faceSkinOption);
+							ps.setString(10, shieldSkinsStr);
+							ps.setInt(11, _shieldSkinOption);
+							ps.executeUpdate();
+						}
+					}
+				}
+			}
+		}
+		catch (Exception e)
+		{
+			// Table might not exist, ignore error
+		}
+	}
+	
+	// Calculate distance to another object
+	public double calculateDistance(WorldObject target)
+	{
+		if (target == null)
+			return Double.MAX_VALUE;
+		return Math.hypot(getX() - target.getX(), getY() - target.getY());
+	}
+	
 	public void stopToFight()
 	{
 		getCast().stop();
@@ -7261,11 +8624,36 @@ public final class Player extends Playable
 		setTarget(null);
 		sendPacket(ActionFailed.STATIC_PACKET);
 	}
-	private final L2AutoFarmTask _farm = new L2AutoFarmTask(this);
+	
+	@Override
+	public <A extends WorldObject> void forEachKnownTypeInRadius(Class<A> type, int radius, java.util.function.Consumer<A> action)
+	{
+		final net.sf.l2j.gameserver.model.WorldRegion region = getRegion();
+		if (region == null)
+			return;
 		
-		public L2AutoFarmTask getFarm()
+		final int depth = (radius <= 2048) ? 1 : (int) ((radius / 2048) + 1);
+		region.forEachRegion(depth, r -> r.forEachType(type, o -> 
 		{
-			return _farm;
+			if (o == this)
+				return;
+			
+			if (!net.sf.l2j.commons.math.MathUtil.checkIfInRange(radius, this, o, true))
+				return;
+			
+			action.accept(type.cast(o));
+		}));
+	}
+	
+	private Base.AutoFarm.AutofarmPlayerRoutine _bot;
+	
+	{
+		_bot = new Base.AutoFarm.AutofarmPlayerRoutine(this);
+	}
+	
+	public Base.AutoFarm.AutofarmPlayerRoutine getBot()
+	{
+		return _bot;
 	}
 
 		/**
@@ -7277,12 +8665,4 @@ public final class Player extends Playable
 			return false;
 		}
 
-		/**
-		 * @param monster
-		 */
-		public void doAutoAttack(Monster monster)
-		{
-			// TODO Auto-generated method stub
-			
-		}
 }

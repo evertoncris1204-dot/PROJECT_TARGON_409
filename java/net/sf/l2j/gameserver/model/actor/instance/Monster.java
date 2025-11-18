@@ -13,6 +13,7 @@ import net.sf.l2j.commons.pool.ThreadPool;
 
 import net.sf.l2j.Config;
 import net.sf.l2j.gameserver.data.manager.CursedWeaponManager;
+import net.sf.l2j.gameserver.data.manager.PartyFarmEvent;
 import net.sf.l2j.gameserver.enums.BossInfoType;
 import net.sf.l2j.gameserver.enums.DropType;
 import net.sf.l2j.gameserver.model.actor.Attackable;
@@ -504,6 +505,24 @@ public class Monster extends Attackable
 	 */
 	private void dropOrAutoLootItem(Player player, int itemId, int amount)
 	{
+		// Check if this is a Party Farm NPC - always distribute to all party members
+		if (PartyFarmEvent.isPartyFarmNpc(this))
+		{
+			if (player.isInParty())
+			{
+				distributeToAllPartyMembers(player, itemId, amount);
+			}
+			else
+			{
+				// No party, give to player only
+				if (itemId == 57)
+					player.addAdena(amount, true);
+				else
+					player.addItem(itemId, amount, true);
+			}
+			return;
+		}
+		
 		// Check Config.
 		if (((isRaidBoss() && Config.AUTO_LOOT_RAID) || (!isRaidBoss() && Config.AUTO_LOOT)) && player.getInventory().validateCapacityByItemId(itemId, amount))
 		{
@@ -520,6 +539,67 @@ public class Monster extends Attackable
 		// Broadcast message if RaidBoss was defeated.
 		if (isRaidBoss())
 			broadcastPacket(SystemMessage.getSystemMessage(SystemMessageId.S1_DIED_DROPPED_S3_S2).addCharName(this).addItemName(itemId).addNumber(amount));
+	}
+	
+	/**
+	 * Distribute item to all party members (Party Farm event).
+	 * @param player : The {@link Player} who made the highest damage contribution.
+	 * @param itemId : The item id used as reward.
+	 * @param amount : The item amount used as reward.
+	 */
+	private void distributeToAllPartyMembers(Player player, int itemId, int amount)
+	{
+		final Party party = player.getParty();
+		if (party == null)
+		{
+			// No party, give to player only
+			if (itemId == 57)
+				player.addAdena(amount, true);
+			else
+				player.addItem(itemId, amount, true);
+			return;
+		}
+		
+		// Get all party members within range
+		List<Player> toReward = new ArrayList<>();
+		for (Player member : party.getMembers())
+		{
+			if (!MathUtil.checkIfInRange(Config.PARTY_RANGE, this, member, true))
+				continue;
+			
+			// Check inventory capacity for non-adena items
+			if (itemId != 57 && !member.getInventory().validateCapacityByItemId(itemId, amount))
+				continue;
+			
+			toReward.add(member);
+		}
+		
+		// If no valid members, give to player only
+		if (toReward.isEmpty())
+		{
+			if (itemId == 57)
+				player.addAdena(amount, true);
+			else
+				player.addItem(itemId, amount, true);
+			return;
+		}
+		
+		// Distribute full amount to each party member
+		for (Player member : toReward)
+		{
+			if (itemId == 57)
+				member.addAdena(amount, true);
+			else
+				member.addItem(itemId, amount, true);
+			
+			// Send message to party members
+			SystemMessage msg;
+			if (amount > 1)
+				msg = SystemMessage.getSystemMessage(SystemMessageId.S1_OBTAINED_S3_S2).addCharName(member).addItemName(itemId).addItemNumber(amount);
+			else
+				msg = SystemMessage.getSystemMessage(SystemMessageId.S1_OBTAINED_S2).addCharName(member).addItemName(itemId);
+			party.broadcastToPartyMembers(member, msg);
+		}
 	}
 	
 	/**

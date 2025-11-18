@@ -54,6 +54,8 @@ import net.sf.l2j.gameserver.scripting.QuestState;
 import net.sf.l2j.gameserver.skills.L2Skill;
 import net.sf.l2j.gameserver.taskmanager.GameTimeTaskManager;
 
+import Base.AutoFarm.AutofarmPlayerRoutine;
+
 public class EnterWorld extends L2GameClientPacket
 {
 	@Override
@@ -216,6 +218,9 @@ public class EnterWorld extends L2GameClientPacket
 		// Notify quest for enterworld event, if quest allows it.
 		player.getQuestList().getQuests(Quest::isTriggeredOnEnterWorld).forEach(q -> q.onEnterWorld(player));
 		
+		// Update ranking data when player enters world
+		net.sf.l2j.gameserver.data.manager.RankingManager.getInstance().updatePlayerRanking(player);
+		
 		player.sendPacket(new QuestList(player));
 		player.sendPacket(new SkillList(player));
 		player.sendPacket(new FriendList(player));
@@ -255,6 +260,21 @@ public class EnterWorld extends L2GameClientPacket
 		
 		player.onPlayerEnter();
 		
+		// Announce Hero login
+		if (player.getActiveClass() == player.getBaseClass() && player.isHero() && Config.ANNOUNCE_HERO_ONLY_BASECLASS)
+		{
+			String className = player.getClassId().toString();
+			String msg = player.getClan() != null ? Config.ANNOUNCE_HERO_ENTER_BY_CLAN_MEMBER_MSG.replace("%player%", player.getName()).replace("%clan%", player.getClan().getName()).replace("%classe%", className).replace("%class%", className) : Config.ANNOUNCE_HERO_ENTER_BY_PLAYER_MSG.replace("%player%", player.getName()).replace("%classe%", className);
+			World.announceToOnlinePlayers(msg, true);
+		}
+		
+		// Announce Premium login
+		if (player.getMemos().getLong("PremiumTime", 0) > System.currentTimeMillis() && Config.ANNOUNCE_PREMIUM_ENTER)
+		{
+			String msg = player.getClan() != null ? Config.ANNOUNCE_PREMIUM_ENTER_BY_CLAN_MEMBER_MSG.replace("%player%", player.getName()).replace("%clan%", player.getClan().getName()) : Config.ANNOUNCE_PREMIUM_ENTER_BY_PLAYER_MSG.replace("%player%", player.getName());
+			World.announceToOnlinePlayers(msg, true);
+		}
+		
 		sendPacket(new SkillCoolTime(player));
 		
 		// If player logs back in a stadium, port him in nearest town.
@@ -272,6 +292,31 @@ public class EnterWorld extends L2GameClientPacket
 		final QuestState qs = player.getQuestList().getQuestState("Tutorial");
 		if (qs != null)
 			qs.getQuest().notifyEvent("UC", null, player);
+		
+		// AutoFarm
+		if (AutofarmPlayerRoutine.isIpAllowed(player.getIP()))
+		{
+			AutofarmPlayerRoutine.removeIpEntry(player.getObjectId());
+		}
+		
+		// DressMe System
+		if (Config.ALLOW_DRESS_ME_SYSTEM)
+		{
+			player.restoreDressMeData();
+		}
+		
+		// AutoFarm System - Load settings
+		player.loadAutoFarmSettings();
+		
+		if (player.isSummonAttack())
+		{
+			player.sendPacket(new SystemMessage(SystemMessageId.ACTIVATE_SUMMON_ACTACK));
+		}
+		
+		if (player.isAntiKsProtected())
+		{
+			player.sendPacket(new SystemMessage(SystemMessageId.ACTIVATE_RESPECT_HUNT));
+		}
 		
 		player.sendPacket(ActionFailed.STATIC_PACKET);
 	}

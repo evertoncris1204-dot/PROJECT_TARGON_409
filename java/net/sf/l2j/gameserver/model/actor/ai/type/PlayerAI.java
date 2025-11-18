@@ -37,12 +37,25 @@ import net.sf.l2j.gameserver.taskmanager.AttackStanceTaskManager;
 import net.sf.l2j.gameserver.taskmanager.ItemsOnGroundTaskManager;
 import net.sf.l2j.gameserver.util.sellBuffEngine.BuffShopManager;
 import net.sf.l2j.gameserver.util.sellBuffEngine.BuffShopUIManager;
+import net.sf.l2j.gameserver.util.sellBuffEngine.ShopObject;
 
 public class PlayerAI extends PlayableAI<Player>
 {
+	@Override
+	public synchronized void tryToAttack(Creature target, boolean isCtrlPressed, boolean isShiftPressed)
+	{
+		super.tryToAttack(target, isCtrlPressed, isShiftPressed);
+	}
+	
 	public PlayerAI(Player player)
 	{
 		super(player);
+	}
+	
+	@Override
+	protected synchronized void doAttackIntention(Creature target, boolean isCtrlPressed, boolean isShiftPressed, boolean moveToTarget)
+	{
+		super.doAttackIntention(target, isCtrlPressed, isShiftPressed, moveToTarget);
 	}
 	
 	@Override
@@ -150,6 +163,12 @@ public class PlayerAI extends PlayableAI<Player>
 	}
 	
 	@Override
+	protected void onEvtFinishedAttack()
+	{
+		super.onEvtFinishedAttack();
+	}
+	
+	@Override
 	protected void onEvtAttacked(Creature attacker)
 	{
 		if (_actor.getTamedBeast() != null)
@@ -242,35 +261,50 @@ public class PlayerAI extends PlayableAI<Player>
 			doIdleIntention();
 			return;
 		}
-		// Verifique se a inten��o � interagir com a loja de buffs
+		// Verifique se a intenção é interagir com a loja de buffs
 		if (target instanceof Player && BuffShopManager.getInstance().getSellers().containsKey(target.getObjectId()))
 		{
 			Player sellerNpc = (Player) target;
 			Integer ownerId = BuffShopManager.getInstance().getSellers().get(sellerNpc.getObjectId());
-			if (ownerId != null && ownerId.equals(_actor.getObjectId()))
+			if (ownerId == null)
 			{
-				_actor.sendMessage("Voc� n�o pode comprar buffs da sua pr�pria loja.");
-				// Enviar ActionFailed ou limpar a inten��o da AI
-				_actor.sendPacket(ActionFailed.STATIC_PACKET);
-				doIdleIntention(); // Parar a intera��o
+				doIdleIntention();
 				return;
 			}
-			if (_actor.distance3D(target) > 150)
+			
+			if (ownerId.equals(_actor.getObjectId()))
 			{
-				// Calcule um novo local pr�ximo � loja
-				final Location destination = GeoEngine.getInstance().getValidLocation(_actor, target.getX(), target.getY(), target.getZ());
-				
-				// Defina a inten��o do jogador para se mover para o novo local
-				_actor.getAI().doMoveToIntention(destination, null);
-				BuffShopUIManager.getInstance().showPublicShopWindow(_actor, (Player) target, BuffShopManager.getInstance().getProfile((Player) target), 1, 1);
-				return; // Interrompa o m�todo para que o jogador possa se mover
+				_actor.sendMessage("Você não pode comprar buffs da sua própria loja.");
+				_actor.sendPacket(ActionFailed.STATIC_PACKET);
+				doIdleIntention();
+				return;
 			}
 			
-			// BuffShopManager.getInstance().showShop((Player) target, _actor, 1);
-			BuffShopUIManager.getInstance().showPublicShopWindow(_actor, (Player) target, BuffShopManager.getInstance().getProfile((Player) target), 1, 1);
-			_actor.sendPacket(ActionFailed.STATIC_PACKET); // Importante para o cliente n�o ficar "preso"
-			doIdleIntention(); // Parar a intera��o
-			return; // Interrompe o processamento da a��o padr�o de clique em Player
+			// Busca o ShopObject correto da loja ativa
+			final ShopObject shop = BuffShopManager.getInstance().getShops().get(ownerId);
+			if (shop == null)
+			{
+				_actor.sendMessage("Erro: A configuração da loja não foi encontrada.");
+				_actor.sendPacket(ActionFailed.STATIC_PACKET);
+				doIdleIntention();
+				return;
+			}
+			
+			if (_actor.distance3D(target) > 150)
+			{
+				// Calcule um novo local próximo à loja
+				final Location destination = GeoEngine.getInstance().getValidLocation(_actor, target.getX(), target.getY(), target.getZ());
+				
+				// Defina a intenção do jogador para se mover para o novo local
+				_actor.getAI().doMoveToIntention(destination, null);
+				BuffShopUIManager.getInstance().showPublicShopWindow(_actor, sellerNpc, shop, 1, 1);
+				return; // Interrompa o método para que o jogador possa se mover
+			}
+			
+			BuffShopUIManager.getInstance().showPublicShopWindow(_actor, sellerNpc, shop, 1, 1);
+			_actor.sendPacket(ActionFailed.STATIC_PACKET); // Importante para o cliente não ficar "preso"
+			doIdleIntention(); // Parar a interação
+			return; // Interrompe o processamento da ação padrão de clique em Player
 			
 		}
 		if (!_actor.getCast().canAttemptCast(target, skill))

@@ -43,6 +43,12 @@ public class ChatTell implements IChatHandler
 				return;
 			}
 			
+			if (targetPlayer.getMessageRefusal())
+			{
+				player.sendPacket(SystemMessageId.THE_PERSON_IS_IN_MESSAGE_REFUSAL_MODE);
+				return;
+			}
+			
 			if (RelationManager.getInstance().isInBlockList(targetPlayer, player))
 			{
 				player.sendPacket(SystemMessageId.THE_PERSON_IS_IN_MESSAGE_REFUSAL_MODE);

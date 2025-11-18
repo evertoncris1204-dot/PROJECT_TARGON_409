@@ -194,10 +194,9 @@ public final class ItemInstance extends WorldObject implements Runnable, Compara
 	@Override
 	public void sendInfo(Player player)
 	{
-		if (_dropperObjectId != 0)
-			player.sendPacket(new DropItem(this, _dropperObjectId));
-		else
-			player.sendPacket(new SpawnItem(this));
+		// Always use SpawnItem instead of DropItem to avoid client trying to load missing effect files
+		// The client tries to load drp.pnt_drop_accessary for accessories when using DropItem packet
+		player.sendPacket(new SpawnItem(this));
 	}
 	
 	@Override

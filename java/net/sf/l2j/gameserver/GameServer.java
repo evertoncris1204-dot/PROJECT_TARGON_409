@@ -27,6 +27,7 @@ import net.sf.l2j.gameserver.data.manager.CastleManorManager;
 import net.sf.l2j.gameserver.data.manager.ClanHallManager;
 import net.sf.l2j.gameserver.data.manager.CoupleManager;
 import net.sf.l2j.gameserver.data.manager.CursedWeaponManager;
+import net.sf.l2j.gameserver.data.manager.CustomSpawnManager;
 import net.sf.l2j.gameserver.data.manager.DerbyTrackManager;
 import net.sf.l2j.gameserver.data.manager.FestivalOfDarknessManager;
 import net.sf.l2j.gameserver.data.manager.FishingChampionshipManager;
@@ -35,6 +36,7 @@ import net.sf.l2j.gameserver.data.manager.LotteryManager;
 import net.sf.l2j.gameserver.data.manager.PartyMatchRoomManager;
 import net.sf.l2j.gameserver.data.manager.PetitionManager;
 import net.sf.l2j.gameserver.data.manager.RaidPointManager;
+import net.sf.l2j.gameserver.data.manager.RankingManager;
 import net.sf.l2j.gameserver.data.manager.SevenSignsManager;
 import net.sf.l2j.gameserver.data.manager.SpawnManager;
 import net.sf.l2j.gameserver.data.manager.ZoneManager;
@@ -49,6 +51,7 @@ import net.sf.l2j.gameserver.data.xml.AugmentationData;
 import net.sf.l2j.gameserver.data.xml.BoatData;
 import net.sf.l2j.gameserver.data.xml.ClanHallDecoData;
 import net.sf.l2j.gameserver.data.xml.DoorData;
+import net.sf.l2j.gameserver.data.xml.DressMeData;
 import net.sf.l2j.gameserver.data.xml.FishData;
 import net.sf.l2j.gameserver.data.xml.HealSpsData;
 import net.sf.l2j.gameserver.data.xml.HennaData;
@@ -60,6 +63,7 @@ import net.sf.l2j.gameserver.data.xml.MultisellData;
 import net.sf.l2j.gameserver.data.xml.NewbieBuffData;
 import net.sf.l2j.gameserver.data.xml.NpcData;
 import net.sf.l2j.gameserver.data.xml.ObserverGroupData;
+import net.sf.l2j.gameserver.data.xml.PartyFarmData;
 import net.sf.l2j.gameserver.data.xml.PlayerData;
 import net.sf.l2j.gameserver.data.xml.PlayerLevelData;
 import net.sf.l2j.gameserver.data.xml.RecipeData;
@@ -123,15 +127,18 @@ public class GameServer
 		new File("./log/error").mkdir();
 		new File("./log/gmaudit").mkdir();
 		new File("./log/item").mkdir();
-		new File("./data/crests").mkdirs();
+		new File("./game/data/crests").mkdirs();
 		
 		// Create input stream for log file -- or store file data into memory
-		try (InputStream is = new FileInputStream(new File("config/logging.properties")))
+		// Try both paths: from root (game/config/logging.properties) and from game directory (config/logging.properties)
+		File logFile = new File("game/config/logging.properties");
+		if (!logFile.exists())
+			logFile = new File("config/logging.properties");
+		
+		try (InputStream is = new FileInputStream(logFile))
 		{
 			LogManager.getLogManager().readConfiguration(is);
 		}
-		
-		
 		
 		StringUtil.printSection("Config");
 		Config.loadGameServer();
@@ -173,6 +180,7 @@ public class GameServer
 		SoulCrystalData.getInstance();
 		AugmentationData.getInstance();
 		CursedWeaponManager.getInstance();
+		DressMeData.getInstance();
 		
 		StringUtil.printSection("Admins");
 		AdminData.getInstance();
@@ -185,6 +193,7 @@ public class GameServer
 		PlayerLevelData.getInstance();
 		PartyMatchRoomManager.getInstance();
 		RaidPointManager.getInstance();
+		RankingManager.getInstance();
 		HealSpsData.getInstance();
 		RestartPointData.getInstance();
 		
@@ -265,8 +274,23 @@ public class GameServer
 		if (Config.ALLOW_FISH_CHAMPIONSHIP)
 			FishingChampionshipManager.getInstance();
 		
+		if (Config.CTF_EVENT_ENABLED)
+			net.sf.l2j.gameserver.model.entity.events.ctf.CTFManager.getInstance();
+		
+		// Initialize TvT Event and Auto Start
+		dev.tvtEvent.TvTEvent.getInstance().initialize();
+		net.sf.l2j.gameserver.scripting.task.TvTAutoStart.initialize();
+		
+		StringUtil.printSection("Instance Manager");
+		net.sf.l2j.gameserver.model.entity.instance.InstanceManager.getInstance();
+		
+		StringUtil.printSection("Tournament Manager");
+		net.sf.l2j.gameserver.model.entity.Tournament.TournamentManager.getInstance();
+		
 		StringUtil.printSection("Spawns");
+		CustomSpawnManager.getInstance().load(); // Load custom spawns before general spawn
 		SpawnManager.getInstance().spawn();
+		PartyFarmData.getInstance();
 		
 		StringUtil.printSection("Handlers");
 		LOGGER.info("Loaded {} admin command handlers.", AdminCommandHandler.getInstance().size());
@@ -276,6 +300,7 @@ public class GameServer
 		LOGGER.info("Loaded {} target handlers.", TargetHandler.getInstance().size());
 		LOGGER.info("Loaded {} user command handlers.", UserCommandHandler.getInstance().size());
 		LOGGER.info("Loaded {} Voiced command handlers.", VoicedCommandHandler.getInstance().size());
+		LOGGER.info("Loaded {} bypass command handlers.", net.sf.l2j.gameserver.handler.BypassHandler.getInstance().size());
 		
 		StringUtil.printSection("System");
 		Runtime.getRuntime().addShutdownHook(Shutdown.getInstance());

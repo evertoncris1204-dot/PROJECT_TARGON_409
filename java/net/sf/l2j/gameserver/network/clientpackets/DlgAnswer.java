@@ -34,5 +34,7 @@ public final class DlgAnswer extends L2GameClientPacket
 			player.activateGate(_answer, 1);
 		else if (_messageId == SystemMessageId.WOULD_YOU_LIKE_TO_CLOSE_THE_GATE.getId())
 			player.activateGate(_answer, 0);
+		else if (_messageId == SystemMessageId.S1.getId() && player.isTournamentTeleportRequested())
+			net.sf.l2j.gameserver.model.entity.Tournament.TournamentManager.getInstance().handleTeleportAnswer(player, _answer);
 	}
 }

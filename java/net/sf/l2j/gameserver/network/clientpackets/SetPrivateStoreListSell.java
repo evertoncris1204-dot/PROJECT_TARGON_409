@@ -72,6 +72,13 @@ public final class SetPrivateStoreListSell extends L2GameClientPacket
 			return;
 		}
 		
+		// Check if player is in CHAOTIC zone
+		if (Config.NOSTORE_ZONE && player.isInsideZone(net.sf.l2j.gameserver.enums.ZoneId.CHAOTIC))
+		{
+			player.sendMessage("You cannot craft while inside Chaotic zone.");
+			return;
+		}
+		
 		// Check multiple conditions. Message and OperateType reset are sent directly from the method.
 		if (!player.canOpenPrivateStore(false))
 			return;

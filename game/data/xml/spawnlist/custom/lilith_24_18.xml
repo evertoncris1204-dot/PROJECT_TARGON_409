@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<list>
+	<territory name="lilith_1763193724738" minZ="-832" maxZ="-816">
+		<node x="147950" y="11921" />
+		<node x="147850" y="11921" />
+		<node x="147850" y="11821" />
+		<node x="147950" y="11821" />
+	</territory>
+	<npcmaker name="lilith_120138398082500" territory="lilith_1763193724738" maximumNpcs="1">
+		<npc id="25283" pos="147900;11871;-832;50241" total="1" respawn="60sec" /> <!-- Lilith -->
+	</npcmaker>
+</list>

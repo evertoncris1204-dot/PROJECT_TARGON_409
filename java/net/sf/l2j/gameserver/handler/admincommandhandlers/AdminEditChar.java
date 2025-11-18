@@ -35,7 +35,8 @@ public class AdminEditChar implements IAdminCommandHandler
 		"admin_debug",
 		"admin_party_info",
 		"admin_remove",
-		"admin_set"
+		"admin_set",
+		"admin_clearskins"
 	};
 	
 	@Override
@@ -553,6 +554,19 @@ public class AdminEditChar implements IAdminCommandHandler
 					player.sendMessage("Usage: //set level|name|rec|sex|sp|tcolor|title");
 					break;
 			}
+		}
+		else if (command.startsWith("admin_clearskins"))
+		{
+			final Player targetPlayer = (st.hasMoreTokens()) ? getTargetPlayer(player, st.nextToken(), true) : getTargetPlayer(player, true);
+			
+			if (targetPlayer == null)
+			{
+				player.sendMessage("Invalid target.");
+				return;
+			}
+			
+			targetPlayer.clearAllSkins();
+			player.sendMessage("All skins have been removed from " + targetPlayer.getName() + ".");
 		}
 	}
 	

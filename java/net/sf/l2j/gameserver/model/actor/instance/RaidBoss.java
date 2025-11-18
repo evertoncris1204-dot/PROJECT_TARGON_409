@@ -1,9 +1,11 @@
 package net.sf.l2j.gameserver.model.actor.instance;
 
+import net.sf.l2j.Config;
 import net.sf.l2j.commons.random.Rnd;
 
 import net.sf.l2j.gameserver.data.manager.HeroManager;
 import net.sf.l2j.gameserver.data.manager.RaidPointManager;
+import net.sf.l2j.gameserver.model.World;
 import net.sf.l2j.gameserver.model.actor.Creature;
 import net.sf.l2j.gameserver.model.actor.Player;
 import net.sf.l2j.gameserver.model.actor.template.NpcTemplate;
@@ -44,6 +46,18 @@ public class RaidBoss extends Monster
 	}
 	
 	@Override
+	public void onSpawn()
+	{
+		super.onSpawn();
+		
+		// Announce Raid Boss spawn
+		if (Config.ANNOUNCE_RAID_BOSS_ALIVE && Config.LIST_RAID_ANNOUNCE.contains(getNpcId()))
+		{
+			World.announceToOnlinePlayers(getName() + " has spawned!", true);
+		}
+	}
+	
+	@Override
 	public boolean doDie(Creature killer)
 	{
 		if (!super.doDie(killer))
@@ -72,6 +86,13 @@ public class RaidBoss extends Monster
 					RaidPointManager.getInstance().addPoints(player, getNpcId(), (getStatus().getLevel() / 2) + Rnd.get(-5, 5));
 					if (player.isNoble())
 						HeroManager.getInstance().setRBkilled(player.getObjectId(), getNpcId());
+				}
+				
+				// Announce Raid Boss defeat
+				if (Config.ENABLE_BOSS_DEFEATED_MSG)
+				{
+					String msg = player.getClan() != null ? Config.RAID_BOSS_DEFEATED_BY_CLAN_MEMBER_MSG.replace("%raidboss%", getName()).replace("%player%", player.getName()).replace("%clan%", player.getClan().getName()) : Config.RAID_BOSS_DEFEATED_BY_PLAYER_MSG.replace("%raidboss%", getName()).replace("%player%", player.getName());
+					World.announceToOnlinePlayers(msg, true);
 				}
 			}
 		}

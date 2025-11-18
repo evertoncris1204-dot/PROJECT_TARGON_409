@@ -8,6 +8,7 @@ import net.sf.l2j.gameserver.enums.ShortcutType;
 import net.sf.l2j.gameserver.geoengine.GeoEngine;
 import net.sf.l2j.gameserver.handler.usercommandhandlers.Escape;
 import net.sf.l2j.gameserver.model.actor.Player;
+import net.sf.l2j.gameserver.model.WorldObject;
 import net.sf.l2j.gameserver.model.actor.instance.Chest;
 import net.sf.l2j.gameserver.model.actor.instance.GrandBoss;
 import net.sf.l2j.gameserver.model.actor.instance.Monster;
@@ -17,6 +18,8 @@ public class L2AutoFarmTask
 {
     private final Player _actor;
     private ScheduledFuture<?> _task;
+    private Monster _currentTarget = null;
+    private String _status = "Stopped";
 
     public L2AutoFarmTask(Player actor)
     {
@@ -26,7 +29,14 @@ public class L2AutoFarmTask
     public void start()
     {
         if (_task == null)
+        {
             _task = ThreadPool.scheduleAtFixedRate(() -> thinking(), 500, 500);
+            _status = "Running";
+            if (_actor != null)
+            {
+                _actor.sendMessage("AutoFarm iniciado.");
+            }
+        }
     }
 
     private void thinking()
@@ -47,7 +57,9 @@ public class L2AutoFarmTask
 
         if (monster != null)
         {
+            _currentTarget = monster;
             _actor.setTarget(monster);
+            _status = "Hunting: " + monster.getName();
 
             // Verifica se o F1 da barra 10 tem o action de attack
             if (hasAttackShortcut())
@@ -56,6 +68,11 @@ public class L2AutoFarmTask
                 if (!_actor.isAttackingNow())
                     _actor.doAutoAttack(monster);
             }
+        }
+        else
+        {
+            _currentTarget = null;
+            _status = "Searching";
         }
     }
 
@@ -77,7 +94,7 @@ public class L2AutoFarmTask
     {
         Monster closest = null;
         double minDist = Double.MAX_VALUE;
-
+        
         for (Monster mob : _actor.getKnownTypeInRadius(Monster.class, 3500))
         {
             if (mob == null || mob.isDead() || !GeoEngine.getInstance().canSeeTarget(_actor, mob))
@@ -132,12 +149,33 @@ public class L2AutoFarmTask
             _task = null;
         }
 
+        _currentTarget = null;
+        _status = "Stopped";
+        
         if (_actor != null)
+        {
             _actor.setTarget(null);
+            _actor.sendMessage("AutoFarm parado.");
+        }
     }
 
     public boolean running()
     {
-        return _task != null;
+        return _task != null && !_task.isCancelled() && !_task.isDone();
+    }
+    
+    public Monster getCurrentTarget()
+    {
+        return _currentTarget;
+    }
+    
+    public String getStatus()
+    {
+        return _status;
+    }
+    
+    public String getTargetName()
+    {
+        return _currentTarget != null ? _currentTarget.getName() : "None";
     }
 }

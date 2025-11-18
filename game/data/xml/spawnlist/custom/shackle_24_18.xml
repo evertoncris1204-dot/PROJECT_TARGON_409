@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<list>
+	<territory name="shackle_1763193469085" minZ="-904" maxZ="-888">
+		<node x="147847" y="12378" />
+		<node x="147747" y="12378" />
+		<node x="147747" y="12278" />
+		<node x="147847" y="12278" />
+	</territory>
+	<npcmaker name="shackle_119882744746900" territory="shackle_1763193469085" maximumNpcs="1">
+		<npc id="20235" pos="147797;12328;-904;47801" total="1" respawn="60sec" /> <!-- Shackle -->
+	</npcmaker>
+</list>

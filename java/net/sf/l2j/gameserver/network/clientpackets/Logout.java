@@ -1,11 +1,14 @@
 package net.sf.l2j.gameserver.network.clientpackets;
 
+import net.sf.l2j.Config;
 import net.sf.l2j.gameserver.data.manager.FestivalOfDarknessManager;
 import net.sf.l2j.gameserver.enums.ZoneId;
 import net.sf.l2j.gameserver.model.actor.Player;
 import net.sf.l2j.gameserver.network.SystemMessageId;
 import net.sf.l2j.gameserver.network.serverpackets.ActionFailed;
 import net.sf.l2j.gameserver.taskmanager.AttackStanceTaskManager;
+
+import Base.AutoFarm.AutofarmPlayerRoutine;
 
 public final class Logout extends L2GameClientPacket
 {
@@ -24,6 +27,13 @@ public final class Logout extends L2GameClientPacket
 		
 		if (player.getActiveEnchantItem() != null || player.isLocked())
 		{
+			player.sendPacket(ActionFailed.STATIC_PACKET);
+			return;
+		}
+		
+		if (Config.NOLOGOUT_ZONE && player.isInsideZone(ZoneId.CHAOTIC))
+		{
+			player.sendMessage("You cannot logout while inside a Chaotic zone.");
 			player.sendPacket(ActionFailed.STATIC_PACKET);
 			return;
 		}
@@ -47,6 +57,15 @@ public final class Logout extends L2GameClientPacket
 			player.sendPacket(SystemMessageId.NO_LOGOUT_HERE);
 			player.sendPacket(ActionFailed.STATIC_PACKET);
 			return;
+		}
+		
+		// AutoFarm
+		if (player.isAutoFarm())
+		{
+			if (AutofarmPlayerRoutine.isIpAllowed(player.getIP()))
+			{
+				AutofarmPlayerRoutine.removeIpEntry(player.getObjectId());
+			}
 		}
 		
 		player.removeFromBossZone();

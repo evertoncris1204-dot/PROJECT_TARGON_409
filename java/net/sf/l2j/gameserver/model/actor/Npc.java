@@ -98,6 +98,10 @@ public class Npc extends Creature
 	private volatile boolean _isDecayed;
 	
 	private int _leftHandItemId;
+	
+	// Farm Dungeon Instance
+	private int _farmDungeonInstanceId = -1;
+	
 	private int _rightHandItemId;
 	private int _enchantEffect;
 	
@@ -300,7 +304,48 @@ public class Npc extends Creature
 	@Override
 	public void sendInfo(Player player)
 	{
+		// Check instance compatibility before sending info
+		if (player.isInTournamentInstance())
+		{
+			// Tournament players can't see world NPCs
+			return;
+		}
+		
+		if (player.isInFarmDungeonInstance())
+		{
+			// Farm Dungeon players can only see NPCs from their instance
+			if (getFarmDungeonInstanceId() != player.getFarmDungeonInstanceId())
+				return;
+		}
+		else
+		{
+			// Normal players can't see Farm Dungeon NPCs
+			if (getFarmDungeonInstanceId() >= 0)
+				return;
+		}
+		
 		player.sendPacket(new NpcInfo(this, player));
+	}
+	
+	// Farm Dungeon Instance methods
+	public int getFarmDungeonInstanceId()
+	{
+		return _farmDungeonInstanceId;
+	}
+	
+	public void setFarmDungeonInstanceId(int instanceId)
+	{
+		_farmDungeonInstanceId = instanceId;
+	}
+	
+	public boolean isInFarmDungeonInstance()
+	{
+		return _farmDungeonInstanceId >= 0;
+	}
+	
+	public void cleanInstanceKnownList()
+	{
+		// Remove objects from other instances from known list
 	}
 	
 	@Override

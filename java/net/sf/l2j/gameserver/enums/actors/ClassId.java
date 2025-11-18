@@ -4,6 +4,7 @@ import java.util.Collections;
 import java.util.EnumSet;
 import java.util.Set;
 
+import net.sf.l2j.commons.util.ArraysUtil;
 import net.sf.l2j.gameserver.model.actor.Player;
 
 /**
@@ -382,6 +383,69 @@ public enum ClassId
 				return player.getClassId() == ELVEN_WIZARD;
 		}
 		return false;
+	}
+	
+	private static final ClassId[] HEALERS =
+	{
+		BISHOP,
+		CARDINAL,
+		EVAS_SAINT,
+		ELVEN_ELDER,
+		SHILLIEN_SAINT,
+		SHILLIEN_ELDER
+	};
+	
+	private static final ClassId[] TANKERS =
+	{
+		HELL_KNIGHT,
+		DARK_AVENGER,
+		SHILLIEN_KNIGHT,
+		SHILLIEN_TEMPLAR,
+		PHOENIX_KNIGHT,
+		TEMPLE_KNIGHT,
+		EVAS_TEMPLAR,
+		PALADIN
+	};
+	
+	private static final ClassId[] DAGGERS =
+	{
+		ROGUE,
+		TREASURE_HUNTER,
+		ABYSS_WALKER,
+		PLAINS_WALKER,
+		ADVENTURER,
+		GHOST_HUNTER,
+		WIND_RIDER
+	};
+	
+	private static final ClassId[] ARCHERS =
+	{
+		HAWKEYE,
+		SILVER_RANGER,
+		PHANTOM_RANGER,
+		SAGGITARIUS,
+		MOONLIGHT_SENTINEL,
+		GHOST_SENTINEL
+	};
+	
+	public boolean isHealer()
+	{
+		return ArraysUtil.contains(HEALERS, this);
+	}
+	
+	public boolean isTanker()
+	{
+		return ArraysUtil.contains(TANKERS, this);
+	}
+	
+	public boolean isDagger()
+	{
+		return ArraysUtil.contains(DAGGERS, this);
+	}
+	
+	public boolean isArcher()
+	{
+		return ArraysUtil.contains(ARCHERS, this);
 	}
 	
 	static

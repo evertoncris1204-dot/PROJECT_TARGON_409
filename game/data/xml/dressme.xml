@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<list>
+   <skin type="armor"> <!-- Armors -->
+       <type id="1" name="Draconic Armor" chestId="6379" legsId="6379" glovesId="6380" feetId="6381" priceId="57" priceCount="100"/>
+       <type id="2" name="Blue Wolf Leather Armor" chestId="2391" legsId="0" glovesId="0" feetId="0" priceId="57" priceCount="100"/>
+       <!-- Skins 2011 -->
+       <type id="3" name="Jolly Jester" chestId="10100" legsId="0" glovesId="0" feetId="0" priceId="57" priceCount="1000"/>
+       <type id="4" name="Chinese" chestId="10102" legsId="0" glovesId="0" feetId="0" priceId="57" priceCount="1000"/>
+       <type id="5" name="Cupid" chestId="10103" legsId="0" glovesId="0" feetId="0" priceId="57" priceCount="1000"/>
+       <type id="6" name="Zariche" chestId="10105" legsId="0" glovesId="0" feetId="0" priceId="57" priceCount="1000"/>
+       <type id="7" name="Formal Wear" chestId="10109" legsId="0" glovesId="0" feetId="0" priceId="57" priceCount="1000"/>
+       <type id="8" name="Cowboy" chestId="10110" legsId="0" glovesId="0" feetId="0" priceId="57" priceCount="1000"/>
+       <type id="9" name="Dark Knight" chestId="10112" legsId="0" glovesId="0" feetId="0" priceId="57" priceCount="1000"/>
+       <type id="10" name="School Uniform A" chestId="10114" legsId="0" glovesId="0" feetId="0" priceId="57" priceCount="1000"/>
+       <type id="11" name="School Uniform B" chestId="10115" legsId="0" glovesId="0" feetId="0" priceId="57" priceCount="1000"/>
+       <type id="12" name="Red Hunter" chestId="10116" legsId="0" glovesId="0" feetId="0" priceId="57" priceCount="1000"/>
+       <type id="13" name="Ninja" chestId="10118" legsId="0" glovesId="0" feetId="0" priceId="57" priceCount="1000"/>
+       <type id="14" name="Light Assasin" chestId="10120" legsId="0" glovesId="0" feetId="0" priceId="57" priceCount="1000"/>
+       <type id="15" name="Dark Assassin" chestId="10122" legsId="0" glovesId="0" feetId="0" priceId="57" priceCount="1000"/>
+       <type id="16" name="Beleth" chestId="10124" legsId="0" glovesId="0" feetId="0" priceId="57" priceCount="1000"/>
+       <type id="17" name="Japan" chestId="10126" legsId="0" glovesId="0" feetId="0" priceId="57" priceCount="1000"/>
+       <type id="18" name="Noble" chestId="10127" legsId="0" glovesId="0" feetId="0" priceId="57" priceCount="1000"/>
+       <type id="19" name="White Knight" chestId="10129" legsId="0" glovesId="0" feetId="0" priceId="57" priceCount="1000"/>
+       <type id="20" name="Barbarian" chestId="10131" legsId="0" glovesId="0" feetId="0" priceId="57" priceCount="1000"/>
+       <type id="21" name="Valkyrie" chestId="10133" legsId="0" glovesId="0" feetId="0" priceId="57" priceCount="1000"/>
+       <type id="22" name="Single Mesh" chestId="10135" legsId="0" glovesId="0" feetId="0" priceId="57" priceCount="1000"/>
+       <type id="23" name="Zaken" chestId="10136" legsId="0" glovesId="0" feetId="0" priceId="57" priceCount="1000"/>
+       <type id="24" name="Dragon Claw" chestId="10138" legsId="0" glovesId="0" feetId="0" priceId="57" priceCount="1000"/>
+       <type id="25" name="Kiborg" chestId="10140" legsId="0" glovesId="0" feetId="0" priceId="57" priceCount="1000"/>
+       <type id="26" name="Halloween" chestId="10142" legsId="0" glovesId="0" feetId="0" priceId="57" priceCount="1000"/>
+       <type id="27" name="Baseball" chestId="10144" legsId="0" glovesId="0" feetId="0" priceId="57" priceCount="1000"/>
+       <type id="28" name="Alicia" chestId="10146" legsId="0" glovesId="0" feetId="0" priceId="57" priceCount="1000"/>
+       <type id="29" name="Skeleton" chestId="10148" legsId="0" glovesId="0" feetId="0" priceId="57" priceCount="1000"/>
+       <type id="30" name="Demonic Deathly Angel" chestId="10150" legsId="0" glovesId="0" feetId="0" priceId="57" priceCount="1000"/>
+       <type id="31" name="Lilith" chestId="10152" legsId="0" glovesId="0" feetId="0" priceId="57" priceCount="1000"/>
+       <type id="32" name="Elite" chestId="10154" legsId="0" glovesId="0" feetId="0" priceId="57" priceCount="1000"/>
+       <type id="33" name="Antharas" chestId="10155" legsId="0" glovesId="0" feetId="0" priceId="57" priceCount="1000"/>
+       <type id="34" name="Valakas" chestId="10156" legsId="0" glovesId="0" feetId="0" priceId="57" priceCount="1000"/>
+       <type id="35" name="Thorns" chestId="10157" legsId="0" glovesId="0" feetId="0" priceId="57" priceCount="1000"/>
+   </skin>
+   <skin type="weapon"> <!-- Weapons -->
+       <type id="1" name="Draconic Bow" weaponId="7575" priceId="57" priceCount="100"/>
+       <type id="2" name="Arcana Mace" weaponId="6608"  priceId="57" priceCount="100"/>
+       <type id="3" name="Keshanberk*Keshanberk" weaponId="5704" priceId="57" priceCount="100"/>
+       <!-- Special Weapon Skins -->
+       <type id="4" name="Akamanah cutter" weaponId="11100" priceId="57" priceCount="1000"/>
+       <type id="5" name="Akamanah slasher" weaponId="11101" priceId="57" priceCount="1000"/>
+       <type id="6" name="Akamanah avenger" weaponId="11102" priceId="57" priceCount="1000"/>
+       <type id="7" name="Akamanah buster" weaponId="11103" priceId="57" priceCount="1000"/>
+       <type id="8" name="Akamanah caster" weaponId="11104" priceId="57" priceCount="1000"/>
+       <type id="9" name="Akamanah retributer" weaponId="11105" priceId="57" priceCount="1000"/>
+       <type id="10" name="Akamanah mretributer" weaponId="11106" priceId="57" priceCount="1000"/>
+       <type id="11" name="Akamanah shaper" weaponId="11107" priceId="57" priceCount="1000"/>
+       <type id="12" name="Akamanah fighter" weaponId="11108" priceId="57" priceCount="1000"/>
+       <type id="13" name="Akamanah thrower" weaponId="11109" priceId="57" priceCount="1000"/>
+       <type id="14" name="Akamanah cutter" weaponId="11110" priceId="57" priceCount="1000"/>
+       <type id="15" name="Akamanah stormer" weaponId="11111" priceId="57" priceCount="1000"/>
+       <type id="16" name="Zariche cutter" weaponId="11112" priceId="57" priceCount="1000"/>
+       <type id="17" name="Zariche slasher" weaponId="11113" priceId="57" priceCount="1000"/>
+       <type id="18" name="Zariche avenger" weaponId="11114" priceId="57" priceCount="1000"/>
+       <type id="19" name="Zariche buster" weaponId="11115" priceId="57" priceCount="1000"/>
+       <type id="20" name="Zariche caster" weaponId="11116" priceId="57" priceCount="1000"/>
+       <type id="21" name="Zariche retributer" weaponId="11117" priceId="57" priceCount="1000"/>
+       <type id="22" name="Zariche mretributer" weaponId="11118" priceId="57" priceCount="1000"/>
+       <type id="23" name="Zariche shaper" weaponId="11119" priceId="57" priceCount="1000"/>
+       <type id="24" name="Zariche fighter" weaponId="11120" priceId="57" priceCount="1000"/>
+       <type id="25" name="Zariche thrower" weaponId="11121" priceId="57" priceCount="1000"/>
+       <type id="26" name="Zariche cutter" weaponId="11122" priceId="57" priceCount="1000"/>
+       <type id="27" name="Zariche stormer" weaponId="11123" priceId="57" priceCount="1000"/>
+       <type id="28" name="Antharas cutter" weaponId="11124" priceId="57" priceCount="1000"/>
+       <type id="29" name="Antharas slasher" weaponId="11125" priceId="57" priceCount="1000"/>
+       <type id="30" name="Antharas avenger" weaponId="11126" priceId="57" priceCount="1000"/>
+       <type id="31" name="Antharas buster" weaponId="11127" priceId="57" priceCount="1000"/>
+       <type id="32" name="Antharas shaper" weaponId="11128" priceId="57" priceCount="1000"/>
+       <type id="33" name="Antharas fighter" weaponId="11129" priceId="57" priceCount="1000"/>
+       <type id="34" name="Antharas thrower" weaponId="11130" priceId="57" priceCount="1000"/>
+       <type id="35" name="Antharas cutter" weaponId="11131" priceId="57" priceCount="1000"/>
+       <type id="36" name="Antharas stormer" weaponId="11132" priceId="57" priceCount="1000"/>
+       <type id="37" name="Lindvior cutter" weaponId="11133" priceId="57" priceCount="1000"/>
+       <type id="38" name="Lindvior slasher" weaponId="11134" priceId="57" priceCount="1000"/>
+       <type id="39" name="Lindvior caster" weaponId="11135" priceId="57" priceCount="1000"/>
+       <type id="40" name="Lindvior shaper" weaponId="11136" priceId="57" priceCount="1000"/>
+       <type id="41" name="Lindvior thrower" weaponId="11137" priceId="57" priceCount="1000"/>
+       <type id="42" name="Lindvior cutter" weaponId="11138" priceId="57" priceCount="1000"/>
+       <type id="43" name="Valakas cutter" weaponId="11139" priceId="57" priceCount="1000"/>
+       <type id="44" name="Valakas slasher" weaponId="11140" priceId="57" priceCount="1000"/>
+       <type id="45" name="Valakas buster" weaponId="11141" priceId="57" priceCount="1000"/>
+       <type id="46" name="Valakas caster" weaponId="11142" priceId="57" priceCount="1000"/>
+       <type id="47" name="Valakas mretributer" weaponId="11143" priceId="57" priceCount="1000"/>
+       <type id="48" name="Valakas shaper" weaponId="11144" priceId="57" priceCount="1000"/>
+       <type id="49" name="Valakas thrower" weaponId="11145" priceId="57" priceCount="1000"/>
+       <type id="50" name="Valakas cutter" weaponId="11146" priceId="57" priceCount="1000"/>
+   </skin>
+   <skin type="hair"> <!-- Hairs -->
+       <type id="1" name="Cat Ear" hairId="6843" priceId="57" priceCount="100"/>
+       <!-- Skins 2011 Hats -->
+       <type id="2" name="Jolly Jester Hat" hairId="10101" priceId="57" priceCount="500"/>
+       <type id="3" name="Cupid Hair Style" hairId="10104" priceId="57" priceCount="500"/>
+       <type id="4" name="Zariche Mask" hairId="10106" priceId="57" priceCount="500"/>
+       <type id="5" name="Cowboy Hat" hairId="10111" priceId="57" priceCount="500"/>
+       <type id="6" name="Dark Knight Hat" hairId="10113" priceId="57" priceCount="500"/>
+       <type id="7" name="Red Hunter Hat" hairId="10117" priceId="57" priceCount="500"/>
+       <type id="8" name="Assasin Mask" hairId="10119" priceId="57" priceCount="500"/>
+       <type id="9" name="Light Assasin Hat" hairId="10121" priceId="57" priceCount="500"/>
+       <type id="10" name="Dark Assasin Hat" hairId="10123" priceId="57" priceCount="500"/>
+       <type id="11" name="Beleth Mask" hairId="10125" priceId="57" priceCount="500"/>
+       <type id="12" name="Noble Hat" hairId="10128" priceId="57" priceCount="500"/>
+       <type id="13" name="White Knight Mask" hairId="10130" priceId="57" priceCount="500"/>
+       <type id="14" name="Barbarian Mask" hairId="10132" priceId="57" priceCount="500"/>
+       <type id="15" name="Valkyrie Mask" hairId="10134" priceId="57" priceCount="500"/>
+       <type id="16" name="Zaken Hat" hairId="10137" priceId="57" priceCount="500"/>
+       <type id="17" name="Dragon Claw Mask" hairId="10139" priceId="57" priceCount="500"/>
+       <type id="18" name="Kiborg Hat" hairId="10141" priceId="57" priceCount="500"/>
+       <type id="19" name="Halloween Hat" hairId="10143" priceId="57" priceCount="500"/>
+       <type id="20" name="Baseball Hat" hairId="10145" priceId="57" priceCount="500"/>
+       <type id="21" name="Alicia Hat" hairId="10147" priceId="57" priceCount="500"/>
+       <type id="22" name="Skeleton Hat" hairId="10149" priceId="57" priceCount="500"/>
+       <type id="23" name="Demonic Deathly Angel Hat" hairId="10151" priceId="57" priceCount="500"/>
+       <type id="24" name="Lilith Hat" hairId="10153" priceId="57" priceCount="500"/>
+       <type id="25" name="Thorns Hat" hairId="10158" priceId="57" priceCount="500"/>
+   </skin>
+   <skin type="face"> <!-- Faces -->
+       <type id="1" name="Party Mask" faceId="5808" priceId="57" priceCount="100"/>
+   </skin>
+   <skin type="shield"> <!-- Shields -->
+       <type id="1" name="Shield of Night" shieldId="2498" priceId="57" priceCount="100"/>
+       <type id="2" name="Imperial Shield" shieldId="6377" priceId="57" priceCount="100"/>
+       <!-- Special Weapon Skins Shields -->
+       <type id="3" name="Akamanah shield" shieldId="12058" priceId="57" priceCount="1000"/>
+       <type id="4" name="Zariche shield" shieldId="12059" priceId="57" priceCount="1000"/>
+   </skin>
+</list>
+

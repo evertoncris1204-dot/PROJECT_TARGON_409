@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<list>
+	<territory name="atraiban_1763193361645" minZ="-2656" maxZ="-2640">
+		<node x="27539" y="-16762" />
+		<node x="27439" y="-16762" />
+		<node x="27439" y="-16862" />
+		<node x="27539" y="-16862" />
+	</territory>
+	<npcmaker name="atraiban_119775304897200" territory="atraiban_1763193361645" maximumNpcs="1">
+		<npc id="25029" pos="27489;-16812;-2656;24660" total="1" respawn="60sec" /> <!-- Atraiban -->
+	</npcmaker>
+</list>

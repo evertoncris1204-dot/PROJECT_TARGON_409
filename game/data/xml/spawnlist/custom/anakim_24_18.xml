@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<list>
+	<territory name="anakim_1763193680261" minZ="-848" maxZ="-832">
+		<node x="147811" y="12077" />
+		<node x="147711" y="12077" />
+		<node x="147711" y="11977" />
+		<node x="147811" y="11977" />
+	</territory>
+	<npcmaker name="anakim_120093921368600" territory="anakim_1763193680261" maximumNpcs="1">
+		<npc id="25286" pos="147761;12027;-848;42114" total="1" respawn="60sec" /> <!-- Anakim -->
+	</npcmaker>
+	<territory name="anakim_1763194082915" minZ="-848" maxZ="-832">
+		<node x="147811" y="12077" />
+		<node x="147711" y="12077" />
+		<node x="147711" y="11977" />
+		<node x="147811" y="11977" />
+	</territory>
+	<npcmaker name="anakim_120496574777600" territory="anakim_1763194082915" maximumNpcs="1">
+		<npc id="25286" pos="147761;12027;-848;42114" total="1" respawn="10sec" /> <!-- Anakim -->
+	</npcmaker>
+</list>

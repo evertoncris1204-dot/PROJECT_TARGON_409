@@ -80,6 +80,37 @@ public class CreatureAttack<T extends Creature>
 		if (_actor.isMovementDisabled() && !_actor.isIn2DRadius(target, (int) (_actor.getStatus().getPhysicalAttackRange() + _actor.getCollisionRadius() + target.getCollisionRadius() + (target.isMoving() ? 60 : 10))))
 			return false;
 		
+		// Boss Event PvP Protection - Prevent PvP between event participants
+		if (_actor instanceof Player attacker && target instanceof Player targetPlayer)
+		{
+			dev.bossInstancedEvent.BossEvent bossEvent = dev.bossInstancedEvent.BossEvent.getInstance();
+			if (bossEvent.getState() == net.sf.l2j.gameserver.enums.EventState.STARTED || 
+			    bossEvent.getState() == net.sf.l2j.gameserver.enums.EventState.STARTING)
+			{
+				if (bossEvent.isRegistered(attacker) && bossEvent.isRegistered(targetPlayer))
+				{
+					attacker.sendPacket(SystemMessage.getSystemMessage(SystemMessageId.TARGET_IS_INCORRECT));
+					return false;
+				}
+			}
+			
+			// TvT Event PvP Protection - Prevent PvP between same team members
+			dev.tvtEvent.TvTEvent tvtEvent = dev.tvtEvent.TvTEvent.getInstance();
+			if (tvtEvent.getState() == net.sf.l2j.gameserver.enums.EventState.STARTED || 
+			    tvtEvent.getState() == net.sf.l2j.gameserver.enums.EventState.STARTING)
+			{
+				if (tvtEvent.isRegistered(attacker) && tvtEvent.isRegistered(targetPlayer))
+				{
+					// Check if same team
+					if (tvtEvent.getTeam(attacker) == tvtEvent.getTeam(targetPlayer) && tvtEvent.getTeam(attacker) > 0)
+					{
+						attacker.sendPacket(SystemMessage.getSystemMessage(SystemMessageId.TARGET_IS_INCORRECT));
+						return false;
+					}
+				}
+			}
+		}
+		
 		if (!_actor.knows(target) || !target.isAttackableBy(_actor))
 			return false;
 		
@@ -255,6 +286,18 @@ public class CreatureAttack<T extends Creature>
 						
 						if (reflectedDamage > target.getStatus().getMaxHp())
 							reflectedDamage = target.getStatus().getMaxHp();
+					}
+				}
+			}
+			
+			// Boss Event damage tracking
+			if (_actor instanceof Player player && dev.bossInstancedEvent.BossEvent.getInstance().getState() == net.sf.l2j.gameserver.enums.EventState.STARTED)
+			{
+				if (dev.bossInstancedEvent.BossEvent.getInstance().eventPlayers.contains(player))
+				{
+					if (dev.bossInstancedEvent.BossEvent.getInstance().bossSpawn != null && target.getObjectId() == dev.bossInstancedEvent.BossEvent.getInstance().objectId)
+					{
+						player.setBossEventDamage(player.getBossEventDamage() + hitHolder._damage);
 					}
 				}
 			}

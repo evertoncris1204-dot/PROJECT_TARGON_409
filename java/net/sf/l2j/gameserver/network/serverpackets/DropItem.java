@@ -32,6 +32,6 @@ public class DropItem extends L2GameServerPacket
 			writeD(0x00);
 		writeD(_item.getCount());
 		
-		writeD(1); // unknown
+		writeD(0); // effect type (0 = no effect, prevents client from trying to load missing effect files)
 	}
 }

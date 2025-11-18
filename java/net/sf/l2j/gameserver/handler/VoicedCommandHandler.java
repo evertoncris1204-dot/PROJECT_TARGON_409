@@ -3,7 +3,12 @@ package net.sf.l2j.gameserver.handler;
 import java.util.HashMap;
 import java.util.Map;
 
+import net.sf.l2j.gameserver.handler.voicedcommandhandlers.AutoFarm;
 import net.sf.l2j.gameserver.handler.voicedcommandhandlers.BuffManagerVCmd;
+import net.sf.l2j.gameserver.handler.voicedcommandhandlers.EventTime;
+import net.sf.l2j.gameserver.handler.voicedcommandhandlers.Market;
+import net.sf.l2j.gameserver.handler.voicedcommandhandlers.RaidInfo;
+import net.sf.l2j.gameserver.handler.voicedcommandhandlers.VoicedDressMe;
 import net.sf.l2j.gameserver.handler.voicedcommandhandlers.VoicedInfo;
 import net.sf.l2j.gameserver.handler.voicedcommandhandlers.VoicedMenu;
 import net.sf.l2j.gameserver.handler.voicedcommandhandlers.VoicedServer;
@@ -24,11 +29,26 @@ public class VoicedCommandHandler
 	protected VoicedCommandHandler()
 	{
 		// Aqui voce registra os comandos customizados
+		registerHandler(new AutoFarm());
 		registerHandler(new VoicedMenu());
 		registerHandler(new VoicedServer());
 		registerHandler(new VoicedInfo());
 		registerHandler(new BuffManagerVCmd());
 		
+		// Register DressMe command
+		registerHandler(new VoicedDressMe());
+		
+		// Register Market command
+		registerHandler(new Market());
+		
+		// Register RaidInfo command
+		registerHandler(new RaidInfo());
+		
+		// Register EventTime command
+		registerHandler(new EventTime());
+		
+		if (net.sf.l2j.Config.CTF_EVENT_ENABLED)
+			registerHandler(new net.sf.l2j.gameserver.handler.voicedcommandhandlers.VoicedCTF());
 	}
 	
 	public void registerHandler(IVoicedCommandHandler handler)

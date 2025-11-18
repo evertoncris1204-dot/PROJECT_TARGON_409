@@ -132,6 +132,11 @@ public final class Spawn extends ASpawn
 			// Check spawn data and set respawn.
 			if (_spawnData != null)
 				_spawnData.setRespawn(respawnDelay);
+			else
+			{
+				// No spawn data (dynamic spawn), schedule respawn directly
+				npc.scheduleRespawn(respawnDelay);
+			}
 		}
 		// Npc can't be respawned, it disappears permanently -> Remove Spawn from SpawnManager.
 		else

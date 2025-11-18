@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<list>
+	<territory name="tyrannosaurus_1763193259595" minZ="-2576" maxZ="-2560">
+		<node x="27905" y="-16989" />
+		<node x="27805" y="-16989" />
+		<node x="27805" y="-17089" />
+		<node x="27905" y="-17089" />
+	</territory>
+	<npcmaker name="tyrannosaurus_119673254744900" territory="tyrannosaurus_1763193259595" maximumNpcs="1">
+		<npc id="22215" pos="27855;-17039;-2576;9151" total="1" respawn="60sec" /> <!-- Tyrannosaurus -->
+	</npcmaker>
+</list>

@@ -179,7 +179,37 @@ public abstract class Playable extends Creature
 		{
 			final Player player = killer.getActingPlayer();
 			if (player != null)
+			{
+				// TvT Event handling - Track player kills and prevent PK
+				if (this instanceof Player victimPlayer)
+				{
+					dev.tvtEvent.TvTEvent tvtEvent = dev.tvtEvent.TvTEvent.getInstance();
+					if (tvtEvent.getState() == net.sf.l2j.gameserver.enums.EventState.STARTED || 
+					    tvtEvent.getState() == net.sf.l2j.gameserver.enums.EventState.STARTING)
+					{
+						if (tvtEvent.isRegistered(player) && tvtEvent.isRegistered(victimPlayer))
+						{
+							// Prevent PK during event - don't update karma/PK
+							tvtEvent.onKill(player, victimPlayer);
+							return true; // Return early to prevent PK
+						}
+					}
+					
+					// Tournament Event handling - Track player kills and finish match if team is defeated
+					if (victimPlayer.isInTournamentMatch() && player.isInTournamentMatch())
+					{
+						if (player.getTournamentFightId() == victimPlayer.getTournamentFightId() && victimPlayer.getTournamentFightId() != 0)
+						{
+							net.sf.l2j.gameserver.model.entity.Tournament.TournamentManager.getInstance().onKill(killer, victimPlayer);
+							// Don't return early - allow normal death processing but prevent PK
+							player.onKillUpdatePvPKarma(this);
+							return true;
+						}
+					}
+				}
+				
 				player.onKillUpdatePvPKarma(this);
+			}
 		}
 		
 		return true;
@@ -193,7 +223,28 @@ public abstract class Playable extends Creature
 		
 		setIsDead(false);
 		
-		if (isPhoenixBlessed())
+		if (isInsideZone(ZoneId.CHAOTIC))
+		{
+			if (this instanceof Player player)
+			{
+				// Use PlayerStatus methods for full heal
+				player.getStatus().setMaxCpHpMp();
+				
+				// Apply noblesse blessing if configured
+				if (Config.REVIVE_NOBLESSE)
+				{
+					net.sf.l2j.gameserver.skills.L2Skill noblesse = net.sf.l2j.gameserver.data.SkillTable.getInstance().getInfo(1323, 1);
+					if (noblesse != null)
+						noblesse.getEffects(player, player);
+				}
+			}
+			else
+			{
+				// For other Playables (like Summons), just set max HP/MP
+				getStatus().setMaxHpMp();
+			}
+		}
+		else if (isPhoenixBlessed())
 		{
 			stopPhoenixBlessing(null);
 			
@@ -472,7 +523,7 @@ public abstract class Playable extends Creature
 			if (getActingPlayer().isInOlympiadMode() && !getActingPlayer().isOlympiadStart())
 				return false;
 			
-			if (isInsideZone(ZoneId.PVP))
+			if (isInsideZone(ZoneId.PVP) || isInsideZone(ZoneId.CHAOTIC))
 				return true;
 			
 			// One cannot be attacked if any of the two has Blessing of Protection and the other is >=10 levels higher and is PK
@@ -521,8 +572,9 @@ public abstract class Playable extends Creature
 		if (sameParty || sameCommandChannel || isInSameClan(attackerPlayer) || isInSameAlly(attackerPlayer) || isInSameActiveSiegeSide(attackerPlayer))
 			return false;
 		
-		// CTRL is not needed if both are in a PVP area
-		if (isInsideZone(ZoneId.PVP) && attacker.isInsideZone(ZoneId.PVP))
+		// CTRL is not needed if both are in a PVP area or CHAOTIC zone
+		if ((isInsideZone(ZoneId.PVP) && attacker.isInsideZone(ZoneId.PVP)) ||
+			(isInsideZone(ZoneId.CHAOTIC) && attacker.isInsideZone(ZoneId.CHAOTIC)))
 			return true;
 		
 		// CTRL is not needed if the target (this) is flagged / PK

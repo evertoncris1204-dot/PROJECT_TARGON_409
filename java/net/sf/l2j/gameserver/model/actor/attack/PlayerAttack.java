@@ -19,7 +19,6 @@ public class PlayerAttack extends PlayableAttack<Player>
 	public void doAttack(Creature target)
 	{
 		super.doAttack(target);
-		
 		_actor.clearRecentFakeDeath();
 	}
 	

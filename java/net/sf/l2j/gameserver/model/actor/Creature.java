@@ -169,6 +169,66 @@ public abstract class Creature extends WorldObject
 		if (!super.knows(target))
 			return false;
 		
+		// Tournament instance check - players in different instances can't see each other
+		if (this instanceof Player thisPlayer && target instanceof Player targetPlayer)
+		{
+			// Both players are in tournament instances
+			if (thisPlayer.isInTournamentInstance() && targetPlayer.isInTournamentInstance())
+			{
+				// They must be in the same instance to see each other
+				if (thisPlayer.getTournamentInstanceId() != targetPlayer.getTournamentInstanceId())
+					return false;
+			}
+			// One is in tournament instance, other is not - can't see each other
+			else if (thisPlayer.isInTournamentInstance() != targetPlayer.isInTournamentInstance())
+			{
+				return false;
+			}
+		}
+		
+		// Farm Dungeon instance check
+		if (this instanceof Player thisPlayer && target instanceof Player targetPlayer)
+		{
+			if (thisPlayer.isInFarmDungeonInstance() && targetPlayer.isInFarmDungeonInstance())
+			{
+				if (thisPlayer.getFarmDungeonInstanceId() != targetPlayer.getFarmDungeonInstanceId())
+					return false;
+			}
+			else if (thisPlayer.isInFarmDungeonInstance() != targetPlayer.isInFarmDungeonInstance())
+			{
+				return false;
+			}
+		}
+		
+		// NPC instance check - NPCs in different instances can't be seen by players in different instances
+		if (this instanceof Player player && target instanceof net.sf.l2j.gameserver.model.actor.Npc npc)
+		{
+			// Tournament player can't see NPCs from other instances or normal world NPCs
+			if (player.isInTournamentInstance())
+			{
+				// Only see NPCs that are also in the same tournament instance (if NPCs have instance support)
+				// For now, tournament players can't see any NPCs except those spawned in their instance
+				// This prevents seeing the registration NPC and other world NPCs
+				if (npc.getFarmDungeonInstanceId() >= 0)
+				{
+					// Farm Dungeon NPC - can't see
+					return false;
+				}
+				// Normal world NPCs - can't see (they don't have tournament instance ID)
+				// We'll need to add tournament instance ID to NPCs if we want them visible
+				return false;
+			}
+			
+			// Farm Dungeon instance check
+			if (player.isInFarmDungeonInstance())
+			{
+				if (npc.getFarmDungeonInstanceId() >= 0 && npc.getFarmDungeonInstanceId() != player.getFarmDungeonInstanceId())
+				{
+					return false;
+				}
+			}
+		}
+		
 		// If current Creature isn't a GM, it can't see any invisible Players.
 		if (!isGM())
 		{

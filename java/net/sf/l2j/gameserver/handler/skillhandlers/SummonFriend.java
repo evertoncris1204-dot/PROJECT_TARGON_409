@@ -75,6 +75,15 @@ public class SummonFriend implements ISkillHandler
 				// Send a request for Summon Friend skill.
 				if (skill.getId() == 1403)
 				{
+					// Block teleport confirmation if target has autofarm active or bot running
+					if (target.isAutoFarm() || (target.getBot() != null && target.getBot().running()))
+					{
+						System.out.println("[DEBUG] SummonFriend.useSkill() - Blocked teleport confirmation for autofarm player: " + target.getName());
+						target.teleportRequest(null, null);
+						player.sendPacket(SystemMessage.getSystemMessage(SystemMessageId.S1_ALREADY_SUMMONED).addCharName(target));
+						continue;
+					}
+					
 					final ConfirmDlg confirm = new ConfirmDlg(SystemMessageId.S1_WISHES_TO_SUMMON_YOU_FROM_S2_DO_YOU_ACCEPT.getId());
 					confirm.addCharName(player);
 					confirm.addZoneName(player.getPosition());

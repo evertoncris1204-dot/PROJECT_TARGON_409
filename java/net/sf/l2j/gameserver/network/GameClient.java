@@ -308,6 +308,48 @@ public final class GameClient extends MMOClient<MMOConnection<GameClient>> imple
 		if (_isDetached)
 			return;
 		
+		Player player = getPlayer();
+		
+		// Block teleport confirmation dialogs when autofarm is active
+		if (gsp instanceof net.sf.l2j.gameserver.network.serverpackets.ConfirmDlg)
+		{
+			net.sf.l2j.gameserver.network.serverpackets.ConfirmDlg confirm = (net.sf.l2j.gameserver.network.serverpackets.ConfirmDlg) gsp;
+			
+			if (player != null)
+			{
+				try
+				{
+					java.lang.reflect.Field messageIdField = confirm.getClass().getDeclaredField("_messageId");
+					messageIdField.setAccessible(true);
+					int messageId = messageIdField.getInt(confirm);
+					
+					// Block teleport/summon confirmation (1842) when autofarm is active or bot is running
+					if (messageId == 1842 && (player.isAutoFarm() || (player.getBot() != null && player.getBot().running())))
+					{
+						try
+						{
+							java.lang.reflect.Field field = player.getClass().getDeclaredField("_summonTargetRequest");
+							field.setAccessible(true);
+							field.set(player, null);
+							
+							field = player.getClass().getDeclaredField("_summonSkillRequest");
+							field.setAccessible(true);
+							field.set(player, null);
+						}
+						catch (Exception e)
+						{
+							// Ignore reflection errors
+						}
+						return; // Don't send the packet
+					}
+				}
+				catch (Exception e)
+				{
+					// Ignore reflection errors
+				}
+			}
+		}
+		
 		getConnection().sendPacket(gsp);
 		gsp.runImpl();
 	}

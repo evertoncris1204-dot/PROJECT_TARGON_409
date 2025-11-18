@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<list>
+   <skin type="armor"> <!-- Armors -->
+       <type id="1" name="Jolly Jester" chestId="10100" legsId="0" glovesId="0" feetId="0" priceId="57" priceCount="1000"/>
+       <type id="2" name="Chinese" chestId="10102" legsId="0" glovesId="0" feetId="0" priceId="57" priceCount="1000"/>
+       <type id="3" name="Cupid" chestId="10103" legsId="0" glovesId="0" feetId="0" priceId="57" priceCount="1000"/>
+       <type id="4" name="Zariche" chestId="10105" legsId="0" glovesId="0" feetId="0" priceId="57" priceCount="1000"/>
+       <type id="5" name="Formal Wear" chestId="10109" legsId="0" glovesId="0" feetId="0" priceId="57" priceCount="1000"/>
+       <type id="6" name="Cowboy" chestId="10110" legsId="0" glovesId="0" feetId="0" priceId="57" priceCount="1000"/>
+       <type id="7" name="Dark Knight" chestId="10112" legsId="0" glovesId="0" feetId="0" priceId="57" priceCount="1000"/>
+       <type id="8" name="School Uniform A" chestId="10114" legsId="0" glovesId="0" feetId="0" priceId="57" priceCount="1000"/>
+       <type id="9" name="School Uniform B" chestId="10115" legsId="0" glovesId="0" feetId="0" priceId="57" priceCount="1000"/>
+       <type id="10" name="Red Hunter" chestId="10116" legsId="0" glovesId="0" feetId="0" priceId="57" priceCount="1000"/>
+       <type id="11" name="Ninja" chestId="10118" legsId="0" glovesId="0" feetId="0" priceId="57" priceCount="1000"/>
+       <type id="12" name="Light Assasin" chestId="10120" legsId="0" glovesId="0" feetId="0" priceId="57" priceCount="1000"/>
+       <type id="13" name="Dark Assassin" chestId="10122" legsId="0" glovesId="0" feetId="0" priceId="57" priceCount="1000"/>
+       <type id="14" name="Beleth" chestId="10124" legsId="0" glovesId="0" feetId="0" priceId="57" priceCount="1000"/>
+       <type id="15" name="Japan" chestId="10126" legsId="0" glovesId="0" feetId="0" priceId="57" priceCount="1000"/>
+       <type id="16" name="Noble" chestId="10127" legsId="0" glovesId="0" feetId="0" priceId="57" priceCount="1000"/>
+       <type id="17" name="White Knight" chestId="10129" legsId="0" glovesId="0" feetId="0" priceId="57" priceCount="1000"/>
+       <type id="18" name="Barbarian" chestId="10131" legsId="0" glovesId="0" feetId="0" priceId="57" priceCount="1000"/>
+       <type id="19" name="Valkyrie" chestId="10133" legsId="0" glovesId="0" feetId="0" priceId="57" priceCount="1000"/>
+       <type id="20" name="Single Mesh" chestId="10135" legsId="0" glovesId="0" feetId="0" priceId="57" priceCount="1000"/>
+       <type id="21" name="Zaken" chestId="10136" legsId="0" glovesId="0" feetId="0" priceId="57" priceCount="1000"/>
+       <type id="22" name="Dragon Claw" chestId="10138" legsId="0" glovesId="0" feetId="0" priceId="57" priceCount="1000"/>
+       <type id="23" name="Kiborg" chestId="10140" legsId="0" glovesId="0" feetId="0" priceId="57" priceCount="1000"/>
+       <type id="24" name="Halloween" chestId="10142" legsId="0" glovesId="0" feetId="0" priceId="57" priceCount="1000"/>
+       <type id="25" name="Baseball" chestId="10144" legsId="0" glovesId="0" feetId="0" priceId="57" priceCount="1000"/>
+       <type id="26" name="Alicia" chestId="10146" legsId="0" glovesId="0" feetId="0" priceId="57" priceCount="1000"/>
+       <type id="27" name="Skeleton" chestId="10148" legsId="0" glovesId="0" feetId="0" priceId="57" priceCount="1000"/>
+       <type id="28" name="Demonic Deathly Angel" chestId="10150" legsId="0" glovesId="0" feetId="0" priceId="57" priceCount="1000"/>
+       <type id="29" name="Lilith" chestId="10152" legsId="0" glovesId="0" feetId="0" priceId="57" priceCount="1000"/>
+       <type id="30" name="Elite" chestId="10154" legsId="0" glovesId="0" feetId="0" priceId="57" priceCount="1000"/>
+       <type id="31" name="Antharas" chestId="10155" legsId="0" glovesId="0" feetId="0" priceId="57" priceCount="1000"/>
+       <type id="32" name="Valakas" chestId="10156" legsId="0" glovesId="0" feetId="0" priceId="57" priceCount="1000"/>
+       <type id="33" name="Thorns" chestId="10157" legsId="0" glovesId="0" feetId="0" priceId="57" priceCount="1000"/>
+   </skin>
+   <skin type="hair"> <!-- Hairs/Hats -->
+       <type id="1" name="Jolly Jester Hat" hairId="10101" priceId="57" priceCount="500"/>
+       <type id="2" name="Cupid Hair Style" hairId="10104" priceId="57" priceCount="500"/>
+       <type id="3" name="Zariche Mask" hairId="10106" priceId="57" priceCount="500"/>
+       <type id="4" name="Cowboy Hat" hairId="10111" priceId="57" priceCount="500"/>
+       <type id="5" name="Dark Knight Hat" hairId="10113" priceId="57" priceCount="500"/>
+       <type id="6" name="Red Hunter Hat" hairId="10117" priceId="57" priceCount="500"/>
+       <type id="7" name="Assasin Mask" hairId="10119" priceId="57" priceCount="500"/>
+       <type id="8" name="Light Assasin Hat" hairId="10121" priceId="57" priceCount="500"/>
+       <type id="9" name="Dark Assasin Hat" hairId="10123" priceId="57" priceCount="500"/>
+       <type id="10" name="Beleth Mask" hairId="10125" priceId="57" priceCount="500"/>
+       <type id="11" name="Noble Hat" hairId="10128" priceId="57" priceCount="500"/>
+       <type id="12" name="White Knight Mask" hairId="10130" priceId="57" priceCount="500"/>
+       <type id="13" name="Barbarian Mask" hairId="10132" priceId="57" priceCount="500"/>
+       <type id="14" name="Valkyrie Mask" hairId="10134" priceId="57" priceCount="500"/>
+       <type id="15" name="Zaken Hat" hairId="10137" priceId="57" priceCount="500"/>
+       <type id="16" name="Dragon Claw Mask" hairId="10139" priceId="57" priceCount="500"/>
+       <type id="17" name="Kiborg Hat" hairId="10141" priceId="57" priceCount="500"/>
+       <type id="18" name="Halloween Hat" hairId="10143" priceId="57" priceCount="500"/>
+       <type id="19" name="Baseball Hat" hairId="10145" priceId="57" priceCount="500"/>
+       <type id="20" name="Alicia Hat" hairId="10147" priceId="57" priceCount="500"/>
+       <type id="21" name="Skeleton Hat" hairId="10149" priceId="57" priceCount="500"/>
+       <type id="22" name="Demonic Deathly Angel Hat" hairId="10151" priceId="57" priceCount="500"/>
+       <type id="23" name="Lilith Hat" hairId="10153" priceId="57" priceCount="500"/>
+       <type id="24" name="Thorns Hat" hairId="10158" priceId="57" priceCount="500"/>
+   </skin>
+</list>

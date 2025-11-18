@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<list>
+	<territory name="captainoftheicequeensroyalguard_1763193755770" minZ="-832" maxZ="-816">
+		<node x="147953" y="11860" />
+		<node x="147853" y="11860" />
+		<node x="147853" y="11760" />
+		<node x="147953" y="11760" />
+	</territory>
+	<npcmaker name="captainoftheicequeensroyalguard_120169429496500" territory="captainoftheicequeensroyalguard_1763193755770" maximumNpcs="1">
+		<npc id="29060" pos="147903;11810;-832;47158" total="1" respawn="60sec" /> <!-- Captain of the Ice Queen's Royal Guard -->
+	</npcmaker>
+</list>

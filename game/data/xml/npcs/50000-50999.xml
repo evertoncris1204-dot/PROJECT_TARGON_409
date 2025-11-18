@@ -318,4 +318,70 @@
 			<skill id="4416" level="18" type="PASSIVE"/>
 		</skills>
 	</npc>
+
+<npc id="90001" idTemplate="22001" name="Grim Wolf" title="" alias="scavenger_wolf">
+		<set name="type" val="Monster"/>
+		<set name="level" val="80"/>
+		<set name="radius" val="13.0"/>
+		<set name="height" val="11.0"/>
+		<set name="hitTimeFactor" val="0.39"/>
+		<set name="rHand" val="0"/>
+		<set name="lHand" val="0"/>
+		<set name="canSeeThrough" val="false"/>
+		<set name="exp" val="1051.8153750000001"/>
+		<set name="sp" val="52.0"/>
+		<set name="hp" val="460.96247"/>
+		<set name="mp" val="259.2"/>
+		<set name="hpRegen" val="3.5"/>
+		<set name="mpRegen" val="1.5"/>
+		<set name="baseAttackRange" val="40"/>
+		<set name="baseDamageRange" val="0;0;80;120"/>
+		<set name="baseRandomDamage" val="10"/>
+		<set name="pAtk" val="64.83203"/>
+		<set name="pDef" val="101.83533"/>
+		<set name="mAtk" val="44.27187"/>
+		<set name="mDef" val="74.51868"/>
+		<set name="crit" val="4.0"/>
+		<set name="atkSpd" val="253.0"/>
+		<set name="walkSpd" val="24.0"/>
+		<set name="runSpd" val="130.0"/>
+		<set name="str" val="40"/>
+		<set name="int" val="21"/>
+		<set name="dex" val="30"/>
+		<set name="wit" val="20"/>
+		<set name="con" val="43"/>
+		<set name="men" val="20"/>
+		<set name="ssCount" val="0"/>
+		<set name="spsCount" val="0"/>
+		<set name="clan" val="npc_clan_22001"/>
+		<set name="clanRange" val="300"/>
+		<set name="undying" val="false"/>
+		<set name="canBeAttacked" val="true"/>
+		<set name="corpseTime" val="7"/>
+		<set name="noSleepMode" val="false"/>
+		<set name="aggroRange" val="1000"/>
+		<set name="canMove" val="true"/>
+		<set name="seedable" val="true"/>
+		<ai>
+			<set name="MoveAroundSocial" val="60"/>
+			<set name="MoveAroundSocial1" val="60"/>
+			<set name="MoveAroundSocial2" val="60"/>
+			<set name="SoulShot" val="200"/>
+			<set name="SoulShotRate" val="5"/>
+			<set name="SpiritShot" val="100"/>
+			<set name="SpiritShotRate" val="10"/>
+		</ai>
+		<drops>
+			<category type="DROP" chance="100">
+				<drop itemid="57" min="1" max="1" chance="100"/>
+			</category>
+		</drops>
+		<skills>
+			<skill id="4274" level="3" type="PASSIVE"/>
+			<skill id="4413" level="13" type="PASSIVE"/>
+			<skill id="4416" level="4" type="PASSIVE"/>
+			<skill id="4458" level="3" type="PASSIVE"/>
+		</skills>
+	</npc>
+
  </list>

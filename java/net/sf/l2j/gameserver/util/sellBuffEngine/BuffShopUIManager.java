@@ -153,14 +153,8 @@ public final class BuffShopUIManager
 	
 	public void showPublicShopWindow(final Player buyer, final Player sellerNpc, final ShopObject shop, int activeTab, int currentPage)
 	{
-		// _log.info("[DEBUG-UI-1] Entrou em showPublicShopWindow para a loja do owner: " + shop.getOwnerId());
-		// _log.info("[DEBUG-UI-2] O objeto 'shop' recebido cont�m " + shop.getBuffList().size() + " buffs no total.");
-		
 		// 1. Filtra os buffs que devem ser exibidos na aba atual.
-		// final List<PrivateBuff> buffsForTab = getFilteredBuffsForTab(shop, activeTab);
-		
-		final List<PrivateBuff> buffsForTab = getFilteredBuffsForTab(shop, activeTab, buyer); // <-- MUDAN�A AQUI
-		// _log.info("[DEBUG-UI-3] Ap�s filtrar para a aba " + activeTab + ", restam " + buffsForTab.size() + " buffs.");
+		final List<PrivateBuff> buffsForTab = getFilteredBuffsForTab(shop, activeTab, buyer);
 		
 		// 2. Calcula a pagina��o.
 		final int totalPages = Math.max((int) Math.ceil((double) buffsForTab.size() / BUFFS_PER_PAGE_PUBLIC), 1);
@@ -299,28 +293,29 @@ public final class BuffShopUIManager
 			final L2Skill sellerSkill = SkillTable.getInstance().getInfo(buffEntry.skillId(), buffEntry.skillLevel());
 			if (sellerSkill == null)
 			{
+				_log.warning("[BuffShop] Skill não encontrada - ID: " + buffEntry.skillId() + ", Level: " + buffEntry.skillLevel());
 				continue;
 			}
 			
-			// --- L�GICA DE FILTRO INTELIGENTE PARA SUMMONS ---
-			// Verifica se � um summon restrito
+			// --- LÓGICA DE FILTRO INTELIGENTE PARA SUMMONS ---
+			// Verifica se é um summon restrito
 			if (BuffShopConfigs.BUFFSHOP_RESTRICTED_SUMMONS.contains(sellerSkill.getId()))
 			{
-				// Procura o n�vel m�ximo que o COMPRADOR poderia ter se fosse um summoner.
+				// Procura o nível máximo que o COMPRADOR poderia ter se fosse um summoner.
 				int appropriateLevel = findAppropriateSummonLevel(sellerSkill.getId(), buyer.getStatus().getLevel());
 				
-				// Se um n�vel apropriado foi encontrado (maior que 0)
+				// Se um nível apropriado foi encontrado (maior que 0)
 				if (appropriateLevel > 0)
 				{
-					// Adiciona uma NOVA vers�o do buff � lista, com o n�vel rebaixado mas o pre�o original.
+					// Adiciona uma NOVA versão do buff à lista, com o nível rebaixado mas o preço original.
 					resultingList.add(new PrivateBuff(buffEntry.price(), buffEntry.skillId(), appropriateLevel));
 				}
-				// Se nenhum n�vel for encontrado (o comprador tem n�vel muito baixo), o buff � omitido.
-				continue; // Pula para o pr�ximo buff da loja.
+				// Se nenhum nível for encontrado (o comprador tem nível muito baixo), o buff é omitido.
+				continue; // Pula para o próximo buff da loja.
 			}
-			// --- FIM DA L�GICA DE SUMMONS ---
+			// --- FIM DA LÓGICA DE SUMMONS ---
 			
-			// L�gica de filtro padr�o para buffs normais (Player/Pet)
+			// Lógica de filtro padrão para buffs normais (Player/Pet)
 			if (activeTab == 1)
 			{ // Aba Player
 				if (sellerSkill.getTargetType() != SkillTargetType.SUMMON)
@@ -337,7 +332,7 @@ public final class BuffShopUIManager
 			}
 		}
 		
-		// Ordena a lista final pelo pre�o.
+		// Ordena a lista final pelo preço.
 		resultingList.sort(Comparator.comparingInt(PrivateBuff::price));
 		return resultingList;
 	}

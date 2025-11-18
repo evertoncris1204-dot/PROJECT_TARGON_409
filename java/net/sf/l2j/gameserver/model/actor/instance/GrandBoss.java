@@ -1,9 +1,11 @@
 package net.sf.l2j.gameserver.model.actor.instance;
 
+import net.sf.l2j.Config;
 import net.sf.l2j.commons.random.Rnd;
 
 import net.sf.l2j.gameserver.data.manager.HeroManager;
 import net.sf.l2j.gameserver.data.manager.RaidPointManager;
+import net.sf.l2j.gameserver.model.World;
 import net.sf.l2j.gameserver.model.actor.Creature;
 import net.sf.l2j.gameserver.model.actor.Player;
 import net.sf.l2j.gameserver.model.actor.template.NpcTemplate;
@@ -43,6 +45,12 @@ public final class GrandBoss extends Monster
 	{
 		setNoRndWalk(true);
 		super.onSpawn();
+		
+		// Announce Grand Boss spawn
+		if (Config.ANNOUNCE_EPIC_BOSS_ALIVE)
+		{
+			World.announceToOnlinePlayers(getName() + " has spawned!", true);
+		}
 	}
 	
 	@Override
@@ -72,6 +80,13 @@ public final class GrandBoss extends Monster
 				RaidPointManager.getInstance().addPoints(player, getNpcId(), (getStatus().getLevel() / 2) + Rnd.get(-5, 5));
 				if (player.isNoble())
 					HeroManager.getInstance().setRBkilled(player.getObjectId(), getNpcId());
+			}
+			
+			// Announce Grand Boss defeat
+			if (Config.ENABLE_BOSS_DEFEATED_MSG)
+			{
+				String msg = player.getClan() != null ? Config.GRAND_BOSS_DEFEATED_BY_CLAN_MEMBER_MSG.replace("%grandboss%", getName()).replace("%player%", player.getName()).replace("%clan%", player.getClan().getName()) : Config.GRAND_BOSS_DEFEATED_BY_PLAYER_MSG.replace("%grandboss%", getName()).replace("%player%", player.getName());
+				World.announceToOnlinePlayers(msg, true);
 			}
 		}
 		
